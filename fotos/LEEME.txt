@@ -1,0 +1,19 @@
+Pon aquí las fotos de María Luz (Marilú).
+
+Cómo usarlas:
+1. Copia tus imágenes en esta carpeta, por ejemplo:
+     fotos/abuela-01.jpg
+     fotos/viaje-espana.jpg
+     fotos/bailando.jpg
+
+2. Abre index.html y busca el bloque "PHOTOS_SEED".
+   Pon la ruta en "src" de cada foto:
+     { id: 'p1', src: 'fotos/abuela-01.jpg', label: 'Su retrato' },
+
+   El marcador rayado desaparece solo en cuanto pones una ruta válida.
+
+3. Para la galería puedes agregar tantas como quieras: solo copia más
+   líneas dentro de PHOTOS_SEED con un id nuevo (p10, p11, ...).
+
+Recomendación: usa imágenes de ~1000 px de ancho y formato .jpg o .webp
+para que la página cargue rápido.

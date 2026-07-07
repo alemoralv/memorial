@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Karla:wght@400;500;600;700&family=Caveat:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; font-family: 'Karla', system-ui, sans-serif; color: #3E2A44; background: #FAF2E6; -webkit-font-smoothing: antialiased; }
+  a { color: #834CA6; text-decoration: none; }
+  a:hover { color: #D94E8A; }
+  ::selection { background: #F3C9A0; color: #3E2A44; }
+  input, textarea, select, button { font-family: inherit; }
+  input::placeholder, textarea::placeholder { color: #B7A38F; }
+  .ml-scroll::-webkit-scrollbar { height: 10px; }
+  .ml-scroll::-webkit-scrollbar-thumb { background: #E7D2B4; border-radius: 20px; }
+  .ml-scroll::-webkit-scrollbar-track { background: transparent; }
+  @keyframes mlflame { 0%,100% { transform: scale(1) rotate(-1deg); opacity:1; } 50% { transform: scale(1.08) rotate(1.5deg); opacity:.9; } }
+  @keyframes mltoast { from { transform: translate(-50%, 24px); opacity: 0; } to { transform: translate(-50%, 0); opacity: 1; } }
+  @keyframes mlfloat { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
+</style>
+</helmet>
+
+<div style="overflow-x: hidden;">
+
+  <nav style="position: sticky; top: 0; z-index: 40; background: rgba(250,242,230,0.82); backdrop-filter: blur(10px); border-bottom: 1px solid #EBDBC4;">
+    <div style="max-width: 1140px; margin: 0 auto; padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; gap: 16px;">
+      <a href="#inicio" style="font-family: 'Cormorant Garamond', serif; font-weight: 700; font-size: 22px; color: #3E2A44; letter-spacing: .3px;">María&nbsp;Luz</a>
+      <div style="display: flex; align-items: center; gap: 22px; flex-wrap: wrap; justify-content: flex-end;">
+        <a href="#vida" style="font-size: 14.5px; color: #6A5560; font-weight: 500;">Su vida</a>
+        <a href="#galeria" style="font-size: 14.5px; color: #6A5560; font-weight: 500;">Galería</a>
+        <a href="#muro" style="font-size: 14.5px; color: #6A5560; font-weight: 500;">Recuerdos</a>
+        <a href="#lugares" style="font-size: 14.5px; color: #6A5560; font-weight: 500;">Lugares</a>
+        <a href="#compartir" style="font-size: 14px; font-weight: 700; color: #fff; background: linear-gradient(92deg,#E07B39,#D94E8A,#834CA6); padding: 9px 18px; border-radius: 999px; box-shadow: 0 6px 16px rgba(217,78,138,.24);">Compartir un recuerdo</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ============ HERO ============ -->
+  <header id="inicio" style="scroll-margin-top: 80px; position: relative; padding: 70px 24px 40px; text-align: center; background:
+      radial-gradient(1100px 520px at 50% -8%, rgba(224,123,57,.16), rgba(217,78,138,.05) 42%, transparent 68%);">
+    <div style="max-width: 940px; margin: 0 auto;">
+      <p style="font-family: 'Caveat', cursive; font-size: 30px; color: #D94E8A; margin: 0 0 6px; font-weight: 600;">En memoria de</p>
+      <h1 style="font-family: 'Cormorant Garamond', serif; font-weight: 700; font-size: clamp(52px, 9vw, 104px); line-height: 1.02; margin: 0; color: #3E2A44; letter-spacing: -.5px;">Marilú Galindo</h1>
+      <div style="display: flex; align-items: center; justify-content: center; gap: 16px; margin: 22px 0 6px; flex-wrap: wrap;">
+        <span style="font-family: 'Cormorant Garamond', serif; font-size: clamp(20px,3vw,26px); color: #6A5560; letter-spacing: 1px;">21 enero 1949</span>
+        <span style="width: 9px; height: 9px; border-radius: 50%; background: linear-gradient(120deg,#E07B39,#834CA6); display: inline-block;"></span>
+        <span style="font-family: 'Cormorant Garamond', serif; font-size: clamp(20px,3vw,26px); color: #6A5560; letter-spacing: 1px;">1 julio 2026</span>
+      </div>
+      <p style="font-size: 16px; letter-spacing: 3px; text-transform: uppercase; color: #B0895F; margin: 4px 0 0; font-weight: 600;">Ciudadana del mundo · Ciudad de México</p>
+
+      <div style="display: inline-flex; align-items: center; gap: 14px; margin-top: 30px; padding: 12px 26px; background: #FFFCF6; border: 1px solid #EBD9C0; border-radius: 999px; box-shadow: 0 10px 30px rgba(62,42,68,.07);">
+        <span style="font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: #B0895F; font-weight: 700;">Su frase</span>
+        <span style="font-family: 'Caveat', cursive; font-size: 34px; font-weight: 700; background: linear-gradient(92deg,#E07B39,#D94E8A,#834CA6); -webkit-background-clip: text; background-clip: text; color: transparent; line-height: 1;">so beat it</span>
+      </div>
+    </div>
+
+    <!-- Collage de polaroids -->
+    <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px; max-width: 1000px; margin: 54px auto 0; padding-bottom: 10px;">
+      <sc-for list="{{ heroPhotos }}" as="p" hint-placeholder-count="4">
+        <div style="background: #FFFEFB; padding: 12px 12px 40px; box-shadow: 0 14px 34px rgba(62,42,68,.14); border-radius: 3px; transform: rotate({{ p.rot }}deg); animation: mlfloat {{ p.dur }}s ease-in-out infinite; cursor: pointer;" onClick="{{ p.onOpen }}">
+          <sc-if value="{{ p.hasSrc }}" hint-placeholder-val="{{ false }}">
+            <img src="{{ p.src }}" alt="{{ p.label }}" style="display: block; width: 190px; height: 210px; object-fit: cover; border-radius: 1px;">
+          </sc-if>
+          <sc-if value="{{ p.noSrc }}" hint-placeholder-val="{{ true }}">
+            <div style="width: 190px; height: 210px; background: repeating-linear-gradient(45deg,#F0E1CD,#F0E1CD 11px,#E9D5BB 11px,#E9D5BB 22px); display: flex; align-items: center; justify-content: center;">
+              <span style="font-family: ui-monospace, monospace; font-size: 11px; color: #9A7E5C; letter-spacing: 1px;">foto</span>
+            </div>
+          </sc-if>
+          <p style="font-family: 'Caveat', cursive; font-size: 21px; color: #6A5560; text-align: center; margin: 8px 0 0; line-height: 1;">{{ p.label }}</p>
+        </div>
+      </sc-for>
+    </div>
+    <p style="font-size: 13px; color: #B0895F; margin-top: 26px; font-family: ui-monospace, monospace;">↓ Desliza para recorrer su historia ↓</p>
+  </header>
+
+  <!-- ============ VELITA ============ -->
+  <section style="padding: 56px 24px; text-align: center; background: #F5E9D8; border-top: 1px solid #EBDBC4; border-bottom: 1px solid #EBDBC4;">
+    <div style="display: inline-flex; flex-direction: column; align-items: center;">
+      <div style="position: relative; width: 60px; height: 96px; display: flex; align-items: flex-end; justify-content: center;">
+        <div style="position: absolute; bottom: 74px; width: 16px; height: 22px; border-radius: 50% 50% 46% 46% / 62% 62% 40% 40%; background: radial-gradient(circle at 50% 68%, #FFE9A8 0%, #F5A63C 42%, #E0568A 88%); box-shadow: 0 0 22px 6px rgba(240,150,80,.55); animation: mlflame 1.6s ease-in-out infinite; transform-origin: bottom center;"></div>
+        <div style="width: 26px; height: 70px; border-radius: 8px 8px 4px 4px; background: linear-gradient(#FFFDF7,#F0E4CE); border: 1px solid #E6D3B4;"></div>
+      </div>
+      <p style="font-family: 'Cormorant Garamond', serif; font-size: 26px; color: #3E2A44; margin: 20px 0 2px;">Su luz sigue encendida</p>
+      <p style="font-size: 15px; color: #7A6470; margin: 0 0 18px;"><strong style="color:#D94E8A; font-size: 19px;">{{ candles }}</strong> velitas encendidas por quienes la recuerdan</p>
+      <button onClick="{{ lightCandle }}" style="border: none; cursor: pointer; background: #FFFCF6; color: #834CA6; border: 1.5px solid #E3C9A6; padding: 11px 24px; border-radius: 999px; font-weight: 700; font-size: 15px; box-shadow: 0 6px 16px rgba(62,42,68,.06);" style-hover="background:#834CA6;color:#fff;border-color:#834CA6;">Encender una velita</button>
+    </div>
+  </section>
+
+  <!-- ============ LÍNEA DE VIDA ============ -->
+  <section id="vida" style="scroll-margin-top: 76px; padding: 84px 0 70px;">
+    <div style="max-width: 1140px; margin: 0 auto; padding: 0 24px; text-align: center;">
+      <p style="font-family: 'Caveat', cursive; font-size: 26px; color: #E07B39; margin: 0; font-weight: 600;">Su historia, año con año</p>
+      <h2 style="font-family: 'Cormorant Garamond', serif; font-size: clamp(34px,5vw,52px); margin: 4px 0 10px; color: #3E2A44; font-weight: 700;">Línea de vida</h2>
+      <p style="max-width: 620px; margin: 0 auto; color: #7A6470; font-size: 16.5px; line-height: 1.6;">Una vida construida a lo largo de los años. Cada quien puede añadir un momento — así su historia sigue creciendo con nosotros.</p>
+    </div>
+
+    <div class="ml-scroll" style="overflow-x: auto; padding: 44px 0 30px; margin-top: 16px;">
+      <div style="display: inline-flex; padding: 0 max(24px, calc((100vw - 1140px)/2)); min-width: 100%;">
+        <sc-for list="{{ timeline }}" as="node" hint-placeholder-count="4">
+          <div style="flex: 0 0 250px; display: flex; flex-direction: column;">
+            <!-- arriba -->
+            <div style="height: 178px; display: flex; align-items: flex-end; justify-content: center; padding: 0 12px;">
+              <sc-if value="{{ node.above }}" hint-placeholder-val="{{ true }}">
+                <div style="display: flex; flex-direction: column; align-items: center;">
+                  <div style="width: 214px; background: #FFFCF6; border: 1px solid #EBD9C0; border-radius: 14px; padding: 15px 16px 16px; box-shadow: 0 12px 26px rgba(62,42,68,.08); text-align: left;">
+                    <div style="display: flex; align-items: baseline; gap: 8px;">
+                      <span style="font-family: 'Cormorant Garamond', serif; font-size: 30px; font-weight: 700; color: {{ node.color }};">{{ node.year }}</span>
+                      <sc-if value="{{ node.isUser }}" hint-placeholder-val="{{ false }}"><span style="font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: #B0895F; font-weight: 700;">aportado</span></sc-if>
+                    </div>
+                    <p style="margin: 3px 0 4px; font-weight: 700; font-size: 15.5px; color: #3E2A44;">{{ node.title }}</p>
+                    <p style="margin: 0; font-size: 13.5px; color: #7A6470; line-height: 1.45;">{{ node.text }}</p>
+                    <sc-if value="{{ node.isUser }}" hint-placeholder-val="{{ false }}"><p style="margin: 8px 0 0; font-family: 'Caveat', cursive; font-size: 17px; color: #834CA6;">— {{ node.author }}</p></sc-if>
+                  </div>
+                  <div style="width: 2px; height: 22px; background: #DBA23F;"></div>
+                </div>
+              </sc-if>
+            </div>
+            <!-- línea -->
+            <div style="height: 0; border-top: 2px solid #DBA23F; position: relative;">
+              <div style="position: absolute; left: 50%; top: -8px; transform: translateX(-50%); width: 15px; height: 15px; border-radius: 50%; background: linear-gradient(135deg,#E07B39,#D94E8A); border: 3px solid #FAF2E6; box-shadow: 0 0 0 1px #DBA23F;"></div>
+            </div>
+            <!-- abajo -->
+            <div style="height: 178px; display: flex; align-items: flex-start; justify-content: center; padding: 0 12px;">
+              <sc-if value="{{ node.below }}" hint-placeholder-val="{{ false }}">
+                <div style="display: flex; flex-direction: column; align-items: center;">
+                  <div style="width: 2px; height: 22px; background: #DBA23F;"></div>
+                  <div style="width: 214px; background: #FFFCF6; border: 1px solid #EBD9C0; border-radius: 14px; padding: 15px 16px 16px; box-shadow: 0 12px 26px rgba(62,42,68,.08); text-align: left;">
+                    <div style="display: flex; align-items: baseline; gap: 8px;">
+                      <span style="font-family: 'Cormorant Garamond', serif; font-size: 30px; font-weight: 700; color: {{ node.color }};">{{ node.year }}</span>
+                      <sc-if value="{{ node.isUser }}" hint-placeholder-val="{{ false }}"><span style="font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: #B0895F; font-weight: 700;">aportado</span></sc-if>
+                    </div>
+                    <p style="margin: 3px 0 4px; font-weight: 700; font-size: 15.5px; color: #3E2A44;">{{ node.title }}</p>
+                    <p style="margin: 0; font-size: 13.5px; color: #7A6470; line-height: 1.45;">{{ node.text }}</p>
+                    <sc-if value="{{ node.isUser }}" hint-placeholder-val="{{ false }}"><p style="margin: 8px 0 0; font-family: 'Caveat', cursive; font-size: 17px; color: #834CA6;">— {{ node.author }}</p></sc-if>
+                  </div>
+                </div>
+              </sc-if>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+
+    <div style="text-align: center;">
+      <button onClick="{{ addToTimeline }}" style="border: none; cursor: pointer; background: #FFFCF6; border: 1.5px solid #E3C9A6; color: #834CA6; padding: 12px 26px; border-radius: 999px; font-weight: 700; font-size: 15px;" style-hover="background:#834CA6;color:#fff;border-color:#834CA6;">＋ Aporta un momento a su línea de vida</button>
+    </div>
+  </section>
+
+  <!-- ============ GALERÍA ============ -->
+  <section id="galeria" style="scroll-margin-top: 76px; padding: 80px 24px; background: #F5E9D8; border-top: 1px solid #EBDBC4;">
+    <div style="max-width: 1140px; margin: 0 auto;">
+      <div style="text-align: center; margin-bottom: 40px;">
+        <p style="font-family: 'Caveat', cursive; font-size: 26px; color: #834CA6; margin: 0; font-weight: 600;">Un álbum de toda una vida</p>
+        <h2 style="font-family: 'Cormorant Garamond', serif; font-size: clamp(34px,5vw,52px); margin: 4px 0 8px; color: #3E2A44; font-weight: 700;">Galería de fotos</h2>
+        <p style="color: #7A6470; font-size: 16.5px;">{{ photoCount }} recuerdos en imágenes · las fotos de todos se van sumando aquí</p>
+      </div>
+      <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 18px;">
+        <sc-for list="{{ photos }}" as="p" hint-placeholder-count="9">
+          <div style="background: #FFFEFB; padding: 13px 13px 46px; box-shadow: 0 12px 28px rgba(62,42,68,.12); transform: rotate({{ p.rot }}deg); cursor: pointer; transition: transform .2s ease;" style-hover="transform: rotate(0deg) scale(1.03);" onClick="{{ p.onOpen }}">
+            <sc-if value="{{ p.hasSrc }}" hint-placeholder-val="{{ false }}">
+              <img src="{{ p.src }}" alt="{{ p.label }}" style="display: block; width: 230px; height: 230px; object-fit: cover;">
+            </sc-if>
+            <sc-if value="{{ p.noSrc }}" hint-placeholder-val="{{ true }}">
+              <div style="width: 230px; height: 230px; background: repeating-linear-gradient(45deg,#F0E1CD,#F0E1CD 12px,#E9D5BB 12px,#E9D5BB 24px); display: flex; align-items: center; justify-content: center;">
+                <span style="font-family: ui-monospace, monospace; font-size: 12px; color: #9A7E5C; letter-spacing: 1px;">{{ p.label }}</span>
+              </div>
+            </sc-if>
+            <p style="font-family: 'Caveat', cursive; font-size: 23px; color: #5C4A54; text-align: center; margin: 10px 0 0; line-height: 1;">{{ p.label }}</p>
+          </div>
+        </sc-for>
+      </div>
+      <div style="text-align: center; margin-top: 40px;">
+        <button onClick="{{ addPhoto }}" style="border: none; cursor: pointer; background: linear-gradient(92deg,#E07B39,#D94E8A,#834CA6); color: #fff; padding: 13px 28px; border-radius: 999px; font-weight: 700; font-size: 15px; box-shadow: 0 10px 24px rgba(217,78,138,.24);">＋ Sube una foto al mural</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ MURO DE RECUERDOS ============ -->
+  <section id="muro" style="scroll-margin-top: 76px; padding: 84px 24px;">
+    <div style="max-width: 1080px; margin: 0 auto;">
+      <div style="text-align: center; margin-bottom: 42px;">
+        <p style="font-family: 'Caveat', cursive; font-size: 26px; color: #E07B39; margin: 0; font-weight: 600;">Lo que dejó en cada uno de nosotros</p>
+        <h2 style="font-family: 'Cormorant Garamond', serif; font-size: clamp(34px,5vw,52px); margin: 4px 0 8px; color: #3E2A44; font-weight: 700;">Muro de recuerdos</h2>
+        <p style="color: #7A6470; font-size: 16.5px;">{{ memoryCount }} recuerdos compartidos por familia y amigas</p>
+      </div>
+      <div style="columns: 320px 3; column-gap: 22px;">
+        <sc-for list="{{ memories }}" as="m" hint-placeholder-count="4">
+          <div style="break-inside: avoid; margin: 0 0 22px; background: #FFFCF6; border: 1px solid #EBD9C0; border-radius: 16px; padding: 22px; box-shadow: 0 10px 26px rgba(62,42,68,.06);">
+            <sc-if value="{{ m.hasPhoto }}" hint-placeholder-val="{{ false }}">
+              <img src="{{ m.photo }}" alt="" style="display: block; width: 100%; border-radius: 10px; margin-bottom: 14px;">
+            </sc-if>
+            <sc-if value="{{ m.epocaShown }}" hint-placeholder-val="{{ false }}">
+              <span style="display: inline-block; font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: {{ m.color }}; font-weight: 700; margin-bottom: 8px;">{{ m.epoca }}</span>
+            </sc-if>
+            <p style="margin: 0 0 16px; font-family: 'Cormorant Garamond', serif; font-size: 20px; line-height: 1.42; color: #4A3550; font-style: italic;">{{ m.text }}</p>
+            <div style="display: flex; align-items: center; gap: 11px;">
+              <div style="width: 38px; height: 38px; border-radius: 50%; background: {{ m.color }}; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 16px; flex: 0 0 auto;">{{ m.initial }}</div>
+              <div>
+                <p style="margin: 0; font-weight: 700; font-size: 14.5px; color: #3E2A44;">{{ m.author }}</p>
+                <sc-if value="{{ m.relShown }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 12.5px; color: #9A8590;">{{ m.rel }}</p></sc-if>
+              </div>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ COMPARTIR ============ -->
+  <section id="compartir" style="scroll-margin-top: 70px; padding: 84px 24px; background: linear-gradient(180deg,#F5E9D8,#F0DFC8);">
+    <div style="max-width: 720px; margin: 0 auto;">
+      <div style="text-align: center; margin-bottom: 34px;">
+        <h2 style="font-family: 'Cormorant Garamond', serif; font-size: clamp(34px,5vw,52px); margin: 0 0 8px; color: #3E2A44; font-weight: 700;">Comparte un recuerdo</h2>
+        <p style="color: #7A6470; font-size: 16.5px; max-width: 460px; margin: 0 auto;">Tu historia mantiene viva su memoria. Escribe una anécdota, sube una foto o añade un momento a su línea de vida.</p>
+      </div>
+
+      <form onSubmit="{{ submit }}" style="background: #FFFCF6; border: 1px solid #EBD9C0; border-radius: 22px; padding: 30px; box-shadow: 0 18px 44px rgba(62,42,68,.1);">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+          <label style="display: block;">
+            <span style="display: block; font-weight: 700; font-size: 14px; color: #3E2A44; margin-bottom: 7px;">Tu nombre</span>
+            <input value="{{ form.name }}" onInput="{{ onName }}" placeholder="¿Cómo te llamas?" style="width: 100%; padding: 13px 15px; border: 1.5px solid #E6D3B4; border-radius: 12px; background: #FEFBF4; font-size: 15px; color: #3E2A44;">
+          </label>
+          <label style="display: block;">
+            <span style="display: block; font-weight: 700; font-size: 14px; color: #3E2A44; margin-bottom: 7px;">Relación</span>
+            <input value="{{ form.rel }}" onInput="{{ onRel }}" placeholder="Nieta, amiga, vecino..." style="width: 100%; padding: 13px 15px; border: 1.5px solid #E6D3B4; border-radius: 12px; background: #FEFBF4; font-size: 15px; color: #3E2A44;">
+          </label>
+        </div>
+
+        <p style="font-weight: 700; font-size: 14px; color: #3E2A44; margin: 20px 0 9px;">Tipo de recuerdo</p>
+        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+          <button type="button" onClick="{{ pickTexto }}" style="{{ segTexto }}">Anécdota</button>
+          <button type="button" onClick="{{ pickFoto }}" style="{{ segFoto }}">Foto</button>
+          <button type="button" onClick="{{ pickMomento }}" style="{{ segMomento }}">Momento en su línea de vida</button>
+        </div>
+
+        <!-- ANÉCDOTA -->
+        <sc-if value="{{ isTexto }}" hint-placeholder-val="{{ true }}">
+          <div style="margin-top: 20px;">
+            <span style="display: block; font-weight: 700; font-size: 14px; color: #3E2A44; margin-bottom: 7px;">Tu recuerdo o anécdota</span>
+            <textarea value="{{ form.text }}" onInput="{{ onText }}" placeholder="Cuéntanos esa historia especial con María Luz..." style="width: 100%; min-height: 130px; padding: 14px 15px; border: 1.5px solid #E6D3B4; border-radius: 12px; background: #FEFBF4; font-size: 15px; color: #3E2A44; resize: vertical; line-height: 1.5;"></textarea>
+            <div style="margin-top: 14px;">
+              <span style="display: block; font-weight: 700; font-size: 14px; color: #3E2A44; margin-bottom: 7px;">Época del recuerdo <span style="color:#B0895F;font-weight:500;">(opcional)</span></span>
+              <input value="{{ form.epoca }}" onInput="{{ onEpoca }}" placeholder="Ej: Navidad 2015, los años 90, un domingo cualquiera..." style="width: 100%; padding: 13px 15px; border: 1.5px solid #E6D3B4; border-radius: 12px; background: #FEFBF4; font-size: 15px; color: #3E2A44;">
+            </div>
+            <div style="margin-top: 14px;">
+              <span style="display: block; font-weight: 700; font-size: 14px; color: #3E2A44; margin-bottom: 7px;">¿Dónde fue? <span style="color:#B0895F;font-weight:500;">(opcional)</span></span>
+              <input value="{{ form.lugar }}" onInput="{{ onLugar }}" placeholder="Ej: Acapulco, la casa de la abuela, Chapultepec..." style="width: 100%; padding: 13px 15px; border: 1.5px solid #E6D3B4; border-radius: 12px; background: #FEFBF4; font-size: 15px; color: #3E2A44;">
+              <p style="margin: 7px 0 0; font-size: 12.5px; color: #9A8590; font-style: italic;">Si lo escribes, ese lugar se sumará a "Lugares que amó".</p>
+            </div>
+          </div>
+        </sc-if>
+
+        <!-- FOTO -->
+        <sc-if value="{{ isFoto }}" hint-placeholder-val="{{ false }}">
+          <div style="margin-top: 20px;">
+            <label style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; padding: 28px; border: 2px dashed #E0C49E; border-radius: 14px; background: #FEFBF4; cursor: pointer; text-align: center;">
+              <span style="font-family: 'Cormorant Garamond', serif; font-size: 22px; color: #834CA6;">Elige una foto</span>
+              <span style="font-size: 13px; color: #9A8590;">Se sumará al mural de fotos de todos</span>
+              <input type="file" accept="image/*" onChange="{{ onPhotoFile }}" style="display: none;">
+            </label>
+            <sc-if value="{{ hasPhotoPreview }}" hint-placeholder-val="{{ false }}">
+              <div style="margin-top: 14px; text-align: center;">
+                <img src="{{ form.photoData }}" alt="preview" style="max-height: 200px; border-radius: 10px; box-shadow: 0 8px 20px rgba(62,42,68,.12);">
+              </div>
+            </sc-if>
+            <div style="margin-top: 14px;">
+              <span style="display: block; font-weight: 700; font-size: 14px; color: #3E2A44; margin-bottom: 7px;">Pie de foto <span style="color:#B0895F;font-weight:500;">(opcional)</span></span>
+              <input value="{{ form.text }}" onInput="{{ onText }}" placeholder="Ej: De viaje en Acapulco, 1988" style="width: 100%; padding: 13px 15px; border: 1.5px solid #E6D3B4; border-radius: 12px; background: #FEFBF4; font-size: 15px; color: #3E2A44;">
+            </div>
+          </div>
+        </sc-if>
+
+        <!-- MOMENTO -->
+        <sc-if value="{{ isMomento }}" hint-placeholder-val="{{ false }}">
+          <div style="margin-top: 20px;">
+            <div style="display: grid; grid-template-columns: 1fr 1.4fr; gap: 16px;">
+              <label style="display: block;">
+                <span style="display: block; font-weight: 700; font-size: 14px; color: #3E2A44; margin-bottom: 7px;">Fecha</span>
+                <input type="date" value="{{ form.date }}" onInput="{{ onDate }}" style="width: 100%; padding: 12px 14px; border: 1.5px solid #E6D3B4; border-radius: 12px; background: #FEFBF4; font-size: 15px; color: #3E2A44;">
+              </label>
+              <label style="display: block;">
+                <span style="display: block; font-weight: 700; font-size: 14px; color: #3E2A44; margin-bottom: 7px;">Título del momento</span>
+                <input value="{{ form.title }}" onInput="{{ onTitle }}" placeholder="Ej: Su viaje a España" style="width: 100%; padding: 13px 15px; border: 1.5px solid #E6D3B4; border-radius: 12px; background: #FEFBF4; font-size: 15px; color: #3E2A44;">
+              </label>
+            </div>
+            <div style="margin-top: 14px;">
+              <span style="display: block; font-weight: 700; font-size: 14px; color: #3E2A44; margin-bottom: 7px;">Descripción <span style="color:#B0895F;font-weight:500;">(opcional)</span></span>
+              <textarea value="{{ form.desc }}" onInput="{{ onDesc }}" placeholder="Cuéntanos qué pasó en ese momento..." style="width: 100%; min-height: 90px; padding: 14px 15px; border: 1.5px solid #E6D3B4; border-radius: 12px; background: #FEFBF4; font-size: 15px; color: #3E2A44; resize: vertical; line-height: 1.5;"></textarea>
+            </div>
+            <p style="margin: 12px 0 0; font-size: 13px; color: #9A8590; font-style: italic;">Tu momento aparecerá en la línea de vida, ordenado por su fecha.</p>
+          </div>
+        </sc-if>
+
+        <button type="submit" style="margin-top: 24px; width: 100%; border: none; cursor: pointer; background: linear-gradient(92deg,#E07B39,#D94E8A,#834CA6); color: #fff; padding: 16px; border-radius: 14px; font-weight: 700; font-size: 16.5px; letter-spacing: .3px; box-shadow: 0 12px 26px rgba(217,78,138,.26);">Compartir recuerdo</button>
+      </form>
+      <p style="text-align: center; font-size: 12.5px; color: #A08C79; margin-top: 16px; font-family: ui-monospace, monospace;">Los recuerdos se guardan en este navegador. Conecta un backend en Claude Code para reunir los de todos.</p>
+    </div>
+  </section>
+
+  <!-- ============ RECETAS ============ -->
+  <section style="padding: 84px 24px;">
+    <div style="max-width: 1080px; margin: 0 auto;">
+      <div style="text-align: center; margin-bottom: 40px;">
+        <p style="font-family: 'Caveat', cursive; font-size: 26px; color: #E07B39; margin: 0; font-weight: 600;">Le encantaba comer rico</p>
+        <h2 style="font-family: 'Cormorant Garamond', serif; font-size: clamp(34px,5vw,52px); margin: 4px 0 8px; color: #3E2A44; font-weight: 700;">Su cocina</h2>
+        <p style="color: #7A6470; font-size: 16.5px;">Los sabores que reunían a la familia alrededor de la mesa</p>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px;">
+        <sc-for list="{{ recetas }}" as="r" hint-placeholder-count="4">
+          <div style="background: #FFFCF6; border: 1px solid #EBD9C0; border-radius: 18px; padding: 24px; box-shadow: 0 10px 24px rgba(62,42,68,.06); border-top: 4px solid {{ r.color }};">
+            <p style="font-family: 'Cormorant Garamond', serif; font-size: 25px; font-weight: 700; color: #3E2A44; margin: 0 0 8px;">{{ r.name }}</p>
+            <p style="margin: 0; color: #7A6470; font-size: 15px; line-height: 1.55;">{{ r.note }}</p>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CANCIONES (votación) ============ -->
+  <section style="padding: 78px 24px; background: #2E2036; color: #F5E9D8;">
+    <div style="max-width: 720px; margin: 0 auto;">
+      <div style="text-align: center; margin-bottom: 30px;">
+        <p style="font-family: 'Caveat', cursive; font-size: 27px; color: #F0A66A; margin: 0; font-weight: 600;">so beat it</p>
+        <h2 style="font-family: 'Cormorant Garamond', serif; font-size: clamp(32px,5vw,48px); margin: 4px 0 8px; color: #FDF6EA; font-weight: 700;">Las canciones que la hacían bailar</h2>
+        <p style="color: #C7B2C4; font-size: 16px;">Vota por las que de verdad le gustaban — las más queridas suben a la cima</p>
+      </div>
+      <div style="background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1); border-radius: 18px; padding: 10px;">
+        <sc-for list="{{ songs }}" as="t" hint-placeholder-count="4">
+          <div style="display: flex; align-items: center; gap: 14px; padding: 13px 14px; border-radius: 12px;">
+            <span style="width: 26px; text-align: center; font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 700; color: #8C7690; flex: 0 0 auto;">{{ t.rank }}</span>
+            <div style="flex: 1; min-width: 0;">
+              <p style="margin: 0; font-weight: 700; font-size: 15.5px; color: #FDF6EA; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ t.title }}</p>
+              <p style="margin: 0; font-size: 13px; color: #C7B2C4;">{{ t.artist }}</p>
+            </div>
+            <button onClick="{{ t.onVote }}" style="{{ t.voteStyle }}">
+              <span style="font-size: 15px; line-height: 1;">{{ t.heart }}</span>
+              <span style="font-weight: 700; font-size: 14px;">{{ t.votes }}</span>
+            </button>
+          </div>
+        </sc-for>
+      </div>
+      <div style="display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap;">
+        <input value="{{ newSongTitle }}" onInput="{{ onNewSongTitle }}" placeholder="Nombre de la canción" style="flex: 2; min-width: 160px; padding: 12px 15px; border: 1px solid rgba(255,255,255,.16); border-radius: 12px; background: rgba(255,255,255,.06); color: #FDF6EA; font-size: 14.5px;">
+        <input value="{{ newSongArtist }}" onInput="{{ onNewSongArtist }}" placeholder="Artista" style="flex: 1.4; min-width: 120px; padding: 12px 15px; border: 1px solid rgba(255,255,255,.16); border-radius: 12px; background: rgba(255,255,255,.06); color: #FDF6EA; font-size: 14.5px;">
+        <button onClick="{{ addSong }}" style="border: none; cursor: pointer; background: linear-gradient(92deg,#E07B39,#D94E8A,#834CA6); color: #fff; padding: 12px 22px; border-radius: 12px; font-weight: 700; font-size: 14.5px;">Agregar</button>
+      </div>
+      <p style="text-align: center; font-size: 12.5px; color: #8C7690; margin-top: 14px;">Cada quien puede votar por sus favoritas y sumar las que falten.</p>
+    </div>
+  </section>
+
+  <!-- ============ LUGARES ============ -->
+  <section id="lugares" style="scroll-margin-top: 76px; padding: 84px 24px; background: #F5E9D8; border-top: 1px solid #EBDBC4; border-bottom: 1px solid #EBDBC4;">
+    <div style="max-width: 1080px; margin: 0 auto;">
+      <div style="text-align: center; margin-bottom: 40px;">
+        <p style="font-family: 'Caveat', cursive; font-size: 26px; color: #834CA6; margin: 0; font-weight: 600;">Ciudadana del mundo</p>
+        <h2 style="font-family: 'Cormorant Garamond', serif; font-size: clamp(34px,5vw,52px); margin: 4px 0 8px; color: #3E2A44; font-weight: 700;">Lugares que amó</h2>
+        <p style="color: #7A6470; font-size: 16.5px;">Del Bosque de Chapultepec a cada rincón del mundo que la vio sonreír</p>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 18px;">
+        <sc-for list="{{ lugares }}" as="l" hint-placeholder-count="4">
+          <div style="background: #FFFCF6; border: 1px solid #EBD9C0; border-radius: 18px; padding: 22px; box-shadow: 0 10px 24px rgba(62,42,68,.06); display: flex; gap: 14px; align-items: flex-start;">
+            <div style="width: 12px; height: 12px; border-radius: 50%; margin-top: 6px; flex: 0 0 auto; background: {{ l.color }}; box-shadow: 0 0 0 4px {{ l.halo }};"></div>
+            <div>
+              <p style="font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 700; color: #3E2A44; margin: 0 0 4px;">{{ l.name }}</p>
+              <p style="margin: 0; color: #7A6470; font-size: 14.5px; line-height: 1.5;">{{ l.note }}</p>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FOOTER ============ -->
+  <footer style="padding: 70px 24px 56px; text-align: center;">
+    <p style="font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: clamp(24px,4vw,34px); color: #4A3550; max-width: 640px; margin: 0 auto 20px; line-height: 1.35;">Mientras la recordemos, mientras contemos sus historias y cocinemos sus recetas, María Luz seguirá aquí, con nosotros.</p>
+    <div style="display: flex; align-items: center; justify-content: center; gap: 14px; margin: 24px 0;">
+      <span style="width: 60px; height: 1px; background: #DBBE96;"></span>
+      <span style="font-family: 'Caveat', cursive; font-size: 30px; font-weight: 700; background: linear-gradient(92deg,#E07B39,#D94E8A,#834CA6); -webkit-background-clip: text; background-clip: text; color: transparent;">so beat it</span>
+      <span style="width: 60px; height: 1px; background: #DBBE96;"></span>
+    </div>
+    <p style="font-family: 'Cormorant Garamond', serif; font-size: 20px; color: #6A5560; margin: 0;">María Luz Galindo Rodríguez · 1949 — 2026</p>
+    <p style="font-size: 13px; color: #A08C79; margin: 8px 0 0;">Hecho con amor por todas las personas que te querían</p>
+  </footer>
+
+  <!-- ============ LIGHTBOX ============ -->
+  <sc-if value="{{ showLightbox }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ closeLightbox }}" style="position: fixed; inset: 0; z-index: 90; background: rgba(46,32,54,.86); display: flex; align-items: center; justify-content: center; padding: 32px; backdrop-filter: blur(4px);">
+      <div style="background: #FFFEFB; padding: 16px 16px 54px; box-shadow: 0 30px 80px rgba(0,0,0,.5); transform: rotate(-1.5deg); max-width: 90vw;">
+        <sc-if value="{{ lightboxHasSrc }}" hint-placeholder-val="{{ false }}">
+          <img src="{{ lightboxSrc }}" alt="" style="display: block; max-width: 78vw; max-height: 68vh; object-fit: contain;">
+        </sc-if>
+        <sc-if value="{{ lightboxNoSrc }}" hint-placeholder-val="{{ true }}">
+          <div style="width: min(60vw, 420px); height: min(60vw, 420px); background: repeating-linear-gradient(45deg,#F0E1CD,#F0E1CD 14px,#E9D5BB 14px,#E9D5BB 28px); display: flex; align-items: center; justify-content: center;">
+            <span style="font-family: ui-monospace, monospace; font-size: 13px; color: #9A7E5C;">reemplaza esta foto en Claude Code</span>
+          </div>
+        </sc-if>
+        <p style="font-family: 'Caveat', cursive; font-size: 26px; color: #5C4A54; text-align: center; margin: 12px 0 0;">{{ lightboxCaption }}</p>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ============ TOAST ============ -->
+  <sc-if value="{{ showToast }}" hint-placeholder-val="{{ false }}">
+    <div style="position: fixed; left: 50%; bottom: 28px; z-index: 95; transform: translateX(-50%); background: #3E2A44; color: #FDF6EA; padding: 15px 26px; border-radius: 999px; font-weight: 600; font-size: 15px; box-shadow: 0 16px 40px rgba(62,42,68,.4); animation: mltoast .35s ease; border: 1px solid rgba(224,123,57,.5);">{{ toast }}</div>
+  </sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  MONTHS = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+  COLORS = ['#E07B39', '#D94E8A', '#834CA6', '#C98A2E'];
+
+  // ⬇️ EDITA AQUÍ — momentos base de la línea de vida (fecha AAAA-MM-DD)
+  TIMELINE_SEED = [
+    { id: 's1', date: '1949-01-21', title: 'Nace María Luz', text: 'Llega al mundo en la Ciudad de México, un 21 de enero.' },
+    { id: 's2', date: '1969-09-20', title: 'Se casa', text: 'El 20 de septiembre comienza a construir su familia.' },
+    { id: 's3', date: '1974-08-31', title: 'Nace su primera hija', text: 'Se convierte en mamá por primera vez.' },
+    { id: 's4', date: '1977-04-09', title: 'Nace su primer hijo', text: 'La familia sigue creciendo.' },
+  ];
+
+  // ⬇️ EDITA AQUÍ — recuerdos de ejemplo (reemplázalos por los reales)
+  MEMORIES_SEED = [
+    { id: 'm1', text: 'Nunca olvidaré cómo ponía música y nos hacía bailar a todos en la sala. Decía "so beat it" y ya no había pretexto que valiera.', author: 'Su familia', rel: 'La recuerdan con cariño', epoca: 'Domingos en casa' },
+    { id: 'm2', text: 'Sus caminatas por Chapultepec eran sagradas. Conocía cada árbol, cada rincón, y siempre volvía con una historia nueva.', author: 'Una amiga', rel: 'Compañera de caminatas', epoca: '' },
+    { id: 'm3', text: 'La mesa de la abuela siempre tenía lugar para uno más. Comer rico y en familia era su forma de decir "los quiero".', author: 'Su nieta', rel: 'Nieta', epoca: '' },
+  ];
+
+  // ⬇️ EDITA AQUÍ — fotos. Pon la ruta en "src" (ej: 'fotos/abuela-01.jpg'). Déjalo vacío para ver un marcador.
+  PHOTOS_SEED = [
+    { id: 'p1', src: 'fotos/familia-01.jpg', label: 'Buena mesa' },
+    { id: 'p2', src: 'fotos/familia-02.jpg', label: 'Siempre con estilo' },
+    { id: 'p3', src: 'fotos/familia-03.jpg', label: 'Celebrando en familia' },
+    { id: 'p4', src: 'fotos/familia-04.jpg', label: 'Ciudadana del mundo' },
+    { id: 'p5', src: 'fotos/familia-05.jpg', label: 'Toda la familia' },
+    { id: 'p6', src: 'fotos/familia-06.jpg', label: 'Momentos juntos' },
+    { id: 'p7', src: 'fotos/familia-07.jpg', label: 'Sobremesa' },
+    { id: 'p8', src: 'fotos/familia-08.jpg', label: 'En las montañas' },
+    { id: 'p9', src: 'fotos/familia-09.jpg', label: 'Aventura en familia' },
+    { id: 'p10', src: 'fotos/familia-10.jpg', label: 'De viaje' },
+  ];
+
+  // ⬇️ EDITA AQUÍ — sus platillos y recetas
+  RECETAS_SEED = [
+    { name: 'Su mole', note: 'El que preparaba para las fiestas grandes y llenaba la casa entera de su aroma.' },
+    { name: 'Sopa de fideo', note: 'El primer plato de todos los domingos, servido con una sonrisa.' },
+    { name: 'Flan napolitano', note: 'El postre que nadie más lograba dejar tan cremoso.' },
+    { name: 'Agua de jamaica', note: 'Siempre fría, siempre lista para la visita que llegara.' },
+  ];
+
+  // ⬇️ EDITA AQUÍ — lugares importantes para ella
+  LUGARES_SEED = [
+    { name: 'Bosque de Chapultepec', note: 'Sus caminatas favoritas, entre árboles y recuerdos.' },
+    { name: 'Ciudad de México', note: 'Su hogar de toda la vida, donde nació y creció su familia.' },
+    { name: 'El mundo entero', note: 'Ciudadana del mundo — cada viaje era una nueva aventura.' },
+    { name: 'La mesa de casa', note: 'Su lugar preferido: rodeada de la gente que amaba.' },
+  ];
+
+  // ⬇️ EDITA AQUÍ — canciones iniciales y sus votos base para el ranking
+  SONGS_SEED = [
+    { id: 'song1', title: 'Las Sevillanas', artist: 'Tradicional (folclore andaluz)', base: 30 },
+    { id: 'song2', title: 'Flowers', artist: 'Miley Cyrus', base: 25 },
+    { id: 'song3', title: 'Muchachita Consentida', artist: 'Rayito Colombiano', base: 20 },
+    { id: 'song4', title: 'A Contracorriente', artist: 'Álvaro Soler & David Bisbal', base: 15 },
+    { id: 'song5', title: 'Tie a Yellow Ribbon', artist: 'Tony Orlando & Dawn', base: 10 },
+    { id: 'song6', title: 'La Suavecita', artist: 'Manduco', base: 6 },
+  ];
+
+  state = {
+    userTimeline: [], userMemories: [], userPhotos: [], userLugares: [], candles: 128,
+    songs: [], songVotes: {}, myVotes: [], newSongTitle: '', newSongArtist: '',
+    form: { name: '', rel: '', type: 'texto', text: '', epoca: '', lugar: '', date: '', title: '', desc: '', photoData: null },
+    lightbox: null, toast: '',
+  };
+
+  lsGet(k, fb) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : fb; } catch (e) { return fb; } }
+  lsSet(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+
+  componentDidMount() {
+    this.setState({
+      userTimeline: this.lsGet('ml_timeline', []),
+      userMemories: this.lsGet('ml_memories', []),
+      userPhotos: this.lsGet('ml_photos', []),
+      userLugares: this.lsGet('ml_lugares', []),
+      songs: this.lsGet('ml_songs', []),
+      songVotes: this.lsGet('ml_songvotes', {}),
+      myVotes: this.lsGet('ml_myvotes', []),
+      candles: this.lsGet('ml_candles', 128),
+    });
+  }
+
+  fmt(d) {
+    const p = String(d).split('-');
+    if (p.length < 3) return d;
+    return (+p[2]) + ' ' + (this.MONTHS[(+p[1]) - 1] || '') + ' ' + p[0];
+  }
+
+  setF(k, v) { this.setState(s => ({ form: Object.assign({}, s.form, { [k]: v }) })); }
+  blankForm() { return { name: '', rel: '', type: this.state.form.type, text: '', epoca: '', lugar: '', date: '', title: '', desc: '', photoData: null }; }
+
+  toastMsg(m) {
+    this.setState({ toast: m });
+    clearTimeout(this._t);
+    this._t = setTimeout(() => this.setState({ toast: '' }), 3400);
+  }
+
+  lightCandle() {
+    const n = this.state.candles + 1;
+    this.setState({ candles: n });
+    this.lsSet('ml_candles', n);
+    this.toastMsg('Encendiste una velita en su memoria');
+  }
+
+  scrollTo(id) {
+    const el = document.getElementById(id);
+    if (el) { const y = el.getBoundingClientRect().top + window.scrollY - 68; window.scrollTo({ top: y, behavior: 'smooth' }); }
+  }
+  goAddMoment() { this.setF('type', 'momento'); this.scrollTo('compartir'); }
+  goAddPhoto() { this.setF('type', 'foto'); this.scrollTo('compartir'); }
+
+  onPhotoFile(e) {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+    const r = new FileReader();
+    r.onload = ev => this.setF('photoData', ev.target.result);
+    r.readAsDataURL(file);
+  }
+
+  submit(e) {
+    if (e) e.preventDefault();
+    const f = this.state.form;
+    if (!f.name.trim()) { this.toastMsg('Escribe tu nombre para compartir'); return; }
+
+    if (f.type === 'momento') {
+      if (!f.date || !f.title.trim()) { this.toastMsg('Falta la fecha o el título del momento'); return; }
+      const entry = { id: 'u' + Date.now(), date: f.date, title: f.title.trim(), text: f.desc.trim(), kind: 'user', author: f.name.trim() };
+      const arr = this.state.userTimeline.concat([entry]);
+      this.setState({ userTimeline: arr, form: this.blankForm() });
+      this.lsSet('ml_timeline', arr);
+      this.toastMsg('¡Gracias! Tu momento se añadió a su línea de vida');
+      this.scrollTo('vida');
+    } else if (f.type === 'foto') {
+      if (!f.photoData) { this.toastMsg('Elige una foto para subir'); return; }
+      const entry = { id: 'u' + Date.now(), src: f.photoData, label: f.text.trim() || 'Un recuerdo', author: f.name.trim() };
+      const arr = this.state.userPhotos.concat([entry]);
+      this.setState({ userPhotos: arr, form: this.blankForm() });
+      this.lsSet('ml_photos', arr);
+      this.toastMsg('¡Gracias! Tu foto ya está en el mural');
+      this.scrollTo('galeria');
+    } else {
+      if (!f.text.trim()) { this.toastMsg('Escribe tu recuerdo'); return; }
+      const entry = { id: 'u' + Date.now(), text: f.text.trim(), author: f.name.trim(), rel: f.rel.trim(), epoca: f.epoca.trim(), photo: f.photoData || null };
+      const arr = this.state.userMemories.concat([entry]);
+      this.setState({ userMemories: arr, form: this.blankForm() });
+      this.lsSet('ml_memories', arr);
+      const lugar = f.lugar.trim();
+      if (lugar) {
+        const lentry = { name: lugar, note: 'Recordado por ' + f.name.trim() + (f.epoca.trim() ? ' · ' + f.epoca.trim() : '') };
+        const larr = this.state.userLugares.concat([lentry]);
+        this.setState({ userLugares: larr });
+        this.lsSet('ml_lugares', larr);
+      }
+      this.toastMsg('¡Gracias por compartir este recuerdo!');
+      this.scrollTo('muro');
+    }
+  }
+
+  voteSong(id) {
+    const my = this.state.myVotes.slice();
+    const votes = Object.assign({}, this.state.songVotes);
+    const idx = my.indexOf(id);
+    if (idx >= 0) { my.splice(idx, 1); votes[id] = (votes[id] || 0) - 1; }
+    else { my.push(id); votes[id] = (votes[id] || 0) + 1; }
+    this.setState({ myVotes: my, songVotes: votes });
+    this.lsSet('ml_myvotes', my); this.lsSet('ml_songvotes', votes);
+  }
+
+  addSong() {
+    const t = this.state.newSongTitle.trim();
+    if (!t) { this.toastMsg('Escribe el nombre de la canción'); return; }
+    const entry = { id: 'us' + Date.now(), title: t, artist: this.state.newSongArtist.trim() || 'Artista', base: 1 };
+    const arr = this.state.songs.concat([entry]);
+    const my = this.state.myVotes.concat([entry.id]);
+    this.setState({ songs: arr, myVotes: my, newSongTitle: '', newSongArtist: '' });
+    this.lsSet('ml_songs', arr); this.lsSet('ml_myvotes', my);
+    this.toastMsg('¡Canción agregada con tu voto!');
+  }
+
+  openLightbox(p) { this.setState({ lightbox: { src: p.src, caption: p.label, hasSrc: !!p.src } }); }
+  closeLightbox() { this.setState({ lightbox: null }); }
+
+  seg(active) {
+    const base = 'border:1.5px solid ' + (active ? 'transparent' : '#E6D3B4') + ';cursor:pointer;padding:10px 18px;border-radius:999px;font-weight:700;font-size:14px;';
+    return base + (active
+      ? 'background:linear-gradient(92deg,#E07B39,#D94E8A,#834CA6);color:#fff;box-shadow:0 6px 16px rgba(217,78,138,.22);'
+      : 'background:#FEFBF4;color:#6A5560;');
+  }
+
+  renderVals() {
+    const s = this.state, f = s.form;
+
+    // Línea de vida
+    const allT = this.TIMELINE_SEED.concat(s.userTimeline).slice()
+      .sort((a, b) => String(a.date).localeCompare(String(b.date)));
+    const timeline = allT.map((e, i) => ({
+      year: String(e.date).slice(0, 4),
+      title: e.title,
+      text: e.text || '',
+      above: i % 2 === 0,
+      below: i % 2 === 1,
+      isUser: e.kind === 'user',
+      author: e.author || '',
+      color: this.COLORS[i % this.COLORS.length],
+    }));
+
+    // Fotos
+    const rots = [-4, 3, -2, 5, -3, 2, 4, -5, 1, -3, 4];
+    const durs = [6, 7.5, 6.8, 8, 7];
+    const allP = this.PHOTOS_SEED.concat(s.userPhotos);
+    const photos = allP.map((p, i) => ({
+      src: p.src, label: p.label || 'foto',
+      hasSrc: !!p.src, noSrc: !p.src,
+      rot: rots[i % rots.length],
+      onOpen: () => this.openLightbox(p),
+    }));
+    const heroPhotos = photos.slice(0, 4).map((p, i) => Object.assign({}, p, { dur: durs[i % durs.length] }));
+
+    // Muro (usuarios más recientes primero, luego semillas)
+    const allM = s.userMemories.slice().reverse().concat(this.MEMORIES_SEED);
+    const memories = allM.map((m, i) => ({
+      text: m.text, author: m.author || 'Anónimo', rel: m.rel || '', epoca: m.epoca || '',
+      relShown: !!(m.rel && m.rel.trim()), epocaShown: !!(m.epoca && m.epoca.trim()),
+      hasPhoto: !!m.photo, photo: m.photo || '',
+      initial: (m.author || 'A').trim().charAt(0).toUpperCase(),
+      color: this.COLORS[i % this.COLORS.length],
+    }));
+
+    const recetas = this.RECETAS_SEED.map((r, i) => Object.assign({}, r, { color: this.COLORS[i % this.COLORS.length] }));
+    const halos = ['rgba(224,123,57,.18)', 'rgba(217,78,138,.18)', 'rgba(131,76,166,.18)', 'rgba(201,138,46,.18)'];
+    const lugares = this.LUGARES_SEED.concat(s.userLugares).map((l, i) => Object.assign({}, l, { color: this.COLORS[i % this.COLORS.length], halo: halos[i % halos.length] }));
+
+    const VOTED = 'display:flex;align-items:center;gap:7px;border:none;cursor:pointer;padding:8px 14px;border-radius:999px;background:linear-gradient(92deg,#E07B39,#D94E8A);color:#fff;';
+    const UNVOTED = 'display:flex;align-items:center;gap:7px;cursor:pointer;padding:8px 14px;border-radius:999px;background:rgba(255,255,255,.08);color:#E8B9CE;border:1px solid rgba(255,255,255,.16);';
+    const allSongs = this.SONGS_SEED.concat(s.songs).map(sg => ({
+      id: sg.id, title: sg.title, artist: sg.artist,
+      votes: (sg.base || 0) + (s.songVotes[sg.id] || 0),
+      voted: s.myVotes.indexOf(sg.id) >= 0,
+    }));
+    allSongs.sort((a, b) => b.votes - a.votes);
+    const songs = allSongs.map((sg, i) => ({
+      title: sg.title, artist: sg.artist, votes: sg.votes, rank: i + 1,
+      heart: sg.voted ? '♥' : '♡',
+      voteStyle: sg.voted ? VOTED : UNVOTED,
+      onVote: () => this.voteSong(sg.id),
+    }));
+
+    const lb = s.lightbox;
+
+    return {
+      candles: s.candles,
+      lightCandle: () => this.lightCandle(),
+      timeline, photos, heroPhotos,
+      photoCount: allP.length, memoryCount: allM.length,
+      memories, recetas, lugares, songs,
+      addToTimeline: () => this.goAddMoment(),
+      addPhoto: () => this.goAddPhoto(),
+      newSongTitle: s.newSongTitle, newSongArtist: s.newSongArtist,
+      onNewSongTitle: e => this.setState({ newSongTitle: e.target.value }),
+      onNewSongArtist: e => this.setState({ newSongArtist: e.target.value }),
+      addSong: () => this.addSong(),
+
+      form: f,
+      onName: e => this.setF('name', e.target.value),
+      onRel: e => this.setF('rel', e.target.value),
+      onText: e => this.setF('text', e.target.value),
+      onEpoca: e => this.setF('epoca', e.target.value),
+      onLugar: e => this.setF('lugar', e.target.value),
+      onDate: e => this.setF('date', e.target.value),
+      onTitle: e => this.setF('title', e.target.value),
+      onDesc: e => this.setF('desc', e.target.value),
+      onPhotoFile: e => this.onPhotoFile(e),
+      pickTexto: () => this.setF('type', 'texto'),
+      pickFoto: () => this.setF('type', 'foto'),
+      pickMomento: () => this.setF('type', 'momento'),
+      isTexto: f.type === 'texto', isFoto: f.type === 'foto', isMomento: f.type === 'momento',
+      segTexto: this.seg(f.type === 'texto'), segFoto: this.seg(f.type === 'foto'), segMomento: this.seg(f.type === 'momento'),
+      hasPhotoPreview: !!f.photoData,
+      submit: e => this.submit(e),
+
+      showLightbox: !!lb,
+      lightboxSrc: lb ? lb.src : '', lightboxCaption: lb ? lb.caption : '',
+      lightboxHasSrc: !!(lb && lb.hasSrc), lightboxNoSrc: !!(lb && !lb.hasSrc),
+      closeLightbox: () => this.closeLightbox(),
+
+      showToast: !!s.toast, toast: s.toast,
+    };
+  }
+}
+</script>
+</body>
+</html>
