@@ -161,22 +161,34 @@
       <div style="text-align: center; margin-bottom: 40px;">
         <p style="font-family: 'Caveat', cursive; font-size: 26px; color: #834CA6; margin: 0; font-weight: 600;">Un álbum de toda una vida</p>
         <h2 style="font-family: 'Cormorant Garamond', serif; font-size: clamp(34px,5vw,52px); margin: 4px 0 8px; color: #3E2A44; font-weight: 700;">Galería de fotos</h2>
-        <p style="color: #7A6470; font-size: 16.5px;">{{ photoCount }} recuerdos en imágenes · las fotos de todos se van sumando aquí</p>
+        <p style="color: #7A6470; font-size: 16.5px;">{{ photoCount }} recuerdos en imágenes · el álbum va pasando solo, al azar y sin repetirse, hasta mostrarlas todas</p>
       </div>
-      <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 18px;">
-        <sc-for list="{{ photos }}" as="p" hint-placeholder-count="9">
-          <div style="background: #FFFEFB; padding: 13px 13px 46px; box-shadow: 0 12px 28px rgba(62,42,68,.12); transform: rotate({{ p.rot }}deg); cursor: pointer; transition: transform .2s ease;" style-hover="transform: rotate(0deg) scale(1.03);" onClick="{{ p.onOpen }}">
-            <sc-if value="{{ p.hasSrc }}" hint-placeholder-val="{{ false }}">
-              <img src="{{ p.src }}" alt="{{ p.label }}" style="display: block; width: 230px; height: 230px; object-fit: cover;">
-            </sc-if>
-            <sc-if value="{{ p.noSrc }}" hint-placeholder-val="{{ true }}">
-              <div style="width: 230px; height: 230px; background: repeating-linear-gradient(45deg,#F0E1CD,#F0E1CD 12px,#E9D5BB 12px,#E9D5BB 24px); display: flex; align-items: center; justify-content: center;">
-                <span style="font-family: ui-monospace, monospace; font-size: 12px; color: #9A7E5C; letter-spacing: 1px;">{{ p.label }}</span>
-              </div>
-            </sc-if>
-            <p style="font-family: 'Caveat', cursive; font-size: 23px; color: #5C4A54; text-align: center; margin: 10px 0 0; line-height: 1;">{{ p.label }}</p>
-          </div>
-        </sc-for>
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 22px;">
+        <div style="background: #FFFEFB; padding: 15px 15px 10px; box-shadow: 0 20px 48px rgba(62,42,68,.16); border-radius: 4px; transform: rotate(-1.2deg); cursor: pointer; width: min(92vw, 720px); transition: transform .2s ease;" style-hover="transform: rotate(0deg) scale(1.01);" onClick="{{ displayOpen }}">
+          <sc-if value="{{ displayHasSrc }}" hint-placeholder-val="{{ false }}">
+            <img src="{{ displaySrc }}" alt="{{ displayLabel }}" style="display: block; width: 100%; height: min(58vh, 520px); object-fit: contain; background: #F7EEDF;">
+          </sc-if>
+          <sc-if value="{{ displayNoSrc }}" hint-placeholder-val="{{ true }}">
+            <div style="width: 100%; height: min(58vh, 520px); background: repeating-linear-gradient(45deg,#F0E1CD,#F0E1CD 12px,#E9D5BB 12px,#E9D5BB 24px); display: flex; align-items: center; justify-content: center;">
+              <span style="font-family: ui-monospace, monospace; font-size: 12px; color: #9A7E5C; letter-spacing: 1px;">foto</span>
+            </div>
+          </sc-if>
+          <sc-if value="{{ displayHasLabel }}" hint-placeholder-val="{{ true }}">
+            <p style="font-family: 'Caveat', cursive; font-size: 30px; color: #5C4A54; text-align: center; margin: 12px 0 4px; line-height: 1;">{{ displayLabel }}</p>
+          </sc-if>
+          <sc-if value="{{ displayNoLabel }}" hint-placeholder-val="{{ false }}">
+            <div style="height: 22px;"></div>
+          </sc-if>
+        </div>
+        <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap; justify-content: center;">
+          <button onClick="{{ displayPrev }}" style="{{ displayPrevStyle }}">◂ Anterior</button>
+          <span style="font-family: ui-monospace, monospace; font-size: 13px; color: #9A7E5C; min-width: 80px; text-align: center;">{{ displayCounter }}</span>
+          <button onClick="{{ displayNext }}" style="border: 1.5px solid #E3C9A6; cursor: pointer; background: #FFFCF6; color: #834CA6; padding: 10px 20px; border-radius: 999px; font-weight: 700; font-size: 14.5px;" style-hover="background:#834CA6;color:#fff;border-color:#834CA6;">Siguiente ▸</button>
+          <button onClick="{{ displayTogglePlay }}" style="border: 1.5px solid #E3C9A6; cursor: pointer; background: #FFFCF6; color: #834CA6; padding: 10px 16px; border-radius: 999px; font-weight: 700; font-size: 14.5px;" style-hover="background:#834CA6;color:#fff;border-color:#834CA6;">{{ displayPlayLabel }}</button>
+        </div>
+        <sc-if value="{{ displayHasPreload }}" hint-placeholder-val="{{ false }}">
+          <img src="{{ displayPreloadSrc }}" alt="" style="position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none;">
+        </sc-if>
       </div>
       <div style="text-align: center; margin-top: 40px;">
         <button onClick="{{ addPhoto }}" style="border: none; cursor: pointer; background: linear-gradient(92deg,#E07B39,#D94E8A,#834CA6); color: #fff; padding: 13px 28px; border-radius: 999px; font-weight: 700; font-size: 15px; box-shadow: 0 10px 24px rgba(217,78,138,.24);">＋ Sube una foto al mural</button>
@@ -447,6 +459,135 @@ class Component extends DCLogic {
     { id: 'p8', src: 'fotos/familia-08.jpg', label: 'En las montañas' },
     { id: 'p9', src: 'fotos/familia-09.jpg', label: 'Aventura en familia' },
     { id: 'p10', src: 'fotos/familia-10.jpg', label: 'De viaje' },
+    { id: 'p11', src: 'fotos/cena-familiar-con-nietos.jpg', label: 'Con sus nietos' },
+    { id: 'p12', src: 'fotos/abrazo-carinoso-en-fiesta.jpg', label: 'Celebrando' },
+    { id: 'p13', src: 'fotos/atardecer-en-la-playa-familia.jpg', label: 'En la playa' },
+    { id: 'p14', src: 'fotos/marilu-con-cigarro-en-la-habana.jpg', label: 'De viaje' },
+    { id: 'p15', src: 'fotos/marilu-soplando-un-diente-de-leon.jpg', label: 'En la naturaleza' },
+    { id: 'p16', src: 'fotos/amigas-junto-a-auto-clasico-cuba.jpg', label: 'De viaje' },
+    { id: 'p17', src: 'fotos/cena-de-gala-con-diez-invitados.jpg', label: 'Celebrando' },
+    { id: 'p18', src: 'fotos/comida-con-copas-de-vino.jpg', label: 'Buena mesa' },
+    { id: 'p19', src: 'fotos/graduacion-con-flores-de-noche.jpg', label: 'Con sus nietos' },
+    { id: 'p20', src: 'fotos/atardecer-en-la-terraza.jpg', label: 'De paseo' },
+    { id: 'p21', src: 'fotos/con-bebe-y-nieta-en-jardin.jpg', label: 'Con sus nietos' },
+    { id: 'p22', src: 'fotos/retrato-con-nietos-en-porche.jpg', label: 'Con sus nietos' },
+    { id: 'p23', src: 'fotos/paseo-en-cuatriciclo-ciudad.jpg', label: 'De paseo' },
+    { id: 'p24', src: 'fotos/cuatriciclo-junto-al-muelle.jpg', label: 'De paseo' },
+    { id: 'p25', src: 'fotos/abrazo-con-su-nieta.jpg', label: 'Con sus nietos' },
+    { id: 'p26', src: 'fotos/familia-en-ruinas-mayas.jpg', label: 'De viaje' },
+    { id: 'p27', src: 'fotos/tira-de-fotomaton-familiar.jpg', label: 'Con sus nietos' },
+    { id: 'p28', src: 'fotos/abrazo-navideno-con-nochebuenas.jpg', label: 'En familia' },
+    { id: 'p29', src: 'fotos/celebracion-familiar-con-pastel.jpg', label: 'Celebrando' },
+    { id: 'p30', src: 'fotos/de-paseo-con-pinguinos-de-peluche.jpg', label: 'Con sus nietas' },
+    { id: 'p31', src: 'fotos/grupo-de-amigas-en-evento.jpg', label: 'Entre amigas' },
+    { id: 'p32', src: 'fotos/boda-familiar-abrazo-carinoso.jpg', label: 'Celebrando' },
+    { id: 'p33', src: 'fotos/noche-de-ano-nuevo-en-pareja.jpg', label: 'Celebrando' },
+    { id: 'p34', src: 'fotos/marilu-con-bebe-recien-nacido.jpg', label: 'Con sus nietos' },
+    { id: 'p35', src: 'fotos/retrato-familiar-en-el-jardin.jpg', label: 'En familia' },
+    { id: 'p36', src: 'fotos/paseo-en-tuk-tuk-mercado-guatemala.jpg', label: 'De viaje' },
+    { id: 'p37', src: 'fotos/marilu-abrazada-por-sus-nietos.jpg', label: 'Con sus nietos' },
+    { id: 'p38', src: 'fotos/selfie-con-nieto-en-munich.jpg', label: 'De viaje' },
+    { id: 'p39', src: 'fotos/dos-amigas-elegantes-en-fiesta.jpg', label: 'Siempre con estilo' },
+    { id: 'p40', src: 'fotos/marilu-en-bahia-halong-vietnam.jpg', label: 'En Ha Long Bay' },
+    { id: 'p41', src: 'fotos/marilu-jardin-tropical-viaje.jpg', label: 'De viaje' },
+    { id: 'p42', src: 'fotos/marilu-sentada-jardin-orquideas.jpg', label: 'En la naturaleza' },
+    { id: 'p43', src: 'fotos/cena-con-amigas-restaurante.jpg', label: 'Entre amigas' },
+    { id: 'p44', src: 'fotos/grupo-amigas-sala-de-espera.jpg', label: 'Entre amigas' },
+    { id: 'p45', src: 'fotos/marilu-y-su-esposo-en-evento.jpg', label: 'En familia' },
+    { id: 'p46', src: 'fotos/marcha-el-ine-no-se-toca.jpg', label: 'Entre amigas' },
+    { id: 'p47', src: 'fotos/cumpleanos-con-nietos-en-casa.jpg', label: 'Con sus nietos' },
+    { id: 'p48', src: 'fotos/marilu-el-dia-de-su-boda.jpg', label: 'El día de su boda' },
+    { id: 'p49', src: 'fotos/marilu-con-esposo-y-nieto-bebe.jpg', label: 'Con sus nietos' },
+    { id: 'p50', src: 'fotos/selfie-marilu-con-nieta.jpg', label: 'Con sus nietos' },
+    { id: 'p51', src: 'fotos/cena-en-terraza-con-familia.jpg', label: 'Buena mesa' },
+    { id: 'p52', src: 'fotos/cumpleanos-con-amigas-bengala.jpg', label: 'Celebrando' },
+    { id: 'p53', src: 'fotos/cena-familiar-frente-al-mar.jpg', label: 'En la playa' },
+    { id: 'p54', src: 'fotos/marilu-comiendo-hot-dog-en-ny.jpg', label: 'En Nueva York' },
+    { id: 'p55', src: 'fotos/amigas-en-alberca-anos-70.jpg', label: 'Entre amigas' },
+    { id: 'p56', src: 'fotos/tres-mujeres-foto-vintage.jpg', label: 'Recuerdos' },
+    { id: 'p57', src: 'fotos/retrato-familiar-en-jardin.jpg', label: 'En familia' },
+    { id: 'p58', src: 'fotos/boda-vintage-blanco-y-negro.jpg', label: 'Recuerdos' },
+    { id: 'p59', src: 'fotos/torii-naranjas-bajo-la-lluvia.jpg', label: 'En Japón' },
+    { id: 'p60', src: 'fotos/grupo-de-amigas-evento-elegante.jpg', label: 'Entre amigas' },
+    { id: 'p61', src: 'fotos/retrato-familiar-vintage-anos-80.jpg', label: 'En familia' },
+    { id: 'p62', src: 'fotos/comida-grupo-amigos-terraza.jpg', label: 'Buena mesa' },
+    { id: 'p63', src: 'fotos/postre-en-restaurante-tropical.jpg', label: 'Buena mesa' },
+    { id: 'p64', src: 'fotos/reunion-de-mujeres-en-jardin.jpg', label: 'Entre amigas' },
+    { id: 'p65', src: 'fotos/familia-con-impermeables-en-japon.jpg', label: 'En Japón' },
+    { id: 'p66', src: 'fotos/retrato-familiar-vintage-elegante.jpg', label: 'En familia' },
+    { id: 'p67', src: 'fotos/pareja-vintage-evento-de-gala.jpg', label: 'Recuerdos' },
+    { id: 'p68', src: 'fotos/paseo-en-bicicleta-en-familia.jpg', label: 'En familia' },
+    { id: 'p69', src: 'fotos/libros-de-decoracion-en-repisa.jpg', label: 'Sus libros' },
+    { id: 'p70', src: 'fotos/globos-de-colores-en-el-parque.jpg', label: 'De paseo' },
+    { id: 'p71', src: 'fotos/familia-frente-a-convento-izamal.jpg', label: 'De viaje' },
+    { id: 'p72', src: 'fotos/cinco-amigas-frente-a-helechos.jpg', label: 'Entre amigas' },
+    { id: 'p73', src: 'fotos/marilu-soplando-velas-de-cumpleanos.jpg', label: 'Celebrando' },
+    { id: 'p74', src: 'fotos/seis-amigas-vestidos-de-colores.jpg', label: 'Entre amigas' },
+    { id: 'p75', src: 'fotos/amigas-frente-a-arbol-iluminado.jpg', label: 'Entre amigas' },
+    { id: 'p76', src: 'fotos/amigas-en-escalera-casa-de-playa.jpg', label: 'Entre amigas' },
+    { id: 'p77', src: 'fotos/selfie-con-nieta-en-restaurante.jpg', label: 'Con sus nietos' },
+    { id: 'p78', src: 'fotos/comida-de-amigas-mesa-festiva.jpg', label: 'Entre amigas' },
+    { id: 'p79', src: 'fotos/celebracion-con-amigas-en-restaurante.jpg', label: 'Entre amigas' },
+    { id: 'p80', src: 'fotos/abrazo-con-nieta-en-barco.jpg', label: 'Con sus nietos' },
+    { id: 'p81', src: 'fotos/comida-navidena-con-amigas.jpg', label: 'Entre amigas' },
+    { id: 'p82', src: 'fotos/marilu-y-esposo-con-sus-nietos.jpg', label: 'Con sus nietos' },
+    { id: 'p83', src: 'fotos/soplando-el-pastel-con-nietos.jpg', label: 'Celebrando' },
+    { id: 'p84', src: 'fotos/retrato-con-nietos-en-el-salon.jpg', label: 'Con sus nietos' },
+    { id: 'p85', src: 'fotos/marilu-con-amigos-en-evento.jpg', label: 'Celebrando' },
+    { id: 'p86', src: 'fotos/reunion-de-generaciones-en-el-jardin.jpg', label: 'Reunión en el jardín' },
+    { id: 'p87', src: 'fotos/con-su-esposo-en-el-jardin-de-noche.jpg', label: 'En pareja' },
+    { id: 'p88', src: 'fotos/festejo-con-amigas-y-bengala.jpg', label: 'Celebrando' },
+    { id: 'p89', src: 'fotos/mesa-de-gala-en-una-boda.jpg', label: 'Celebrando' },
+    { id: 'p90', src: 'fotos/visita-nocturna-en-grupo.jpg', label: 'De paseo' },
+    { id: 'p91', src: 'fotos/cumpleanos-en-familia-soplando-velas.jpg', label: 'Celebrando' },
+    { id: 'p92', src: 'fotos/ano-nuevo-con-sus-nietas.jpg', label: 'Celebrando' },
+    { id: 'p93', src: 'fotos/bajo-la-aurora-boreal.jpg', label: 'Bajo la aurora boreal' },
+    { id: 'p94', src: 'fotos/entre-fiordos-nevados.jpg', label: 'De viaje' },
+    { id: 'p95', src: 'fotos/nueve-amigas-en-el-comedor.jpg', label: 'Entre amigas' },
+    { id: 'p96', src: 'fotos/sorpresa-de-pastel-con-bengala.jpg', label: 'Celebrando' },
+    { id: 'p97', src: 'fotos/atardecer-con-nietos-junto-al-mar.jpg', label: 'Con sus nietos' },
+    { id: 'p98', src: 'fotos/atardecer-en-familia-junto-al-mar.jpg', label: 'En familia' },
+    { id: 'p99', src: 'fotos/gran-reunion-familiar-con-pastel.jpg', label: 'En familia' },
+    { id: 'p100', src: 'fotos/retrato-en-salon-verde-elegante.jpg', label: 'De paseo' },
+    { id: 'p101', src: 'fotos/paseo-con-nietos-junto-al-lago.jpg', label: 'De viaje' },
+    { id: 'p102', src: 'fotos/festejo-familiar-con-los-perritos.jpg', label: 'En familia' },
+    { id: 'p103', src: 'fotos/soplando-la-velita-con-su-esposo.jpg', label: 'Celebrando' },
+    { id: 'p104', src: 'fotos/amigos-frente-a-la-casa.jpg', label: 'Entre amigos' },
+    { id: 'p105', src: 'fotos/tarde-en-el-jardin-entre-amigos.jpg', label: 'Entre amigos' },
+    { id: 'p106', src: 'fotos/con-esposo-y-amigas-en-el-jardin.jpg', label: 'En el jardín' },
+    { id: 'p107', src: 'fotos/comida-familiar-en-patio-de-hotel.jpg', label: 'Buena mesa' },
+    { id: 'p108', src: 'fotos/con-su-nieta-en-sacre-coeur.jpg', label: 'En París' },
+    { id: 'p109', src: 'fotos/selfie-de-tres-sonrisas-al-sol.jpg', label: 'Momentos juntos' },
+    { id: 'p110', src: 'fotos/cena-de-amigas-noche-tropical.jpg', label: 'Entre amigas' },
+    { id: 'p111', src: 'fotos/cumpleanos-en-casa-con-pastel.jpg', label: 'Celebrando' },
+    { id: 'p112', src: 'fotos/grupo-de-mujeres-frente-a-obra-de-arte.jpg', label: 'Entre amigas' },
+    { id: 'p113', src: 'fotos/selfie-en-el-coche-con-nieta.jpg', label: 'Con sus nietos' },
+    { id: 'p114', src: 'fotos/en-una-boda-familiar.jpg', label: 'Celebrando' },
+    { id: 'p115', src: 'fotos/marilu-bailando-en-la-fiesta.jpg', label: 'Bailando' },
+    { id: 'p116', src: 'fotos/festejo-con-su-nieto-en-restaurante.jpg', label: 'Con sus nietos' },
+    { id: 'p117', src: 'fotos/pastelito-de-cumpleanos-en-restaurante.jpg', label: 'Celebrando' },
+    { id: 'p118', src: 'fotos/un-cafe-con-su-nieta.jpg', label: 'Con sus nietos' },
+    { id: 'p119', src: 'fotos/brindando-en-la-mesa-festiva.jpg', label: 'Celebrando' },
+    { id: 'p120', src: 'fotos/retrato-de-juventud-en-marco-de-madera.jpg', label: 'De joven' },
+    { id: 'p121', src: 'fotos/apuntes-a-mano-de-historia.jpg', label: 'Sus apuntes' },
+    { id: 'p122', src: 'fotos/apuntes-de-historia-del-arte.jpg', label: 'Sus apuntes' },
+    { id: 'p123', src: 'fotos/notas-a-mano-para-usar-el-correo.jpg', label: 'Sus apuntes' },
+    { id: 'p124', src: 'fotos/tres-amigas-riendo-foto-antigua.jpg', label: 'Entre amigas' },
+    { id: 'p125', src: 'fotos/tres-amigas-ante-casona-inglesa.jpg', label: 'De viaje' },
+    { id: 'p126', src: 'fotos/entre-roosevelt-y-churchill-en-londres.jpg', label: 'En Londres' },
+    { id: 'p127', src: 'fotos/dos-mujeres-junto-al-mar-vintage.jpg', label: 'Recuerdos' },
+    { id: 'p128', src: 'fotos/amigas-de-excursion-en-la-cascada.jpg', label: 'Entre amigas' },
+    { id: 'p129', src: 'fotos/ocho-amigas-en-el-jardin.jpg', label: 'Entre amigas' },
+    { id: 'p130', src: 'fotos/gran-reunion-de-amigas-de-gala.jpg', label: 'Entre amigas' },
+    { id: 'p131', src: 'fotos/con-su-esposo-en-un-cafe.jpg', label: 'En pareja' },
+    { id: 'p132', src: 'fotos/cena-de-mujeres-en-casa.jpg', label: 'Buena mesa' },
+    { id: 'p133', src: 'fotos/cena-familiar-en-vacaciones.jpg', label: 'En familia' },
+    { id: 'p134', src: 'fotos/cantando-en-la-fiesta.jpg', label: 'Celebrando' },
+    { id: 'p135', src: 'fotos/rompiendo-la-pinata.jpg', label: 'Celebrando' },
+    { id: 'p136', src: 'fotos/sonriente-en-el-jardin.jpg', label: 'En el jardín' },
+    { id: 'p137', src: 'fotos/comida-de-amigas-en-restaurante.jpg', label: 'Entre amigas' },
+    { id: 'p138', src: 'fotos/festejo-entre-amigas-de-rosa.jpg', label: 'Entre amigas' },
+    { id: 'p139', src: 'fotos/festejo-con-pastel-entre-amigos.jpg', label: 'Celebrando' },
   ];
 
   // ⬇️ EDITA AQUÍ — sus platillos y recetas
@@ -480,6 +621,7 @@ class Component extends DCLogic {
     songs: [], songVotes: {}, myVotes: [], newSongTitle: '', newSongArtist: '',
     form: { name: '', rel: '', type: 'texto', text: '', epoca: '', lugar: '', date: '', title: '', desc: '', photoData: null },
     lightbox: null, toast: '',
+    dispHist: [], dispPos: -1, dispPlay: true,
   };
 
   lsGet(k, fb) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : fb; } catch (e) { return fb; } }
@@ -496,6 +638,48 @@ class Component extends DCLogic {
       myVotes: this.lsGet('ml_myvotes', []),
       candles: this.lsGet('ml_candles', 128),
     });
+    // Display aleatorio: primera foto ya, y avance automático cada 5 s
+    this.displayNext();
+    this._dispTimer = setInterval(() => {
+      if (this.state.dispPlay && !this.state.lightbox) this.displayNext();
+    }, 5000);
+  }
+
+  // --- Display aleatorio sin repetición consecutiva ---
+  // Baraja todas las fotos en una "ronda"; al agotarse vuelve a barajar
+  // cuidando que la primera de la nueva ronda no repita la última mostrada.
+  allPhotos() { return this.PHOTOS_SEED.concat(this.state.userPhotos); }
+
+  shuffleArr(a) {
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      const t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  }
+
+  refillBag(lastIdx) {
+    const n = this.allPhotos().length;
+    const bag = this.shuffleArr(Array.from({ length: n }, (_, i) => i));
+    if (n > 1 && bag[0] === lastIdx) {
+      const k = 1 + Math.floor(Math.random() * (n - 1));
+      const t = bag[0]; bag[0] = bag[k]; bag[k] = t;
+    }
+    return bag;
+  }
+
+  displayNext() {
+    const s = this.state;
+    if (s.dispPos < s.dispHist.length - 1) { this.setState({ dispPos: s.dispPos + 1 }); return; }
+    if (!this.allPhotos().length) return;
+    if (!this._bag || !this._bag.length) this._bag = this.refillBag(s.dispHist[s.dispHist.length - 1]);
+    const idx = this._bag.shift();
+    const hist = s.dispHist.concat([idx]);
+    this.setState({ dispHist: hist, dispPos: hist.length - 1 });
+  }
+
+  displayPrev() {
+    if (this.state.dispPos > 0) this.setState({ dispPos: this.state.dispPos - 1 });
   }
 
   fmt(d) {
@@ -665,11 +849,36 @@ class Component extends DCLogic {
 
     const lb = s.lightbox;
 
+    // Display aleatorio
+    const dIdx = (s.dispPos >= 0 && s.dispPos < s.dispHist.length) ? s.dispHist[s.dispPos] : -1;
+    const dPhoto = (dIdx >= 0 && dIdx < allP.length) ? allP[dIdx] : null;
+    const dLabel = dPhoto && dPhoto.label ? String(dPhoto.label).trim() : '';
+    const atTip = s.dispPos === s.dispHist.length - 1;
+    const bagLeft = this._bag ? this._bag.length : 0;
+    const roundPos = allP.length ? (allP.length - bagLeft) : 0;
+    const preloadIdx = (atTip && bagLeft) ? this._bag[0] : -1;
+    const PREV_ON = 'border:1.5px solid #E3C9A6;cursor:pointer;background:#FFFCF6;color:#834CA6;padding:10px 20px;border-radius:999px;font-weight:700;font-size:14.5px;';
+    const PREV_OFF = 'border:1.5px solid #EBDDC8;cursor:default;background:#FAF4E9;color:#C9B69E;padding:10px 20px;border-radius:999px;font-weight:700;font-size:14.5px;';
+
     return {
       candles: s.candles,
       lightCandle: () => this.lightCandle(),
       timeline, photos, heroPhotos,
       photoCount: allP.length, memoryCount: allM.length,
+
+      displaySrc: dPhoto ? dPhoto.src : '',
+      displayLabel: dLabel,
+      displayHasLabel: !!dLabel, displayNoLabel: !dLabel,
+      displayHasSrc: !!(dPhoto && dPhoto.src), displayNoSrc: !(dPhoto && dPhoto.src),
+      displayOpen: () => { if (dPhoto) this.openLightbox(dPhoto); },
+      displayNext: () => this.displayNext(),
+      displayPrev: () => this.displayPrev(),
+      displayPrevStyle: s.dispPos > 0 ? PREV_ON : PREV_OFF,
+      displayCounter: roundPos + ' / ' + allP.length,
+      displayTogglePlay: () => this.setState({ dispPlay: !s.dispPlay }),
+      displayPlayLabel: s.dispPlay ? '❚❚ Pausa' : '▶ Reanudar',
+      displayHasPreload: preloadIdx >= 0 && !!allP[preloadIdx].src,
+      displayPreloadSrc: preloadIdx >= 0 ? (allP[preloadIdx].src || '') : '',
       memories, recetas, lugares, songs,
       addToTimeline: () => this.goAddMoment(),
       addPhoto: () => this.goAddPhoto(),
