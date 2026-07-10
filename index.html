@@ -4,6 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="./support.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
 </head>
 <body>
 <x-dc>
@@ -432,6 +434,18 @@ class Component extends DCLogic {
   MONTHS = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
   COLORS = ['#E07B39', '#D94E8A', '#834CA6', '#C98A2E'];
 
+  // ⬇️ Base de datos compartida (Firebase) — velitas, recuerdos, fotos y canciones de todos los visitantes
+  FIREBASE_CONFIG = {
+    apiKey: "AIzaSyAPfk0_DweyLwoRy_zKmNvrwsUBgHXagak",
+    authDomain: "memorial-marilu.firebaseapp.com",
+    projectId: "memorial-marilu",
+    storageBucket: "memorial-marilu.firebasestorage.app",
+    messagingSenderId: "994871922156",
+    appId: "1:994871922156:web:3e337d06e96aed65f204c9",
+    measurementId: "G-2PFL19FZE2"
+  };
+  CANDLES_BASE = 128; // velitas iniciales; se les suman las encendidas en la nube
+
   // ⬇️ EDITA AQUÍ — momentos base de la línea de vida (fecha AAAA-MM-DD)
   TIMELINE_SEED = [
     { id: 's1', date: '1949-01-21', title: 'Nace María Luz', text: 'Llega al mundo en la Ciudad de México, un 21 de enero.' },
@@ -638,11 +652,76 @@ class Component extends DCLogic {
       myVotes: this.lsGet('ml_myvotes', []),
       candles: this.lsGet('ml_candles', 128),
     });
+    this.initCloud();
     // Display aleatorio: primera foto ya, y avance automático cada 5 s
     this.displayNext();
     this._dispTimer = setInterval(() => {
       if (this.state.dispPlay && !this.state.lightbox) this.displayNext();
     }, 5000);
+  }
+
+  // --- Nube compartida (Firestore) ---
+  // Si Firebase no carga o las reglas lo impiden, la página sigue funcionando
+  // con localStorage (solo en este dispositivo), como antes.
+  initCloud() {
+    try {
+      if (typeof firebase === 'undefined' || !this.FIREBASE_CONFIG.apiKey) return;
+      if (!firebase.apps.length) firebase.initializeApp(this.FIREBASE_CONFIG);
+      this.db = firebase.firestore();
+    } catch (e) { console.warn('Firebase no disponible:', e); this.db = null; return; }
+    const db = this.db;
+    const warn = tag => e => console.warn('nube (' + tag + '):', e && e.code || e);
+    // Contador global de velitas, en vivo
+    db.doc('contadores/velitas').onSnapshot(d => {
+      const n = (d.exists && d.data().n) || 0;
+      this.setState({ candles: this.CANDLES_BASE + n });
+    }, warn('velitas'));
+    // Muro de recuerdos + lugares mencionados en ellos
+    db.collection('recuerdos').onSnapshot(q => {
+      const arr = this.snapArr(q);
+      const lug = arr.filter(m => m.lugar).map(m => ({
+        name: m.lugar,
+        note: 'Recordado por ' + (m.author || 'alguien') + (m.epoca ? ' · ' + m.epoca : ''),
+      }));
+      this.setState({ userMemories: arr, userLugares: lug });
+    }, warn('recuerdos'));
+    // Momentos de la línea de vida
+    db.collection('momentos').onSnapshot(q => this.setState({ userTimeline: this.snapArr(q) }), warn('momentos'));
+    // Fotos del mural
+    db.collection('fotos').onSnapshot(q => this.setState({ userPhotos: this.snapArr(q) }), warn('fotos'));
+    // Canciones agregadas por visitantes + votos globales
+    db.collection('canciones').onSnapshot(q => {
+      this.setState({ songs: this.snapArr(q).map(c => ({ id: c.id, title: c.title, artist: c.artist, base: 0 })) });
+    }, warn('canciones'));
+    db.collection('votos').onSnapshot(q => {
+      const v = {};
+      q.forEach(d => { v[d.id] = (d.data() && d.data().n) || 0; });
+      this.setState({ songVotes: v });
+    }, warn('votos'));
+  }
+
+  // QuerySnapshot → array ordenado por fecha de creación (lo pendiente de servidor va al final)
+  snapArr(q) {
+    const arr = [];
+    q.forEach(d => arr.push(Object.assign({ id: d.id }, d.data())));
+    arr.sort((a, b) => (a.t && a.t.toMillis ? a.t.toMillis() : 9e15) - (b.t && b.t.toMillis ? b.t.toMillis() : 9e15));
+    return arr;
+  }
+
+  saveLocal(lsKey, stateKey, entry) {
+    const arr = this.state[stateKey].concat([entry]);
+    this.setState({ [stateKey]: arr });
+    this.lsSet(lsKey, arr);
+  }
+
+  saveMemoryLocal(entry) {
+    this.saveLocal('ml_memories', 'userMemories', Object.assign({ id: 'u' + Date.now() }, entry));
+    if (entry.lugar) {
+      this.saveLocal('ml_lugares', 'userLugares', {
+        name: entry.lugar,
+        note: 'Recordado por ' + entry.author + (entry.epoca ? ' · ' + entry.epoca : ''),
+      });
+    }
   }
 
   // --- Display aleatorio sin repetición consecutiva ---
@@ -698,9 +777,19 @@ class Component extends DCLogic {
   }
 
   lightCandle() {
-    const n = this.state.candles + 1;
-    this.setState({ candles: n });
-    this.lsSet('ml_candles', n);
+    if (this.db) {
+      this.db.doc('contadores/velitas')
+        .set({ n: firebase.firestore.FieldValue.increment(1) }, { merge: true })
+        .catch(() => {
+          const n = this.state.candles + 1;
+          this.setState({ candles: n });
+          this.lsSet('ml_candles', n);
+        });
+    } else {
+      const n = this.state.candles + 1;
+      this.setState({ candles: n });
+      this.lsSet('ml_candles', n);
+    }
     this.toastMsg('Encendiste una velita en su memoria');
   }
 
@@ -711,11 +800,30 @@ class Component extends DCLogic {
   goAddMoment() { this.setF('type', 'momento'); this.scrollTo('compartir'); }
   goAddPhoto() { this.setF('type', 'foto'); this.scrollTo('compartir'); }
 
+  // Lee la foto y la comprime (máx 1100 px, JPEG) para que quepa en la nube (límite 1 MB)
   onPhotoFile(e) {
     const file = e.target.files && e.target.files[0];
     if (!file) return;
     const r = new FileReader();
-    r.onload = ev => this.setF('photoData', ev.target.result);
+    r.onload = ev => {
+      const raw = ev.target.result;
+      const img = new Image();
+      img.onload = () => {
+        try {
+          const MAX = 1100;
+          const k = Math.min(1, MAX / Math.max(img.width, img.height));
+          const c = document.createElement('canvas');
+          c.width = Math.round(img.width * k);
+          c.height = Math.round(img.height * k);
+          c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+          let q = 0.8, out = c.toDataURL('image/jpeg', q);
+          while (out.length > 900000 && q > 0.35) { q -= 0.1; out = c.toDataURL('image/jpeg', q); }
+          this.setF('photoData', out);
+        } catch (err) { this.setF('photoData', raw); }
+      };
+      img.onerror = () => this.setF('photoData', raw);
+      img.src = raw;
+    };
     r.readAsDataURL(file);
   }
 
@@ -726,33 +834,38 @@ class Component extends DCLogic {
 
     if (f.type === 'momento') {
       if (!f.date || !f.title.trim()) { this.toastMsg('Falta la fecha o el título del momento'); return; }
-      const entry = { id: 'u' + Date.now(), date: f.date, title: f.title.trim(), text: f.desc.trim(), kind: 'user', author: f.name.trim() };
-      const arr = this.state.userTimeline.concat([entry]);
-      this.setState({ userTimeline: arr, form: this.blankForm() });
-      this.lsSet('ml_timeline', arr);
+      const entry = { date: f.date, title: f.title.trim(), text: f.desc.trim(), kind: 'user', author: f.name.trim() };
+      if (this.db) {
+        this.db.collection('momentos').add(Object.assign({ t: firebase.firestore.FieldValue.serverTimestamp() }, entry))
+          .catch(() => this.saveLocal('ml_timeline', 'userTimeline', Object.assign({ id: 'u' + Date.now() }, entry)));
+      } else {
+        this.saveLocal('ml_timeline', 'userTimeline', Object.assign({ id: 'u' + Date.now() }, entry));
+      }
+      this.setState({ form: this.blankForm() });
       this.toastMsg('¡Gracias! Tu momento se añadió a su línea de vida');
       this.scrollTo('vida');
     } else if (f.type === 'foto') {
       if (!f.photoData) { this.toastMsg('Elige una foto para subir'); return; }
-      const entry = { id: 'u' + Date.now(), src: f.photoData, label: f.text.trim() || 'Un recuerdo', author: f.name.trim() };
-      const arr = this.state.userPhotos.concat([entry]);
-      this.setState({ userPhotos: arr, form: this.blankForm() });
-      this.lsSet('ml_photos', arr);
+      const entry = { src: f.photoData, label: f.text.trim() || 'Un recuerdo', author: f.name.trim() };
+      if (this.db) {
+        this.db.collection('fotos').add(Object.assign({ t: firebase.firestore.FieldValue.serverTimestamp() }, entry))
+          .catch(() => this.saveLocal('ml_photos', 'userPhotos', Object.assign({ id: 'u' + Date.now() }, entry)));
+      } else {
+        this.saveLocal('ml_photos', 'userPhotos', Object.assign({ id: 'u' + Date.now() }, entry));
+      }
+      this.setState({ form: this.blankForm() });
       this.toastMsg('¡Gracias! Tu foto ya está en el mural');
       this.scrollTo('galeria');
     } else {
       if (!f.text.trim()) { this.toastMsg('Escribe tu recuerdo'); return; }
-      const entry = { id: 'u' + Date.now(), text: f.text.trim(), author: f.name.trim(), rel: f.rel.trim(), epoca: f.epoca.trim(), photo: f.photoData || null };
-      const arr = this.state.userMemories.concat([entry]);
-      this.setState({ userMemories: arr, form: this.blankForm() });
-      this.lsSet('ml_memories', arr);
-      const lugar = f.lugar.trim();
-      if (lugar) {
-        const lentry = { name: lugar, note: 'Recordado por ' + f.name.trim() + (f.epoca.trim() ? ' · ' + f.epoca.trim() : '') };
-        const larr = this.state.userLugares.concat([lentry]);
-        this.setState({ userLugares: larr });
-        this.lsSet('ml_lugares', larr);
+      const entry = { text: f.text.trim(), author: f.name.trim(), rel: f.rel.trim(), epoca: f.epoca.trim(), lugar: f.lugar.trim(), photo: f.photoData || null };
+      if (this.db) {
+        this.db.collection('recuerdos').add(Object.assign({ t: firebase.firestore.FieldValue.serverTimestamp() }, entry))
+          .catch(() => this.saveMemoryLocal(entry));
+      } else {
+        this.saveMemoryLocal(entry);
       }
+      this.setState({ form: this.blankForm() });
       this.toastMsg('¡Gracias por compartir este recuerdo!');
       this.scrollTo('muro');
     }
@@ -760,22 +873,44 @@ class Component extends DCLogic {
 
   voteSong(id) {
     const my = this.state.myVotes.slice();
-    const votes = Object.assign({}, this.state.songVotes);
     const idx = my.indexOf(id);
-    if (idx >= 0) { my.splice(idx, 1); votes[id] = (votes[id] || 0) - 1; }
-    else { my.push(id); votes[id] = (votes[id] || 0) + 1; }
-    this.setState({ myVotes: my, songVotes: votes });
-    this.lsSet('ml_myvotes', my); this.lsSet('ml_songvotes', votes);
+    const delta = idx >= 0 ? -1 : 1;
+    if (idx >= 0) my.splice(idx, 1); else my.push(id);
+    if (this.db) {
+      this.db.doc('votos/' + id)
+        .set({ n: firebase.firestore.FieldValue.increment(delta) }, { merge: true })
+        .catch(e => console.warn('nube (voto):', e && e.code || e));
+      this.setState({ myVotes: my });
+      this.lsSet('ml_myvotes', my);
+    } else {
+      const votes = Object.assign({}, this.state.songVotes);
+      votes[id] = (votes[id] || 0) + delta;
+      this.setState({ myVotes: my, songVotes: votes });
+      this.lsSet('ml_myvotes', my); this.lsSet('ml_songvotes', votes);
+    }
   }
 
   addSong() {
-    const t = this.state.newSongTitle.trim();
-    if (!t) { this.toastMsg('Escribe el nombre de la canción'); return; }
-    const entry = { id: 'us' + Date.now(), title: t, artist: this.state.newSongArtist.trim() || 'Artista', base: 1 };
-    const arr = this.state.songs.concat([entry]);
-    const my = this.state.myVotes.concat([entry.id]);
-    this.setState({ songs: arr, myVotes: my, newSongTitle: '', newSongArtist: '' });
-    this.lsSet('ml_songs', arr); this.lsSet('ml_myvotes', my);
+    const title = this.state.newSongTitle.trim();
+    if (!title) { this.toastMsg('Escribe el nombre de la canción'); return; }
+    const artist = this.state.newSongArtist.trim() || 'Artista';
+    if (this.db) {
+      const ref = this.db.collection('canciones').doc();
+      ref.set({ title: title, artist: artist, t: firebase.firestore.FieldValue.serverTimestamp() })
+        .catch(e => console.warn('nube (cancion):', e && e.code || e));
+      this.db.doc('votos/' + ref.id)
+        .set({ n: firebase.firestore.FieldValue.increment(1) }, { merge: true })
+        .catch(e => console.warn('nube (voto):', e && e.code || e));
+      const my = this.state.myVotes.concat([ref.id]);
+      this.setState({ myVotes: my, newSongTitle: '', newSongArtist: '' });
+      this.lsSet('ml_myvotes', my);
+    } else {
+      const entry = { id: 'us' + Date.now(), title: title, artist: artist, base: 1 };
+      const arr = this.state.songs.concat([entry]);
+      const my = this.state.myVotes.concat([entry.id]);
+      this.setState({ songs: arr, myVotes: my, newSongTitle: '', newSongArtist: '' });
+      this.lsSet('ml_songs', arr); this.lsSet('ml_myvotes', my);
+    }
     this.toastMsg('¡Canción agregada con tu voto!');
   }
 
