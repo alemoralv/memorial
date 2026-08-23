@@ -8,8 +8,8 @@
 <meta property="og:title" content="María Luz Galindo Rodríguez · 1949 – 2026">
 <meta property="og:description" content="Un álbum abierto de su vida. Cualquiera puede añadir una fotografía, un recuerdo o una receta suya.">
 <meta property="og:image" content="https://alemoralv.github.io/memorial/fotos/v/marilu-soplando-un-diente-de-leon.webp">
-<meta name="theme-color" content="#0E0D0B">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%230E0D0B'/><circle cx='16' cy='16' r='6' fill='%23E0654A'/></svg>">
+<meta name="theme-color" content="#11241C">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%2311241C'/><circle cx='16' cy='16' r='6' fill='%23F2789C'/></svg>">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -19,16 +19,19 @@
 
 <style>
   /* ── The whole theme: six colours and two faces. ─────────────────────────
-     Warm off-black ground, bone ink, one accent. The accent is the red of a
-     china marker, the pencil a photo editor uses to ring the keepers on a
-     contact sheet, which is what this page's one bespoke interaction is. */
+     A deep green wall, beige type, and one accent: pink. The green is dark
+     enough to hang photographs on and green enough to read as green rather
+     than as black. Pink is hers, it is all over the archive, and it is what
+     rings the keeper on the contact sheet.
+     Measured on the render: beige on green 13.4:1, pink on green 6.1:1,
+     green on pink 6.1:1, secondary beige on green 7.3:1. */
   :root {
-    --sc-canvas:     #0E0D0B;
-    --sc-surface:    #171512;
-    --sc-ink:        #F0EBE1;
-    --sc-ink-soft:   #A39A8C;
-    --sc-accent:     #E0654A;
-    --sc-accent-ink: #17100D;
+    --sc-canvas:     #11241C;
+    --sc-surface:    #183328;
+    --sc-ink:        #F2E8D5;
+    --sc-ink-soft:   #B0AE9C;
+    --sc-accent:     #F2789C;
+    --sc-accent-ink: #11241C;
 
     --sc-font-display: "Bodoni Moda", Didot, Georgia, serif;
     --sc-font-text:    "Archivo", system-ui, sans-serif;
@@ -37,7 +40,7 @@
        rather than left pointing at a face this page never asked for. */
     --sc-font-mono:    ui-monospace, "SFMono-Regular", Menlo, monospace;
 
-    --sc-shadow-color: 28 30% 2%;
+    --sc-shadow-color: 155 50% 2%;
     --sc-r-sm: 0px; --sc-r-md: 0px; --sc-r-lg: 0px; --sc-r-pill: 0px;
 
     /* The contact sheet's height. Constant, and reserved from the first
@@ -141,6 +144,17 @@
   .ella__note { margin: var(--sc-6) 0 0; font-size: var(--sc-t-sm);
                 color: var(--sc-ink-soft); max-width: 26ch; line-height: 1.6; }
   .ella__note b { color: var(--sc-ink); font-weight: 500; font-variant-numeric: tabular-nums; }
+
+  /* La velita es lo primero que se puede hacer al llegar, así que vive aquí y
+     no al final: encenderla no cuesta nada y es la puerta de entrada a dejar
+     algo más. */
+  .velas { margin-top: var(--sc-6); padding-top: var(--sc-5);
+           border-top: 1px solid var(--sc-hairline); }
+  .velas__n { margin: 0 0 var(--sc-4); font-size: var(--sc-t-sm); color: var(--sc-ink-soft); }
+  .velas__n b { font-family: var(--sc-font-display); font-weight: 500;
+                font-size: var(--sc-t-xl); color: var(--sc-accent);
+                font-variant-numeric: tabular-nums; margin-right: 0.35rem; }
+  .velas .btn--ghost { width: auto; }
 
   /* ── act 2 · Su vida, a rail ────────────────────────────────────────────── */
   .rail { display: flex; align-items: center; gap: 0; will-change: transform; }
@@ -349,12 +363,14 @@
   .hoja__in { display: flex; align-items: stretch; }
   .hoja__lbl { flex: 0 0 auto; display: flex; flex-direction: column; justify-content: center;
                padding: 0 var(--sc-4); border-right: 1px solid var(--sc-hairline);
-               font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase;
-               color: var(--sc-ink-soft); line-height: 1.5; }
+               font-size: var(--sc-t-xs); letter-spacing: 0.09em; text-transform: uppercase;
+               color: var(--sc-ink-soft); line-height: 1.45; white-space: nowrap; }
   .hoja__lbl b { color: var(--sc-ink); font-weight: 500; font-variant-numeric: tabular-nums; }
   .hoja__strip { flex: 1 1 auto; display: flex; gap: 3px; padding: 6px;
                  overflow-x: auto; overflow-y: hidden; scroll-behavior: smooth;
                  scrollbar-width: thin; }
+  /* Una celda que todavía espera sus bytes se lee como un hueco negro. Con el
+     tono de superficie se lee como lo que es: un lugar ya ocupado. */
   .cell { flex: 0 0 auto; width: 58px; height: 58px; padding: 0; border: 0;
           background: var(--sc-surface); cursor: pointer; position: relative;
           opacity: 0; animation: cellin 420ms var(--sc-ease-out) forwards; }
@@ -380,13 +396,38 @@
   .lb { position: fixed; inset: 0; z-index: 90; display: none;
         background: color-mix(in oklab, var(--sc-canvas) 92%, #000);
         padding: clamp(1rem, 4vw, 3rem); }
-  .lb[open] { display: grid; grid-template-rows: 1fr auto; gap: var(--sc-5);
+  /* `minmax(0, 1fr)` y no `1fr`: contra una pista `fr` el alto en porcentaje no
+     resuelve, la imagen se pinta a tamaño natural y empuja el mando fuera de
+     la pantalla. */
+  .lb[open] { display: grid; grid-template-rows: minmax(0, 1fr) auto; gap: var(--sc-5);
               place-items: center; }
-  .lb img { max-width: 100%; max-height: 100%; object-fit: contain; box-shadow: var(--sc-e3); }
+  .lb :is(img, video) { max-width: 100%; max-height: 100%; min-height: 0;
+                        object-fit: contain; box-shadow: var(--sc-e3); }
   .lb__cap { text-align: center; max-width: 46ch; }
   .lb__x { position: absolute; top: var(--sc-4); right: var(--sc-5); background: transparent;
            border: 1px solid var(--sc-hairline-strong); color: var(--sc-ink);
-           width: 2.4rem; height: 2.4rem; cursor: pointer; font-size: 1.1rem; line-height: 1; }
+           width: 2.4rem; height: 2.4rem; cursor: pointer; font-size: 1.1rem; line-height: 1;
+           z-index: 2; }
+  .lb__mando { display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+               margin-top: var(--sc-5); }
+  .lb__mando button { width: 2.4rem; height: 2.4rem; background: transparent;
+                      border: 1px solid var(--sc-hairline-strong); color: var(--sc-ink);
+                      cursor: pointer; font-size: var(--sc-t-sm); line-height: 1;
+                      transition: color var(--sc-d-fast) var(--sc-ease-out),
+                                  border-color var(--sc-d-fast) var(--sc-ease-out); }
+  .lb__mando button:active { transform: translateY(1px); }
+  @media (hover: hover) and (pointer: fine) {
+    .lb__mando button:hover { color: var(--sc-accent); border-color: var(--sc-accent); }
+  }
+  #lb-cuenta { margin-left: var(--sc-3); font-size: var(--sc-t-xs); letter-spacing: 0.09em;
+               text-transform: uppercase; color: var(--sc-ink-soft);
+               font-variant-numeric: tabular-nums; }
+  /* dónde vas de las 190: es dato, no decoración */
+  .lb__pista { position: absolute; left: 0; right: 0; bottom: 0; height: 2px;
+               background: var(--sc-hairline); }
+  .lb__pista i { display: block; height: 100%; background: var(--sc-accent);
+                 transform-origin: 0 50%; transform: scaleX(0);
+                 transition: transform 320ms var(--sc-ease-out); }
 
   /* ── toast ──────────────────────────────────────────────────────────────── */
   .toast { position: fixed; left: 50%; z-index: 95; translate: -50% 0;
@@ -414,8 +455,19 @@
     .idx a { border: 0 !important; padding: 0; white-space: nowrap; display: block; }
     .idx a i { display: none; }
     .idx a[aria-current="true"] b::before { display: none; }
-    .ella { grid-template-columns: 1fr; gap: var(--sc-6); align-content: center; }
-    .ella__plate img { height: min(46vh, 22rem); }
+    /* El recibidor lleva foto, cédula, nombre, fechas, la nota y la velita.
+       En una pantalla de 844 px eso no cabe entero, y un hero que se sale de
+       la pantalla queda cortado arriba y abajo por el clip de la escena. */
+    .ella { grid-template-columns: 1fr; gap: var(--sc-4); align-content: center; }
+    .ella__plate img { height: min(27vh, 13rem); }
+    .ella__plate .ced { margin-top: var(--sc-3) !important; }
+    .ella__plate .ced__t { font-size: var(--sc-t-base) !important; }
+    .ella__dl { margin-top: var(--sc-4); gap: 0.4rem; }
+    .ella__dl div { padding-top: 0.45rem; }
+    .ella__note { margin-top: var(--sc-4); }
+    .velas { margin-top: var(--sc-4); padding-top: var(--sc-4); }
+    .velas__n { margin-bottom: var(--sc-3); }
+    .velas .btn--ghost { padding: 0.7rem 1rem; }
     .alb { grid-template-columns: 1fr; gap: var(--sc-5); align-content: center; }
     .alb__frame { height: min(46vh, 24rem); }
     .alb__cap { min-height: 0; }
@@ -459,7 +511,7 @@
 <main>
 
   <!-- ══ 1 · ELLA. Object one, already in view, already labelled. ══ -->
-  <section id="ella" data-sc-act="pin" data-sc-span="1.5" data-sc-drift="#0E0D0B">
+  <section id="ella" data-sc-act="pin" data-sc-span="1.5" data-sc-drift="#11241C">
     <div data-sc-stage class="stage-pad">
       <div class="room ella">
         <div class="ella__plate" data-sc-reveal="up" data-sc-reveal-at="0 0.3">
@@ -481,13 +533,17 @@
           </dl>
           <p class="ella__note">Colección de <b data-n="fotos">143</b> fotografías reunida
              por su familia y sus amigas. Sigue abierta.</p>
+          <div class="velas">
+            <p class="velas__n"><b data-n="velitas">–</b> velitas encendidas</p>
+            <button class="btn btn--ghost" type="button" id="velita">Encender una velita</button>
+          </div>
         </div>
       </div>
     </div>
   </section>
 
   <!-- ══ 2 · SU VIDA. Lateral travel reads as chronology. ══ -->
-  <section id="vida" data-sc-act="pan" data-sc-span="2.4" data-sc-drift="#121110">
+  <section id="vida" data-sc-act="pan" data-sc-span="2.4" data-sc-drift="#142A20">
     <div data-sc-stage class="stage-pad">
       <div class="rail" data-sc-pan="0.04" id="rail">
         <div class="rail__lead">
@@ -505,7 +561,7 @@
   </section>
 
   <!-- ══ 3 · EL ÁLBUM. The peak. 5.5vh, more than three times any other act. ══ -->
-  <section id="album" data-sc-act="pin" data-sc-span="5.8" data-sc-drift="#0A0908">
+  <section id="album" data-sc-act="pin" data-sc-span="11" data-sc-drift="#0D1D16">
     <div data-sc-stage class="stage-pad">
       <div class="room alb">
         <div class="alb__frame" id="alb-frame"><!-- slides injected --></div>
@@ -514,14 +570,15 @@
           <p class="ced__f" id="alb-f">Van pasando conforme bajas. Tú llevas el paso.</p>
           <p class="ced__p" id="alb-p">Archivo de la familia</p>
           <p class="alb__hint">Cada fotografía que pasa se queda abajo, en la hoja
-             de contactos. Puedes volver a cualquiera desde ahí.</p>
+             de contactos. Pícale a cualquiera y se vuelve un pase automático de
+             las 190.</p>
         </div>
       </div>
     </div>
   </section>
 
   <!-- ══ 4 · LO QUE DEJÓ. The one act that reads as a document. ══ -->
-  <section id="muro" class="sc-section" data-sc-act="flow" data-sc-drift="#151312">
+  <section id="muro" class="sc-section" data-sc-act="flow" data-sc-drift="#173226">
     <div class="room stage-pad">
       <div data-sc-in>
         <h2 class="ella__name">Lo que dejó en cada quien</h2>
@@ -537,7 +594,7 @@
   </section>
 
   <!-- ══ 5 · SU COCINA, SUS LUGARES. A rail: lateral travel reads as range. ══ -->
-  <section id="cocina" data-sc-act="pan" data-sc-span="1.8" data-sc-drift="#121110">
+  <section id="cocina" data-sc-act="pan" data-sc-span="1.8" data-sc-drift="#142A20">
     <div data-sc-stage class="stage-pad">
       <div class="rail" data-sc-pan="0.04" id="rail-cosas">
         <div class="rail__lead">
@@ -556,7 +613,7 @@
   </section>
 
   <!-- ══ 6 · SUS CANCIONES, Y LA PLACA. ══ -->
-  <section id="cierre" class="sc-section sc-section--tight" data-sc-act="flow" data-sc-drift="#0F0E0C">
+  <section id="cierre" class="sc-section sc-section--tight" data-sc-act="flow" data-sc-drift="#12261D">
     <div class="room stage-pad">
       <div class="close">
 
@@ -657,7 +714,7 @@
   </section>
 
   <!-- ══ 7 · SU ÚLTIMA PALABRA. Short, pinned, holds to the end. ══ -->
-  <section id="final" data-sc-act="pin" data-sc-span="1.2" data-sc-drift="#0B0A09">
+  <section id="final" data-sc-act="pin" data-sc-span="1.2" data-sc-drift="#0E1F18">
     <div data-sc-stage class="stage-pad">
       <div class="room fin" data-sc-cue="0 1 0 0">
         <div class="tally">
@@ -666,7 +723,6 @@
           <div><b data-n="recuerdos">–</b><span>recuerdos</span></div>
           <div><b data-n="velitas">–</b><span>velitas encendidas</span></div>
         </div>
-        <button class="btn btn--ghost" type="button" id="velita">Encender una velita</button>
         <div class="lastword">
           <q>so beat it</q>
           <p>Ella tiene la última palabra</p>
@@ -680,17 +736,24 @@
 <!-- ══ the signature move ══ -->
 <aside class="hoja" id="hoja" aria-label="Hoja de contactos">
   <div class="hoja__in">
-    <div class="hoja__lbl">Hoja de<br>contactos<br><b id="hoja-n">0</b></div>
+    <div class="hoja__lbl">Hoja de<br>contactos <b id="hoja-n">0</b></div>
     <div class="hoja__strip" id="hoja-strip" role="list"></div>
   </div>
 </aside>
 
-<div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Fotografía">
-  <button class="lb__x" id="lb-x" aria-label="Cerrar">✕</button>
+<div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Pase de fotografías">
+  <button class="lb__x" id="lb-x" aria-label="Cerrar el pase">✕</button>
   <div class="lb__cap ced">
     <p class="ced__t" id="lb-t" style="font-size: var(--sc-t-lg)"></p>
     <p class="ced__p" id="lb-p" style="justify-content: center"></p>
+    <div class="lb__mando">
+      <button id="lb-ant" aria-label="La anterior">◂</button>
+      <button id="lb-pausa" aria-pressed="false" aria-label="Pausar el pase">❚❚</button>
+      <button id="lb-sig" aria-label="La siguiente">▸</button>
+      <span id="lb-cuenta" aria-live="off"></span>
+    </div>
   </div>
+  <div class="lb__pista" aria-hidden="true"><i id="lb-barra"></i></div>
 </div>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>

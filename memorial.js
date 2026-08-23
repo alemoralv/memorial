@@ -37,8 +37,8 @@
 
   // How many photographs are shown large in the album act. The rest arrive in
   // the contact sheet when the run ends, which is the moment the page is for.
-  var CORRIDA = 20;
-  var FIN_CORRIDA = 0.86;   // act progress where the run ends and the flood lands
+  var CORRIDA = 51;
+  var FIN_CORRIDA = 0.88;   // act progress where the run ends and the flood lands
 
   var MESES = ["enero","febrero","marzo","abril","mayo","junio","julio",
                "agosto","septiembre","octubre","noviembre","diciembre"];
@@ -80,18 +80,48 @@
      life, then the people. After these the contributed photographs take over
      and the credits start carrying other people's names. */
   var CORRIDA_ARCHIVO = [
+    // de joven
+    "retrato-de-juventud-en-marco-de-madera",
+    "boda-vintage-blanco-y-negro",
     "marilu-el-dia-de-su-boda",
+    "dos-mujeres-junto-al-mar-vintage",
     "amigas-en-alberca-anos-70",
-    "marilu-sentada-jardin-orquideas",
+    "tres-amigas-riendo-foto-antigua",
+    "retrato-familiar-vintage-anos-80",
+    // madre
+    "marilu-con-bebe-recien-nacido",
+    "con-bebe-y-nieta-en-jardin",
+    "retrato-familiar-en-el-jardin",
+    // su carácter
     "marilu-con-cigarro-en-la-habana",
+    "amigas-junto-a-auto-clasico-cuba",
     "entre-roosevelt-y-churchill-en-londres",
-    "bajo-la-aurora-boreal",
+    "marilu-comiendo-hot-dog-en-ny",
     "marcha-el-ine-no-se-toca",
+    // el mundo
+    "bajo-la-aurora-boreal",
+    "entre-fiordos-nevados",
+    "marilu-en-bahia-halong-vietnam",
+    "torii-naranjas-bajo-la-lluvia",
+    "familia-con-impermeables-en-japon",
+    "con-su-nieta-en-sacre-coeur",
+    "familia-frente-a-convento-izamal",
+    // adentro
     "apuntes-de-historia-del-arte",
+    "libros-de-decoracion-en-repisa",
+    // la fiesta
     "marilu-bailando-en-la-fiesta",
+    "cantando-en-la-fiesta",
+    "rompiendo-la-pinata",
+    "gran-reunion-de-amigas-de-gala",
+    "cumpleanos-con-amigas-bengala",
+    // los suyos
     "con-su-esposo-en-un-cafe",
+    "con-su-esposo-en-el-jardin-de-noche",
     "marilu-abrazada-por-sus-nietos",
-    "gran-reunion-de-amigas-de-gala"
+    "atardecer-con-nietos-junto-al-mar",
+    "un-cafe-con-su-nieta",
+    "marilu-soplando-velas-de-cumpleanos"
   ];
 
   // ── estado ───────────────────────────────────────────────────────────────
@@ -160,10 +190,23 @@
       .then(function (r) { return r.json(); })
       .then(function (j) {
         var s = (j.fields && j.fields.src && j.fields.src.stringValue) || "";
-        S.srcs[id] = s; return s;
+        S.srcs[id] = s;
+        llenarCelda(id, s);
+        return s;
       })
       .catch(function () { return ""; });
     return pidiendo[id];
+  }
+
+  // La celda de la hoja se llena en cuanto los bytes existen, sin importar
+  // quién los pidió: el proyector, el álbum o la propia hoja.
+  function llenarCelda(id, src) {
+    if (!src) return;
+    var b = document.querySelector('.cell[data-id="gift:' + id + '"]');
+    if (b && !b.firstChild) {
+      var im = new Image(); im.src = src; im.alt = ""; im.decoding = "async";
+      b.appendChild(im);
+    }
   }
 
   // ── índice de fotos subidas, por REST y con máscara ──────────────────────
@@ -223,6 +266,9 @@
 
   function pintarCorrida() {
     var frame = $("#alb-frame");
+    frame.onclick = function () { var o = S.corrida[albActual]; if (o) abrir(o); };
+    frame.style.cursor = "zoom-in";
+    frame.title = "Ver todas en pase automático";
     frame.innerHTML = S.corrida.map(function (o, i) {
       var src = vistaSrc(o);
       return '<figure class="alb__slide" data-i="' + i + '">' +
@@ -360,49 +406,121 @@
     }
   }
 
-  // ── lightbox ─────────────────────────────────────────────────────────────
+  /* ── el proyector ─────────────────────────────────────────────────────────
+     Picar cualquier foto de la hoja de contactos (o la del álbum) abre el pase
+     completo: las 190, en orden, avanzando solas desde la que picaste. Es lo
+     contrario del defecto de la página: aquí bajar es tu trabajo, y el pase
+     automático sólo existe cuando alguien lo pide, para sentarse a verlas. */
+  var PASO = 5000;
   var lb = $("#lb"), lbVid = null, ultimoFoco = null;
-  // La imagen del lightbox se crea cuando ya hay algo que enseñar: un <img>
-  // sin src en el documento es una caja rota esperando su turno.
+  var proy = { lista: [], i: 0, timer: 0, corriendo: false };
+
   var lbImg = new Image();
   lbImg.alt = ""; lbImg.hidden = true;
   lb.insertBefore(lbImg, $("#lb .lb__cap"));
+
+  function todasLasFotos() { return ARCH.concat(S.subidas); }
+
   function abrir(o) {
+    var todas = todasLasFotos();
+    var i = todas.findIndex(function (x) { return x.k === o.k && x.id === o.id; });
+    abrirProyector(todas, i < 0 ? 0 : i);
+  }
+
+  function abrirProyector(lista, i) {
     ultimoFoco = document.activeElement;
-    var pintar = function (src) {
-      if (lbVid) { lbVid.remove(); lbVid = null; }
+    proy.lista = lista;
+    lb.setAttribute("open", "");
+    document.body.style.overflow = "hidden";
+    irA(i);
+    reanudar();
+    $("#lb-x").focus();
+  }
+
+  function irA(i) {
+    var n = proy.lista.length;
+    if (!n) return;
+    proy.i = ((i % n) + n) % n;
+    var o = proy.lista[proy.i];
+    pintarProyector(o);
+    precargar(proy.i + 1);
+    precargar(proy.i + 2);
+  }
+
+  function precargar(i) {
+    var o = proy.lista[((i % proy.lista.length) + proy.lista.length) % proy.lista.length];
+    if (!o) return;
+    if (o.k === "gift") { pedirSrc(o.id); return; }
+    var im = new Image(); im.src = vistaSrc(o);
+  }
+
+  function pintarProyector(o) {
+    var poner = function (src) {
+      if (proy.lista[proy.i] !== o) return;          // llegó tarde, ya pasamos
+      if (lbVid) { lbVid.pause(); lbVid.remove(); lbVid = null; }
       if (o.v) {
-        lbImg.hidden = true;
-        lbImg.removeAttribute("src");
+        // el único vídeo del archivo: el pase se detiene y sigue cuando termina
+        lbImg.hidden = true; lbImg.removeAttribute("src");
+        pausar();
         lbVid = document.createElement("video");
         lbVid.src = "fotos/v/" + o.id + ".mp4";
         lbVid.poster = src; lbVid.controls = true; lbVid.playsInline = true;
-        lbVid.style.cssText = "max-width:100%;max-height:100%;box-shadow:var(--sc-e3)";
+        lbVid.addEventListener("ended", function () { siguiente(); reanudar(); });
         lb.insertBefore(lbVid, lbImg);
-      } else {
+      } else if (src) {
         lbImg.src = src; lbImg.alt = o.c; lbImg.hidden = false;
       }
       $("#lb-t").textContent = o.c + (o.f ? " " + o.f : "");
       $("#lb-p").textContent = procedencia(o);
       $("#lb-p").classList.toggle("ced__p--gift", o.k === "gift");
-      lb.setAttribute("open", "");
-      document.body.style.overflow = "hidden";
-      $("#lb-x").focus();
+      $("#lb-cuenta").textContent = (proy.i + 1) + " de " + proy.lista.length;
+      $("#lb-barra").style.transform = "scaleX(" + ((proy.i + 1) / proy.lista.length) + ")";
     };
-    if (o.k === "gift" && !S.srcs[o.id]) pedirSrc(o.id).then(pintar);
-    else pintar(vistaSrc(o));
+    if (o.k === "gift" && !S.srcs[o.id]) { lbImg.hidden = true; pedirSrc(o.id).then(poner); }
+    else poner(vistaSrc(o));
   }
+
+  function siguiente() { irA(proy.i + 1); }
+  function anterior()  { irA(proy.i - 1); }
+
+  function reanudar() {
+    if (prefiereQuieto()) { pausar(); return; }   // sin movimiento no hay pase solo
+    clearInterval(proy.timer);
+    proy.corriendo = true;
+    proy.timer = setInterval(function () { if (!lbVid) siguiente(); }, PASO);
+    marcarPausa();
+  }
+  function pausar() {
+    clearInterval(proy.timer); proy.corriendo = false; marcarPausa();
+  }
+  function alternarPausa() { proy.corriendo ? pausar() : reanudar(); }
+  function marcarPausa() {
+    var b = $("#lb-pausa");
+    b.textContent = proy.corriendo ? "❚❚" : "▶";
+    b.setAttribute("aria-label", proy.corriendo ? "Pausar el pase" : "Reanudar el pase");
+    b.setAttribute("aria-pressed", String(!proy.corriendo));
+  }
+
   function cerrar() {
+    pausar();
     lb.removeAttribute("open");
     if (lbVid) { lbVid.pause(); lbVid.remove(); lbVid = null; }
-    lbImg.hidden = true;
+    lbImg.hidden = true; lbImg.removeAttribute("src");
     document.body.style.overflow = "";
     if (ultimoFoco) ultimoFoco.focus();
   }
+
   $("#lb-x").addEventListener("click", cerrar);
+  $("#lb-pausa").addEventListener("click", alternarPausa);
+  $("#lb-sig").addEventListener("click", function () { siguiente(); if (proy.corriendo) reanudar(); });
+  $("#lb-ant").addEventListener("click", function () { anterior(); if (proy.corriendo) reanudar(); });
   lb.addEventListener("click", function (e) { if (e.target === lb) cerrar(); });
   document.addEventListener("keydown", function (e) {
-    if (e.key === "Escape" && lb.hasAttribute("open")) cerrar();
+    if (!lb.hasAttribute("open")) return;
+    if (e.key === "Escape") { cerrar(); }
+    else if (e.key === "ArrowRight") { siguiente(); if (proy.corriendo) reanudar(); }
+    else if (e.key === "ArrowLeft") { anterior(); if (proy.corriendo) reanudar(); }
+    else if (e.key === " ") { e.preventDefault(); alternarPausa(); }
   });
 
   function prefiereQuieto() {

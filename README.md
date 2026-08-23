@@ -8,8 +8,15 @@ La página es una **colección**: cada fotografía, cada receta y cada lugar lle
 la misma cédula (título, dato, procedencia), y las 141 del archivo de la familia
 se etiquetan igual que las que trae la gente. Al bajar, las fotografías van
 pasando **al ritmo de tu scroll**, nunca solas, y cada una que pasa se queda en
-la hoja de contactos fija abajo. Esa hoja es el índice de la página, se puede
-picar, y su última celda siempre está vacía: es la que falta, la tuya.
+la hoja de contactos fija abajo. Esa hoja es el índice de la página, y su última
+celda siempre está vacía: es la que falta, la tuya.
+
+Y si quieres sentarte a verlas en lugar de bajarlas tú, **pícale a cualquier
+foto de la hoja y arranca el pase automático de las 190**, con pausa, flechas y
+teclado. Es la única parte de la página que avanza sola, y sólo porque alguien
+lo pidió.
+
+Paleta: verde oscuro de fondo, tipografía beige, y un solo acento, rosa.
 
 ---
 
@@ -53,8 +60,11 @@ Y abre <http://localhost:8000>.
 `REWRITE` de ese script y vuelve a correrlo. **No edites `fotos.js` a mano**: se
 sobrescribe.
 
-Las doce con las que abre el álbum están en `CORRIDA_ARCHIVO`, dentro de
-`memorial.js`. Ahí se cambia con qué empieza.
+Cuáles del archivo pasan grandes en el álbum, y en qué orden, está en
+`CORRIDA_ARCHIVO` dentro de `memorial.js`. Va curado a propósito: de joven,
+madre, su carácter, el mundo, adentro, la fiesta, los suyos. Después de ésas
+entran las que trajo la gente, y ahí es donde los pies de foto cambian de
+«Archivo de la familia» al nombre de quien la compartió.
 
 ---
 
@@ -110,6 +120,12 @@ la raíz del dominio sino en `/memorial/`.
   para caber en una forma. Son evidencia.
 - Todo número en la página es real: velitas, fotografías, personas, recuerdos.
   No hay ninguno inventado, y no debe haberlo.
+- Cuántas fotos pasan grandes en el álbum lo fija `CORRIDA` en `memorial.js`
+  (hoy 51: las de `CORRIDA_ARCHIVO` y luego las que trajo la gente, para que el
+  traspaso se vea en los pies de foto). Si le subes, súbele también el
+  `data-sc-span` de `#album` o pasan demasiado rápido: unos 0.19 vh por foto.
+- El pase automático (`PASO`, 5 s) se detiene solo cuando llega al único vídeo
+  del archivo y sigue cuando termina. Con `prefers-reduced-motion` no arranca.
 
 ---
 
