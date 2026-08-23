@@ -1,19 +1,30 @@
-Pon aquí las fotos de María Luz (Marilú).
+Aquí viven las fotografías del archivo de la familia.
 
-Cómo usarlas:
-1. Copia tus imágenes en esta carpeta, por ejemplo:
-     fotos/abuela-01.jpg
-     fotos/viaje-espana.jpg
-     fotos/bailando.jpg
+EL NOMBRE DEL ARCHIVO ES EL PIE DE FOTO.
 
-2. Abre index.html y busca el bloque "PHOTOS_SEED".
-   Pon la ruta en "src" de cada foto:
-     { id: 'p1', src: 'fotos/abuela-01.jpg', label: 'Su retrato' },
+Esto es lo único que hay que entender de esta carpeta. Cuando pongas una foto
+nueva, ponle un nombre descriptivo, en español, todo en minúsculas y separado
+con guiones, porque ese nombre es lo que la gente va a leer debajo de la
+fotografía en la página:
 
-   El marcador rayado desaparece solo en cuanto pones una ruta válida.
+    marilu-el-dia-de-su-boda.jpg      ->  "Marilú el día de su boda"
+    cena-de-amigas-noche-tropical.jpg ->  "Cena de amigas, noche tropical"
+    bajo-la-aurora-boreal.jpg         ->  "Bajo la aurora boreal"
 
-3. Para la galería puedes agregar tantas como quieras: solo copia más
-   líneas dentro de PHOTOS_SEED con un id nuevo (p10, p11, ...).
+Sin acentos ni eñes en el nombre: el programa se los devuelve solo
+(cumpleanos -> cumpleaños, marilu -> Marilú, pinata -> piñata).
 
-Recomendación: usa imágenes de ~1000 px de ancho y formato .jpg o .webp
-para que la página cargue rápido.
+Un nombre como IMG_4471.jpg no dice nada, así que la página la etiqueta
+honestamente como "Sin título". Vale más ponerle nombre.
+
+DESPUÉS DE COPIAR FOTOS NUEVAS, corre esto desde la carpeta sitio/:
+
+    bash scripts/optimizar.sh
+    node scripts/manifest.mjs
+
+Lo primero crea las versiones ligeras (fotos/v y fotos/t) que es lo que la
+página carga de verdad. Lo segundo actualiza el catálogo. Los .jpg originales
+de esta carpeta no se tocan nunca: son el archivo.
+
+No hace falta editar index.html. Ya no hay ninguna lista de fotos que mantener
+a mano.

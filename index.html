@@ -1,1147 +1,704 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="es-MX">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<script src="./support.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
-</head>
-<body>
-<x-dc>
-<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>María Luz Galindo Rodríguez · 1949 – 2026</title>
+<meta name="description" content="Un álbum abierto de la vida de Marilú Galindo: sus fotografías, sus recuerdos, sus recetas, sus lugares y sus canciones, reunidos por su familia y sus amigas.">
+<meta property="og:title" content="María Luz Galindo Rodríguez · 1949 – 2026">
+<meta property="og:description" content="Un álbum abierto de su vida. Cualquiera puede añadir una fotografía, un recuerdo o una receta suya.">
+<meta property="og:image" content="https://alemoralv.github.io/memorial/fotos/v/marilu-soplando-un-diente-de-leon.webp">
+<meta name="theme-color" content="#0E0D0B">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%230E0D0B'/><circle cx='16' cy='16' r='6' fill='%23E0654A'/></svg>">
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Karla:wght@400;500;600;700&family=Caveat:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&family=Bodoni+Moda:ital,opsz,wght@0,6..96,500;0,6..96,600;1,6..96,500&display=swap">
+<link rel="stylesheet" href="scrollcraft.css">
+<link rel="preload" as="image" href="fotos/v/marilu-soplando-un-diente-de-leon.webp">
+
 <style>
-  * { box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
-  body { margin: 0; font-family: 'Karla', system-ui, sans-serif; color: #3E2A44; background: #FAF2E6; -webkit-font-smoothing: antialiased; }
-  a { color: #834CA6; text-decoration: none; }
-  a:hover { color: #D94E8A; }
-  ::selection { background: #F3C9A0; color: #3E2A44; }
-  input, textarea, select, button { font-family: inherit; }
-  input::placeholder, textarea::placeholder { color: #B7A38F; }
-  .ml-scroll::-webkit-scrollbar { height: 10px; }
-  .ml-scroll::-webkit-scrollbar-thumb { background: #E7D2B4; border-radius: 20px; }
-  .ml-scroll::-webkit-scrollbar-track { background: transparent; }
-  @keyframes mlflame { 0%,100% { transform: scale(1) rotate(-1deg); opacity:1; } 50% { transform: scale(1.08) rotate(1.5deg); opacity:.9; } }
-  @keyframes mltoast { from { transform: translate(-50%, 24px); opacity: 0; } to { transform: translate(-50%, 0); opacity: 1; } }
-  @keyframes mlfloat { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
+  /* ── The whole theme: six colours and two faces. ─────────────────────────
+     Warm off-black ground, bone ink, one accent. The accent is the red of a
+     china marker, the pencil a photo editor uses to ring the keepers on a
+     contact sheet, which is what this page's one bespoke interaction is. */
+  :root {
+    --sc-canvas:     #0E0D0B;
+    --sc-surface:    #171512;
+    --sc-ink:        #F0EBE1;
+    --sc-ink-soft:   #A39A8C;
+    --sc-accent:     #E0654A;
+    --sc-accent-ink: #17100D;
+
+    --sc-font-display: "Bodoni Moda", Didot, Georgia, serif;
+    --sc-font-text:    "Archivo", system-ui, sans-serif;
+    /* The engine's stylesheet names Geist and Instrument Sans in its own
+       defaults. Neither is loaded here, so the third slot is closed too
+       rather than left pointing at a face this page never asked for. */
+    --sc-font-mono:    ui-monospace, "SFMono-Regular", Menlo, monospace;
+
+    --sc-shadow-color: 28 30% 2%;
+    --sc-r-sm: 0px; --sc-r-md: 0px; --sc-r-lg: 0px; --sc-r-pill: 0px;
+
+    /* The contact sheet's height. Constant, and reserved from the first
+       paint: growing it when the strip appears would reflow the document
+       mid-scroll and every act the engine has already measured would jump. */
+    --hoja-h: 72px;
+    --idx-w: 15rem;
+  }
+
+  /* Prints are hung square on this page. One radius scale, and it is zero:
+     a rounded photograph is a UI element, a square one is a photograph. */
+
+  ::selection { background: var(--sc-accent); color: var(--sc-accent-ink); }
+
+  /* ── the collection's label schema ──────────────────────────────────────
+     Every object on this page is labelled the same way, with no exceptions:
+     a title, a fact line, and a provenance line. That schema is what makes
+     143 photographs from an attic and 49 from a WhatsApp group read as one
+     collection instead of a gallery plus a feed. */
+  .ced          { font-family: var(--sc-font-text); }
+  .ced__t       { font-family: var(--sc-font-display); font-weight: 500;
+                  font-size: var(--sc-t-xl);
+                  line-height: 1.14; letter-spacing: var(--sc-track-snug);
+                  color: var(--sc-ink); margin: 0; text-wrap: balance; }
+  .ced__f       { font-size: var(--sc-t-sm); color: var(--sc-ink-soft);
+                  margin: 0.55rem 0 0; line-height: 1.5; }
+  .ced__p       { font-size: var(--sc-t-xs); letter-spacing: 0.09em;
+                  text-transform: uppercase; color: var(--sc-ink-soft);
+                  margin: 1rem 0 0; display: flex; align-items: center; gap: 0.6rem; }
+  .ced__p::before { content: ""; width: 1.6rem; height: 1px;
+                  background: var(--sc-accent); flex: 0 0 auto; }
+  .ced__p--gift { color: var(--sc-accent); }
+
+  .eyebrow { font-size: var(--sc-t-xs); letter-spacing: 0.16em;
+             text-transform: uppercase; color: var(--sc-ink-soft);
+             margin: 0 0 var(--sc-4); font-weight: 500; }
+
+  /* ── the index: an index of objects, and it jumps ───────────────────────── */
+  .idx { position: fixed; left: 0; top: 0; bottom: 0; width: var(--idx-w);
+         z-index: var(--sc-z-chrome); display: flex; flex-direction: column;
+         justify-content: center; gap: 0; padding: var(--sc-6) var(--sc-5);
+         pointer-events: none; }
+  .idx__mark { font-family: var(--sc-font-display); font-weight: 500; font-size: var(--sc-t-lg);
+               line-height: 1.05; color: var(--sc-ink); margin: 0 0 var(--sc-6);
+               pointer-events: auto; }
+  .idx__mark span { display: block; font-family: var(--sc-font-text);
+                    font-size: var(--sc-t-xs); letter-spacing: 0.12em;
+                    text-transform: uppercase; color: var(--sc-ink-soft);
+                    margin-top: 0.4rem; }
+  .idx a { pointer-events: auto; display: grid; grid-template-columns: 1fr auto;
+           align-items: baseline; gap: 0.75rem; padding: 0.5rem 0;
+           color: var(--sc-ink-soft); text-decoration: none;
+           border-top: 1px solid var(--sc-hairline);
+           font-size: var(--sc-t-sm); transition: color var(--sc-d-fast) var(--sc-ease-out); }
+  .idx a:last-of-type { border-bottom: 1px solid var(--sc-hairline); }
+  .idx a b { font-weight: 500; }
+  .idx a i { font-style: normal; font-size: var(--sc-t-xs); font-variant-numeric: tabular-nums;
+             color: color-mix(in oklab, var(--sc-ink-soft) 70%, transparent); }
+  @media (hover: hover) and (pointer: fine) { .idx a:hover { color: var(--sc-ink); } }
+  .idx a[aria-current="true"] { color: var(--sc-ink); }
+  .idx a[aria-current="true"] b::before { content: ""; position: absolute;
+    margin-left: -0.85rem; width: 0.3rem; height: 0.3rem; border-radius: 50%;
+    background: var(--sc-accent); transform: translateY(0.45rem); }
+
+  /* ── acts share one inner measure, offset past the index ────────────────── */
+  .room { width: 100%; max-width: 78rem; margin-inline: auto;
+          padding-inline: var(--sc-gutter); }
+
+  /* A pinned stage is a fixed-height box that does not centre its children.
+     The compositions inside it (.ella, .alb, .fin) each set their own height
+     and centring; the rail did not, which is why it used to sit at the top of
+     the stage with the rest of the viewport empty underneath it. Only the rail
+     needs the rule, and it must not touch `display`: .ella and .alb ARE the
+     .room, and forcing flex on them destroys their grid. */
+  [data-sc-stage] > .rail { min-height: 100%; }
+  main { padding-left: var(--idx-w); }
+  .stage-pad { padding-bottom: var(--hoja-h); }
+
+  /* ── act 1 · Ella ───────────────────────────────────────────────────────── */
+  .ella { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(16rem, 0.8fr);
+          gap: clamp(1.75rem, 3.4vw, 3.75rem); align-items: center; height: 100%; }
+  .ella__plate { position: relative; }
+    /* The photograph is evidence: it is shown whole, never cropped to fit a
+     shape the layout wanted. */
+  .ella__plate img { width: 100%; height: auto; max-height: 78vh;
+                     object-fit: contain; box-shadow: var(--sc-e3); }
+    /* Smaller than the work it labels. A wall card does not out-shout the
+     photograph hanging next to it. */
+  .ella__name { font-family: var(--sc-font-display); font-weight: 500; font-size: var(--sc-t-2xl);
+                line-height: 0.98; letter-spacing: var(--sc-track-tight);
+                margin: 0; color: var(--sc-ink); }
+  .ella__alias { font-family: var(--sc-font-display); font-weight: 500; font-style: italic;
+                 font-size: var(--sc-t-xl); color: var(--sc-accent); margin: 0.2rem 0 0; }
+  .ella__dl { margin: var(--sc-6) 0 0; display: grid; gap: 0.7rem;
+              font-size: var(--sc-t-sm); }
+  .ella__dl div { display: grid; grid-template-columns: 5.5rem 1fr; gap: 0.9rem;
+                  padding-top: 0.7rem; border-top: 1px solid var(--sc-hairline); }
+  .ella__dl dt { color: var(--sc-ink-soft); font-size: var(--sc-t-xs);
+                 letter-spacing: 0.1em; text-transform: uppercase; margin: 0; }
+  .ella__dl dd { margin: 0; color: var(--sc-ink); }
+  .ella__note { margin: var(--sc-6) 0 0; font-size: var(--sc-t-sm);
+                color: var(--sc-ink-soft); max-width: 26ch; line-height: 1.6; }
+  .ella__note b { color: var(--sc-ink); font-weight: 500; font-variant-numeric: tabular-nums; }
+
+  /* ── act 2 · Su vida, a rail ────────────────────────────────────────────── */
+  .rail { display: flex; align-items: center; gap: 0; will-change: transform; }
+  .rail__lead { flex: 0 0 clamp(19rem, 27vw, 27rem); padding-inline: var(--sc-gutter) var(--sc-8); }
+  .rail__lead h2 { font-family: var(--sc-font-display); font-weight: 500; font-size: var(--sc-t-3xl);
+                   line-height: 1; margin: 0 0 var(--sc-4); letter-spacing: var(--sc-track-tight); }
+  .rail__lead p { color: var(--sc-ink-soft); font-size: var(--sc-t-sm);
+                  max-width: 30ch; margin: 0; line-height: 1.6; }
+  .node { flex: 0 0 clamp(13rem, 17vw, 16rem); padding: 0 var(--sc-5);
+          position: relative; align-self: stretch; display: flex;
+          flex-direction: column; justify-content: center; }
+  .node::before { content: ""; position: absolute; left: 0; right: 0; top: 50%;
+                  height: 1px; background: var(--sc-hairline-strong); }
+  .node::after { content: ""; position: absolute; left: var(--sc-5); top: 50%;
+                 width: 0.45rem; height: 0.45rem; background: var(--sc-accent);
+                 border-radius: 50%; transform: translate(-50%, -50%); }
+  .node__y { font-family: var(--sc-font-display); font-weight: 500; font-size: var(--sc-t-2xl);
+             line-height: 1; color: var(--sc-ink); margin: 0 0 0.35rem;
+             font-variant-numeric: tabular-nums; }
+  .node--up    { padding-bottom: 30%; }
+  .node--down  { padding-top: 30%; }
+  .node img { width: 100%; height: 8.5rem; object-fit: cover; margin-bottom: 0.7rem;
+              box-shadow: var(--sc-e2); }
+  .node--decada .node__y { color: var(--sc-accent); }
+  .node h3 { font-size: var(--sc-t-base); font-weight: 500; margin: 0 0 0.3rem;
+             color: var(--sc-ink); line-height: 1.3; }
+  .node p  { font-size: var(--sc-t-sm); color: var(--sc-ink-soft); margin: 0;
+             line-height: 1.55; }
+  .node__by { font-size: var(--sc-t-xs); letter-spacing: 0.06em;
+              color: var(--sc-accent); margin: 0.6rem 0 0; }
+  .rail__end { flex: 0 0 clamp(16rem, 24vw, 22rem); padding-inline: var(--sc-8) var(--sc-gutter);
+               color: var(--sc-ink-soft); font-size: var(--sc-t-sm); line-height: 1.6; }
+
+  /* ── act 3 · El álbum. The peak. ────────────────────────────────────────── */
+  .alb { display: grid; grid-template-columns: minmax(0, 1fr) minmax(15rem, 20rem);
+         gap: clamp(1.5rem, 3.5vw, 3.5rem); align-items: center; height: 100%; }
+  .alb__frame { position: relative; height: min(80vh, 48rem); }
+  .alb__slide { position: absolute; inset: 0; margin: 0; opacity: 0;
+                display: grid; place-items: center;
+                transition: opacity 260ms var(--sc-ease-out); }
+  .alb__slide img { max-width: 100%; max-height: 100%; width: auto; height: auto;
+                    object-fit: contain; box-shadow: var(--sc-e3); }
+  .alb__slide.is-on { opacity: 1; }
+  .alb__cap { min-height: 12rem; }
+  .alb__cap .ced__t { transition: opacity 200ms var(--sc-ease-out); }
+    /* Said once, while it is still news, then it gets out of the way. */
+  .alb__hint { margin: var(--sc-6) 0 0; font-size: var(--sc-t-xs);
+               color: var(--sc-ink-soft); letter-spacing: 0.02em; line-height: 1.6;
+               max-width: 26ch; transition: opacity 600ms var(--sc-ease-out); }
+  .alb__hint.is-off { opacity: 0; }
+
+  /* ── act 4 · Lo que dejó ────────────────────────────────────────────────── */
+  .muro { columns: 21rem 3; column-gap: var(--sc-7); margin-top: var(--sc-8); }
+  .rec { break-inside: avoid; margin: 0 0 var(--sc-7);
+         padding-top: var(--sc-5); border-top: 1px solid var(--sc-hairline); }
+  .rec img { width: 100%; margin-bottom: var(--sc-4); }
+  .rec blockquote { margin: 0 0 var(--sc-4); font-family: var(--sc-font-display);
+                    font-size: var(--sc-t-lg); line-height: 1.36; color: var(--sc-ink); }
+  .rec figcaption { font-size: var(--sc-t-xs); letter-spacing: 0.09em;
+                    text-transform: uppercase; color: var(--sc-ink-soft); }
+  .rec figcaption b { color: var(--sc-accent); font-weight: 500; }
+
+  /* ── act 5 · Su cocina, sus lugares ─────────────────────────────────────── */
+    .case { flex: 0 0 clamp(15rem, 21vw, 19rem); padding: 0 var(--sc-5);
+          align-self: center; }
+  .case > div { padding-top: var(--sc-4); border-top: 1px solid var(--sc-hairline-strong); }
+  .case img { width: 100%; max-height: 15rem; object-fit: cover;
+              margin-bottom: var(--sc-4); box-shadow: var(--sc-e2); }
+  .case__body { font-size: var(--sc-t-sm); color: var(--sc-ink-soft);
+                line-height: 1.65; white-space: pre-line; margin: 0.6rem 0 0;
+                display: -webkit-box; -webkit-line-clamp: 7; -webkit-box-orient: vertical;
+                overflow: hidden; }
+  /* A place has no photograph in this archive, so the label IS the object.
+     Set at the size a wall label is actually set, it holds its own beside a
+     recipe card instead of reading as a caption that lost its picture. */
+  .case--lug { flex: 0 0 clamp(12rem, 16vw, 15rem); }
+  .case--lug .ced__t { font-size: var(--sc-t-2xl) !important; line-height: 1.02; }
+  .case--lug > div { border-top-color: var(--sc-accent); padding-top: var(--sc-5); }
+  .case > div { transition: transform var(--sc-d-base) var(--sc-ease-out); }
+  @media (hover: hover) and (pointer: fine) {
+    .case:hover > div { transform: translateY(-4px); }
+  }
+  @media (prefers-reduced-motion: reduce) { .case:hover > div { transform: none; } }
+
+  /* ── act 6 · Sus canciones, y la placa ──────────────────────────────────── */
+  .close { display: grid; gap: clamp(2rem, 5vw, 5rem);
+           grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: start; }
+  .song { display: grid; grid-template-columns: auto 1fr auto; align-items: center;
+          gap: var(--sc-4); padding: 0.75rem 0;
+          border-top: 1px solid var(--sc-hairline); }
+  .song__n { font-family: var(--sc-font-display); font-weight: 500; font-size: var(--sc-t-lg);
+             color: var(--sc-ink-soft); font-variant-numeric: tabular-nums;
+             min-width: 1.4rem; }
+  .song__t { margin: 0; font-size: var(--sc-t-base); color: var(--sc-ink); font-weight: 500; }
+  .song__a { margin: 0; font-size: var(--sc-t-xs); color: var(--sc-ink-soft);
+             letter-spacing: 0.06em; }
+  .vote { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.4rem 0.8rem;
+          background: transparent; border: 1px solid var(--sc-hairline-strong);
+          color: var(--sc-ink-soft); cursor: pointer; font-size: var(--sc-t-sm);
+          font-variant-numeric: tabular-nums;
+          transition: color var(--sc-d-fast) var(--sc-ease-out),
+                      border-color var(--sc-d-fast) var(--sc-ease-out),
+                      background-color var(--sc-d-fast) var(--sc-ease-out); }
+  .vote:active { transform: translateY(1px); }
+  @media (hover: hover) and (pointer: fine) {
+    .vote:hover { color: var(--sc-ink); border-color: var(--sc-ink-soft); }
+  }
+  .vote[aria-pressed="true"] { color: var(--sc-accent-ink); background: var(--sc-accent);
+                               border-color: var(--sc-accent); }
+
+  /* the accession plate: the ask, typeset exactly like a label */
+  .plate { border: 1px solid var(--sc-hairline-strong); padding: clamp(1.5rem, 3vw, 2.5rem); }
+  .plate h2 { font-family: var(--sc-font-display); font-weight: 500; font-size: var(--sc-t-2xl);
+              line-height: 1.02; margin: 0 0 var(--sc-3); letter-spacing: var(--sc-track-snug); }
+  .plate > p { color: var(--sc-ink-soft); font-size: var(--sc-t-sm);
+               line-height: 1.65; margin: 0 0 var(--sc-6); max-width: 42ch; }
+  .seg { display: grid; grid-template-columns: repeat(4, 1fr); margin: 0 0 var(--sc-5);
+         border: 1px solid var(--sc-hairline-strong); }
+  .seg button { padding: 0.6rem 0.4rem; background: transparent;
+                border: 0; border-right: 1px solid var(--sc-hairline-strong);
+                color: var(--sc-ink-soft); cursor: pointer; font-size: var(--sc-t-xs);
+                letter-spacing: 0.05em; text-transform: uppercase;
+                transition: color var(--sc-d-fast) var(--sc-ease-out),
+                            background-color var(--sc-d-fast) var(--sc-ease-out); }
+  .seg button:last-child { border-right: 0; }
+  .seg button[aria-pressed="true"] { background: var(--sc-accent); color: var(--sc-accent-ink); }
+  @media (hover: hover) and (pointer: fine) {
+    .seg button:not([aria-pressed="true"]):hover { color: var(--sc-ink); }
+  }
+  .fld { display: block; margin: 0 0 var(--sc-4); }
+  .fld > span { display: block; font-size: var(--sc-t-xs); letter-spacing: 0.09em;
+                text-transform: uppercase; color: var(--sc-ink-soft); margin-bottom: 0.45rem; }
+  .fld input, .fld textarea {
+    width: 100%; padding: 0.7rem 0.8rem; background: var(--sc-surface);
+    border: 1px solid var(--sc-hairline-strong); color: var(--sc-ink);
+    font-size: var(--sc-t-sm); font-family: var(--sc-font-text); }
+  .fld textarea { min-height: 7rem; resize: vertical; line-height: 1.6; }
+  .fld input::placeholder, .fld textarea::placeholder { color: color-mix(in oklab, var(--sc-ink-soft) 62%, transparent); }
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sc-4); }
+  .drop { display: flex; flex-direction: column; align-items: center; gap: 0.4rem;
+          padding: var(--sc-6); border: 1px dashed var(--sc-hairline-strong);
+          cursor: pointer; text-align: center; color: var(--sc-ink-soft);
+          font-size: var(--sc-t-sm); margin-bottom: var(--sc-4);
+          transition: border-color var(--sc-d-fast) var(--sc-ease-out); }
+  @media (hover: hover) and (pointer: fine) { .drop:hover { border-color: var(--sc-accent); } }
+  .drop b { color: var(--sc-ink); font-weight: 500; }
+  .btn { display: inline-flex; align-items: center; justify-content: center;
+         width: 100%; padding: 0.85rem 1.2rem; background: var(--sc-accent);
+         color: var(--sc-accent-ink); border: 1px solid var(--sc-accent);
+         font-size: var(--sc-t-sm); font-weight: 600; letter-spacing: 0.06em;
+         text-transform: uppercase; cursor: pointer;
+         transition: background-color var(--sc-d-fast) var(--sc-ease-out); }
+  .btn:active { transform: translateY(1px); }
+  @media (hover: hover) and (pointer: fine) {
+    .btn:hover { background: color-mix(in oklab, var(--sc-accent) 86%, #FFF); }
+  }
+  .btn--ghost { background: transparent; color: var(--sc-ink);
+                border-color: var(--sc-hairline-strong); width: auto; }
+  @media (hover: hover) and (pointer: fine) {
+    .btn--ghost:hover { background: transparent; border-color: var(--sc-accent); color: var(--sc-accent); }
+  }
+
+
+  /* A flow section that follows a pinned act inherits a full viewport of the
+     stage sliding off. Full section padding on top of that is a second empty
+     screen, so the padding comes off here rather than being paid twice. */
+  .sc-section { padding-block: var(--sc-section) var(--sc-section); }
+  #muro, #cierre { padding-block: var(--sc-7) var(--sc-section); }
+
+  .close { display: grid; gap: clamp(2rem, 5vw, 4.5rem);
+           grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: start; }
+  .lugs-extra { margin-top: var(--sc-8); padding-top: var(--sc-5);
+                border-top: 1px solid var(--sc-hairline); }
+
+  /* the last screen: three real numbers, one control, her own words */
+  .fin { display: flex; flex-direction: column; align-items: center;
+         justify-content: center; height: 100%; text-align: center; }
+  .fin .tally { max-width: 46rem; width: 100%; }
+  .fin .lastword { margin-top: var(--sc-8); border-top: 0; padding-top: 0; }
+  .fin > .btn--ghost { margin-top: var(--sc-7); }
+
+  .tally { display: grid; grid-template-columns: repeat(auto-fit, minmax(7rem, 1fr));
+           gap: var(--sc-5); margin: 0; }
+  .tally div b { display: block; font-family: var(--sc-font-display); font-weight: 500;
+                 font-size: var(--sc-t-2xl); line-height: 1; color: var(--sc-ink);
+                 font-variant-numeric: tabular-nums; }
+  .tally div span { display: block; font-size: var(--sc-t-xs); letter-spacing: 0.09em;
+                    text-transform: uppercase; color: var(--sc-ink-soft); margin-top: 0.35rem; }
+
+  .lastword { margin: var(--sc-9) 0 0; padding-top: var(--sc-7);
+              border-top: 1px solid var(--sc-hairline); text-align: center; }
+  .lastword q { font-family: var(--sc-font-display); font-weight: 500; font-style: italic;
+                font-size: var(--sc-t-3xl); color: var(--sc-accent); quotes: none;
+                line-height: 1; display: block; }
+  .lastword p { font-size: var(--sc-t-xs); letter-spacing: 0.14em;
+                text-transform: uppercase; color: var(--sc-ink-soft);
+                margin: var(--sc-4) 0 0; }
+
+  /* ── the signature move: la hoja de contactos ───────────────────────────── */
+  .hoja { position: fixed; left: 0; right: 0; bottom: 0; z-index: 55;
+          background: color-mix(in oklab, var(--sc-canvas) 88%, #000);
+          border-top: 1px solid var(--sc-hairline-strong);
+          transform: translateY(101%); transition: transform 520ms var(--sc-ease-drawer);
+          backdrop-filter: blur(6px); }
+  .hoja.is-up { transform: none; }
+  .hoja__in { display: flex; align-items: stretch; }
+  .hoja__lbl { flex: 0 0 auto; display: flex; flex-direction: column; justify-content: center;
+               padding: 0 var(--sc-4); border-right: 1px solid var(--sc-hairline);
+               font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase;
+               color: var(--sc-ink-soft); line-height: 1.5; }
+  .hoja__lbl b { color: var(--sc-ink); font-weight: 500; font-variant-numeric: tabular-nums; }
+  .hoja__strip { flex: 1 1 auto; display: flex; gap: 3px; padding: 6px;
+                 overflow-x: auto; overflow-y: hidden; scroll-behavior: smooth;
+                 scrollbar-width: thin; }
+  .cell { flex: 0 0 auto; width: 58px; height: 58px; padding: 0; border: 0;
+          background: var(--sc-surface); cursor: pointer; position: relative;
+          opacity: 0; animation: cellin 420ms var(--sc-ease-out) forwards; }
+  @keyframes cellin { from { opacity: 0; transform: scale(0.92); } to { opacity: 1; transform: none; } }
+  .cell img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .cell--gift::after { content: ""; position: absolute; left: 3px; bottom: 3px;
+                       width: 5px; height: 5px; background: var(--sc-accent); }
+  /* the china marker: the editor rings the keeper */
+  .cell.is-now { outline: 2px solid var(--sc-accent); outline-offset: -2px; }
+  .cell.is-now::before { content: ""; position: absolute; inset: -3px;
+                         border: 1.5px solid var(--sc-accent); border-radius: 48% 52% 47% 53%;
+                         opacity: 0.9; pointer-events: none; }
+  .cell--empty { border: 1px dashed var(--sc-hairline-strong); background: transparent;
+                 display: grid; place-items: center; color: var(--sc-ink-soft);
+                 font-size: 1.1rem; line-height: 1; opacity: 1; animation: none;
+                 transition: border-color var(--sc-d-fast) var(--sc-ease-out),
+                             color var(--sc-d-fast) var(--sc-ease-out); }
+  @media (hover: hover) and (pointer: fine) {
+    .cell--empty:hover { border-color: var(--sc-accent); color: var(--sc-accent); }
+  }
+
+  /* ── lightbox ───────────────────────────────────────────────────────────── */
+  .lb { position: fixed; inset: 0; z-index: 90; display: none;
+        background: color-mix(in oklab, var(--sc-canvas) 92%, #000);
+        padding: clamp(1rem, 4vw, 3rem); }
+  .lb[open] { display: grid; grid-template-rows: 1fr auto; gap: var(--sc-5);
+              place-items: center; }
+  .lb img { max-width: 100%; max-height: 100%; object-fit: contain; box-shadow: var(--sc-e3); }
+  .lb__cap { text-align: center; max-width: 46ch; }
+  .lb__x { position: absolute; top: var(--sc-4); right: var(--sc-5); background: transparent;
+           border: 1px solid var(--sc-hairline-strong); color: var(--sc-ink);
+           width: 2.4rem; height: 2.4rem; cursor: pointer; font-size: 1.1rem; line-height: 1; }
+
+  /* ── toast ──────────────────────────────────────────────────────────────── */
+  .toast { position: fixed; left: 50%; z-index: 95; translate: -50% 0;
+           bottom: calc(var(--hoja-h) + 1.2rem);
+           background: var(--sc-ink); color: var(--sc-canvas);
+           padding: 0.7rem 1.2rem; font-size: var(--sc-t-sm); font-weight: 500;
+           box-shadow: var(--sc-e3); opacity: 0; pointer-events: none;
+           transition: opacity 220ms var(--sc-ease-out), translate 220ms var(--sc-ease-out); }
+  .toast.is-on { opacity: 1; translate: -50% -0.4rem; }
+
+  .skip { position: absolute; left: -9999px; top: 0; z-index: 100;
+          background: var(--sc-accent); color: var(--sc-accent-ink); padding: 0.7rem 1rem; }
+  .skip:focus { left: var(--sc-4); top: var(--sc-4); }
+
+  /* ── responsive ─────────────────────────────────────────────────────────── */
+  @media (max-width: 1080px) {
+    :root { --idx-w: 0px; }
+    main { padding-left: 0; }
+    .idx { position: static; width: auto; flex-direction: row; align-items: center;
+           gap: var(--sc-5); overflow-x: auto; padding: var(--sc-4) var(--sc-gutter);
+           border-bottom: 1px solid var(--sc-hairline); justify-content: flex-start;
+           background: var(--sc-canvas); }
+    .idx__mark { margin: 0 var(--sc-4) 0 0; white-space: nowrap; font-size: var(--sc-t-base); }
+    .idx__mark span { display: none; }
+    .idx a { border: 0 !important; padding: 0; white-space: nowrap; display: block; }
+    .idx a i { display: none; }
+    .idx a[aria-current="true"] b::before { display: none; }
+    .ella { grid-template-columns: 1fr; gap: var(--sc-6); align-content: center; }
+    .ella__plate img { height: min(46vh, 22rem); }
+    .alb { grid-template-columns: 1fr; gap: var(--sc-5); align-content: center; }
+    .alb__frame { height: min(46vh, 24rem); }
+    .alb__cap { min-height: 0; }
+    .close { grid-template-columns: 1fr; }
+    .seg { grid-template-columns: repeat(2, 1fr); }
+    .seg button:nth-child(2) { border-right: 0; }
+  }
+  @media (max-width: 640px) {
+    .ella__name { font-size: var(--sc-t-2xl); }
+    .two { grid-template-columns: 1fr; }
+    .muro { columns: 1; }
+    .cell { width: 46px; height: 46px; }
+    .hoja__lbl { display: none; }
+    :root { --hoja-h: 60px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hoja { transition: none; }
+    .cell { animation: none; opacity: 1; }
+    .alb__slide { transition: none; }
+  }
 </style>
-</helmet>
+</head>
+<body>
 
-<div style="overflow-x: hidden;">
+<a class="skip" href="#album">Saltar al álbum</a>
+<span data-sc-progress></span>
+<div class="sc-grain" aria-hidden="true"></div>
 
-  <nav style="position: sticky; top: 0; z-index: 40; background: rgba(250,242,230,0.82); backdrop-filter: blur(10px); border-bottom: 1px solid #EBDBC4;">
-    <div style="max-width: 1140px; margin: 0 auto; padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; gap: 16px;">
-      <a href="#inicio" style="font-family: 'Cormorant Garamond', serif; font-weight: 700; font-size: 22px; color: #3E2A44; letter-spacing: .3px;">María&nbsp;Luz</a>
-      <div style="display: flex; align-items: center; gap: 22px; flex-wrap: wrap; justify-content: flex-end;">
-        <a href="#vida" style="font-size: 14.5px; color: #6A5560; font-weight: 500;">Su vida</a>
-        <a href="#galeria" style="font-size: 14.5px; color: #6A5560; font-weight: 500;">Galería</a>
-        <a href="#muro" style="font-size: 14.5px; color: #6A5560; font-weight: 500;">Recuerdos</a>
-        <a href="#lugares" style="font-size: 14.5px; color: #6A5560; font-weight: 500;">Lugares</a>
-        <a href="#compartir" style="font-size: 14px; font-weight: 700; color: #fff; background: linear-gradient(92deg,#E07B39,#D94E8A,#834CA6); padding: 9px 18px; border-radius: 999px; box-shadow: 0 6px 16px rgba(217,78,138,.24);">Compartir un recuerdo</a>
-      </div>
-    </div>
-  </nav>
+<!-- ══ the index of the collection. It jumps. Counts are live and real. ══ -->
+<nav class="idx" aria-label="Índice de la colección">
+  <p class="idx__mark">Marilú<span>1949 – 2026</span></p>
+  <a href="#ella"><b>Ella</b><i data-n="ella">1</i></a>
+  <a href="#vida"><b>Su vida</b><i data-n="vida">–</i></a>
+  <a href="#album"><b>El álbum</b><i data-n="fotos">–</i></a>
+  <a href="#muro"><b>Lo que dejó</b><i data-n="recuerdos">–</i></a>
+  <a href="#cocina"><b>Su cocina</b><i data-n="recetas">–</i></a>
+  <a href="#cierre"><b>Sus canciones</b><i data-n="canciones">–</i></a>
+</nav>
 
-  <!-- ============ HERO ============ -->
-  <header id="inicio" style="scroll-margin-top: 80px; position: relative; padding: 70px 24px 40px; text-align: center; background:
-      radial-gradient(1100px 520px at 50% -8%, rgba(224,123,57,.16), rgba(217,78,138,.05) 42%, transparent 68%);">
-    <div style="max-width: 940px; margin: 0 auto;">
-      <p style="font-family: 'Caveat', cursive; font-size: 30px; color: #D94E8A; margin: 0 0 6px; font-weight: 600;">En memoria de</p>
-      <h1 style="font-family: 'Cormorant Garamond', serif; font-weight: 700; font-size: clamp(52px, 9vw, 104px); line-height: 1.02; margin: 0; color: #3E2A44; letter-spacing: -.5px;">Marilú Galindo</h1>
-      <div style="display: flex; align-items: center; justify-content: center; gap: 16px; margin: 22px 0 6px; flex-wrap: wrap;">
-        <span style="font-family: 'Cormorant Garamond', serif; font-size: clamp(20px,3vw,26px); color: #6A5560; letter-spacing: 1px;">21 enero 1949</span>
-        <span style="width: 9px; height: 9px; border-radius: 50%; background: linear-gradient(120deg,#E07B39,#834CA6); display: inline-block;"></span>
-        <span style="font-family: 'Cormorant Garamond', serif; font-size: clamp(20px,3vw,26px); color: #6A5560; letter-spacing: 1px;">1 julio 2026</span>
-      </div>
-      <p style="font-size: 16px; letter-spacing: 3px; text-transform: uppercase; color: #B0895F; margin: 4px 0 0; font-weight: 600;">Ciudadana del mundo · Ciudad de México</p>
+<main>
 
-      <div style="display: inline-flex; align-items: center; gap: 14px; margin-top: 30px; padding: 12px 26px; background: #FFFCF6; border: 1px solid #EBD9C0; border-radius: 999px; box-shadow: 0 10px 30px rgba(62,42,68,.07);">
-        <span style="font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: #B0895F; font-weight: 700;">Su frase</span>
-        <span style="font-family: 'Caveat', cursive; font-size: 34px; font-weight: 700; background: linear-gradient(92deg,#E07B39,#D94E8A,#834CA6); -webkit-background-clip: text; background-clip: text; color: transparent; line-height: 1;">so beat it</span>
-      </div>
-    </div>
-
-    <!-- Collage de polaroids -->
-    <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px; max-width: 1000px; margin: 54px auto 0; padding-bottom: 10px;">
-      <sc-for list="{{ heroPhotos }}" as="p" hint-placeholder-count="4">
-        <div style="background: #FFFEFB; padding: 12px 12px 30px; box-shadow: 0 14px 34px rgba(62,42,68,.14); border-radius: 3px; transform: rotate({{ p.rot }}deg); animation: mlfloat {{ p.dur }}s ease-in-out infinite; cursor: pointer;" onClick="{{ p.onOpen }}">
-          <sc-if value="{{ p.hasSrc }}" hint-placeholder-val="{{ false }}">
-            <img src="{{ p.src }}" alt="María Luz" style="display: block; width: 190px; height: 210px; object-fit: cover; border-radius: 1px;">
-          </sc-if>
-          <sc-if value="{{ p.noSrc }}" hint-placeholder-val="{{ true }}">
-            <div style="width: 190px; height: 210px; background: repeating-linear-gradient(45deg,#F0E1CD,#F0E1CD 11px,#E9D5BB 11px,#E9D5BB 22px); display: flex; align-items: center; justify-content: center;">
-              <span style="font-family: ui-monospace, monospace; font-size: 11px; color: #9A7E5C; letter-spacing: 1px;">foto</span>
-            </div>
-          </sc-if>
-        </div>
-      </sc-for>
-    </div>
-    <p style="font-size: 13px; color: #B0895F; margin-top: 26px; font-family: ui-monospace, monospace;">↓ Desliza para recorrer su historia ↓</p>
-  </header>
-
-  <!-- ============ VELITA ============ -->
-  <section style="padding: 56px 24px; text-align: center; background: #F5E9D8; border-top: 1px solid #EBDBC4; border-bottom: 1px solid #EBDBC4;">
-    <div style="display: inline-flex; flex-direction: column; align-items: center;">
-      <div style="position: relative; width: 60px; height: 96px; display: flex; align-items: flex-end; justify-content: center;">
-        <div style="position: absolute; bottom: 74px; width: 16px; height: 22px; border-radius: 50% 50% 46% 46% / 62% 62% 40% 40%; background: radial-gradient(circle at 50% 68%, #FFE9A8 0%, #F5A63C 42%, #E0568A 88%); box-shadow: 0 0 22px 6px rgba(240,150,80,.55); animation: mlflame 1.6s ease-in-out infinite; transform-origin: bottom center;"></div>
-        <div style="width: 26px; height: 70px; border-radius: 8px 8px 4px 4px; background: linear-gradient(#FFFDF7,#F0E4CE); border: 1px solid #E6D3B4;"></div>
-      </div>
-      <p style="font-family: 'Cormorant Garamond', serif; font-size: 26px; color: #3E2A44; margin: 20px 0 2px;">Su luz sigue encendida</p>
-      <p style="font-size: 15px; color: #7A6470; margin: 0 0 18px;"><strong style="color:#D94E8A; font-size: 19px;">{{ candles }}</strong> velitas encendidas por quienes la recuerdan</p>
-      <button onClick="{{ lightCandle }}" style="border: none; cursor: pointer; background: #FFFCF6; color: #834CA6; border: 1.5px solid #E3C9A6; padding: 11px 24px; border-radius: 999px; font-weight: 700; font-size: 15px; box-shadow: 0 6px 16px rgba(62,42,68,.06);" style-hover="background:#834CA6;color:#fff;border-color:#834CA6;">Encender una velita</button>
-    </div>
-  </section>
-
-  <!-- ============ LÍNEA DE VIDA ============ -->
-  <section id="vida" style="scroll-margin-top: 76px; padding: 84px 0 70px;">
-    <div style="max-width: 1140px; margin: 0 auto; padding: 0 24px; text-align: center;">
-      <p style="font-family: 'Caveat', cursive; font-size: 26px; color: #E07B39; margin: 0; font-weight: 600;">Su historia, año con año</p>
-      <h2 style="font-family: 'Cormorant Garamond', serif; font-size: clamp(34px,5vw,52px); margin: 4px 0 10px; color: #3E2A44; font-weight: 700;">Línea de vida</h2>
-      <p style="max-width: 620px; margin: 0 auto; color: #7A6470; font-size: 16.5px; line-height: 1.6;">Una vida construida a lo largo de los años. Cada quien puede añadir un momento — así su historia sigue creciendo con nosotros.</p>
-    </div>
-
-    <div class="ml-scroll" style="overflow-x: auto; padding: 44px 0 30px; margin-top: 16px;">
-      <div style="display: inline-flex; padding: 0 max(24px, calc((100vw - 1140px)/2)); min-width: 100%;">
-        <sc-for list="{{ timeline }}" as="node" hint-placeholder-count="4">
-          <div style="flex: 0 0 250px; display: flex; flex-direction: column;">
-            <!-- arriba -->
-            <div style="height: 178px; display: flex; align-items: flex-end; justify-content: center; padding: 0 12px;">
-              <sc-if value="{{ node.above }}" hint-placeholder-val="{{ true }}">
-                <div style="display: flex; flex-direction: column; align-items: center;">
-                  <div style="width: 214px; background: #FFFCF6; border: 1px solid #EBD9C0; border-radius: 14px; padding: 15px 16px 16px; box-shadow: 0 12px 26px rgba(62,42,68,.08); text-align: left;">
-                    <div style="display: flex; align-items: baseline; gap: 8px;">
-                      <span style="font-family: 'Cormorant Garamond', serif; font-size: 30px; font-weight: 700; color: {{ node.color }};">{{ node.year }}</span>
-                      <sc-if value="{{ node.isUser }}" hint-placeholder-val="{{ false }}"><span style="font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: #B0895F; font-weight: 700;">aportado</span></sc-if>
-                    </div>
-                    <p style="margin: 3px 0 4px; font-weight: 700; font-size: 15.5px; color: #3E2A44;">{{ node.title }}</p>
-                    <p style="margin: 0; font-size: 13.5px; color: #7A6470; line-height: 1.45;">{{ node.text }}</p>
-                    <sc-if value="{{ node.isUser }}" hint-placeholder-val="{{ false }}"><p style="margin: 8px 0 0; font-family: 'Caveat', cursive; font-size: 17px; color: #834CA6;">— {{ node.author }}</p></sc-if>
-                  </div>
-                  <div style="width: 2px; height: 22px; background: #DBA23F;"></div>
-                </div>
-              </sc-if>
-            </div>
-            <!-- línea -->
-            <div style="height: 0; border-top: 2px solid #DBA23F; position: relative;">
-              <div style="position: absolute; left: 50%; top: -8px; transform: translateX(-50%); width: 15px; height: 15px; border-radius: 50%; background: linear-gradient(135deg,#E07B39,#D94E8A); border: 3px solid #FAF2E6; box-shadow: 0 0 0 1px #DBA23F;"></div>
-            </div>
-            <!-- abajo -->
-            <div style="height: 178px; display: flex; align-items: flex-start; justify-content: center; padding: 0 12px;">
-              <sc-if value="{{ node.below }}" hint-placeholder-val="{{ false }}">
-                <div style="display: flex; flex-direction: column; align-items: center;">
-                  <div style="width: 2px; height: 22px; background: #DBA23F;"></div>
-                  <div style="width: 214px; background: #FFFCF6; border: 1px solid #EBD9C0; border-radius: 14px; padding: 15px 16px 16px; box-shadow: 0 12px 26px rgba(62,42,68,.08); text-align: left;">
-                    <div style="display: flex; align-items: baseline; gap: 8px;">
-                      <span style="font-family: 'Cormorant Garamond', serif; font-size: 30px; font-weight: 700; color: {{ node.color }};">{{ node.year }}</span>
-                      <sc-if value="{{ node.isUser }}" hint-placeholder-val="{{ false }}"><span style="font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: #B0895F; font-weight: 700;">aportado</span></sc-if>
-                    </div>
-                    <p style="margin: 3px 0 4px; font-weight: 700; font-size: 15.5px; color: #3E2A44;">{{ node.title }}</p>
-                    <p style="margin: 0; font-size: 13.5px; color: #7A6470; line-height: 1.45;">{{ node.text }}</p>
-                    <sc-if value="{{ node.isUser }}" hint-placeholder-val="{{ false }}"><p style="margin: 8px 0 0; font-family: 'Caveat', cursive; font-size: 17px; color: #834CA6;">— {{ node.author }}</p></sc-if>
-                  </div>
-                </div>
-              </sc-if>
-            </div>
+  <!-- ══ 1 · ELLA. Object one, already in view, already labelled. ══ -->
+  <section id="ella" data-sc-act="pin" data-sc-span="1.5" data-sc-drift="#0E0D0B">
+    <div data-sc-stage class="stage-pad">
+      <div class="room ella">
+        <div class="ella__plate" data-sc-reveal="up" data-sc-reveal-at="0 0.3">
+          <img src="fotos/v/marilu-soplando-un-diente-de-leon.webp"
+               width="1400" height="933" fetchpriority="high"
+               alt="María Luz sopla un diente de león, muy de cerca, en el campo.">
+          <div class="ced" style="margin-top: var(--sc-4)">
+            <p class="ced__t" style="font-size: var(--sc-t-lg)">Marilú soplando un diente de león</p>
+            <p class="ced__p">Archivo de la familia</p>
           </div>
-        </sc-for>
-      </div>
-    </div>
-
-    <div style="text-align: center;">
-      <button onClick="{{ addToTimeline }}" style="border: none; cursor: pointer; background: #FFFCF6; border: 1.5px solid #E3C9A6; color: #834CA6; padding: 12px 26px; border-radius: 999px; font-weight: 700; font-size: 15px;" style-hover="background:#834CA6;color:#fff;border-color:#834CA6;">＋ Aporta un momento a su línea de vida</button>
-    </div>
-  </section>
-
-  <!-- ============ GALERÍA ============ -->
-  <section id="galeria" style="scroll-margin-top: 76px; padding: 80px 24px; background: #F5E9D8; border-top: 1px solid #EBDBC4;">
-    <div style="max-width: 1140px; margin: 0 auto;">
-      <div style="text-align: center; margin-bottom: 40px;">
-        <p style="font-family: 'Caveat', cursive; font-size: 26px; color: #834CA6; margin: 0; font-weight: 600;">Un álbum de toda una vida</p>
-        <h2 style="font-family: 'Cormorant Garamond', serif; font-size: clamp(34px,5vw,52px); margin: 4px 0 8px; color: #3E2A44; font-weight: 700;">Galería de fotos</h2>
-        <p style="color: #7A6470; font-size: 16.5px;">{{ photoCount }} recuerdos en imágenes · el álbum va pasando solo, al azar y sin repetirse, hasta mostrarlas todas</p>
-      </div>
-      <div style="display: flex; flex-direction: column; align-items: center; gap: 22px;">
-        <div style="background: #FFFEFB; padding: 15px 15px 10px; box-shadow: 0 20px 48px rgba(62,42,68,.16); border-radius: 4px; transform: rotate(-1.2deg); cursor: pointer; width: min(92vw, 720px); transition: transform .2s ease;" style-hover="transform: rotate(0deg) scale(1.01);" onClick="{{ displayOpen }}">
-          <sc-if value="{{ displayHasSrc }}" hint-placeholder-val="{{ false }}">
-            <img src="{{ displaySrc }}" alt="{{ displayLabel }}" style="display: block; width: 100%; height: min(58vh, 520px); object-fit: contain; background: #F7EEDF;">
-          </sc-if>
-          <sc-if value="{{ displayNoSrc }}" hint-placeholder-val="{{ true }}">
-            <div style="width: 100%; height: min(58vh, 520px); background: repeating-linear-gradient(45deg,#F0E1CD,#F0E1CD 12px,#E9D5BB 12px,#E9D5BB 24px); display: flex; align-items: center; justify-content: center;">
-              <span style="font-family: ui-monospace, monospace; font-size: 12px; color: #9A7E5C; letter-spacing: 1px;">foto</span>
-            </div>
-          </sc-if>
-          <sc-if value="{{ displayHasLabel }}" hint-placeholder-val="{{ true }}">
-            <p style="font-family: 'Caveat', cursive; font-size: 30px; color: #5C4A54; text-align: center; margin: 12px 0 4px; line-height: 1;">{{ displayLabel }}</p>
-          </sc-if>
-          <sc-if value="{{ displayNoLabel }}" hint-placeholder-val="{{ false }}">
-            <div style="height: 22px;"></div>
-          </sc-if>
         </div>
-        <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap; justify-content: center;">
-          <button onClick="{{ displayPrev }}" style="{{ displayPrevStyle }}">◂ Anterior</button>
-          <span style="font-family: ui-monospace, monospace; font-size: 13px; color: #9A7E5C; min-width: 80px; text-align: center;">{{ displayCounter }}</span>
-          <button onClick="{{ displayNext }}" style="border: 1.5px solid #E3C9A6; cursor: pointer; background: #FFFCF6; color: #834CA6; padding: 10px 20px; border-radius: 999px; font-weight: 700; font-size: 14.5px;" style-hover="background:#834CA6;color:#fff;border-color:#834CA6;">Siguiente ▸</button>
-          <button onClick="{{ displayTogglePlay }}" style="border: 1.5px solid #E3C9A6; cursor: pointer; background: #FFFCF6; color: #834CA6; padding: 10px 16px; border-radius: 999px; font-weight: 700; font-size: 14.5px;" style-hover="background:#834CA6;color:#fff;border-color:#834CA6;">{{ displayPlayLabel }}</button>
+        <div class="ced" data-sc-cue="0 1 0 0">
+          <h1 class="ella__name">María&nbsp;Luz<br>Galindo Rodríguez</h1>
+          <p class="ella__alias">Marilú</p>
+          <dl class="ella__dl">
+            <div><dt>Nació</dt><dd>21 de enero de 1949<br>Ciudad de México</dd></div>
+            <div><dt>Murió</dt><dd>1 de julio de 2026<br>Ciudad de México</dd></div>
+            <div><dt>Fue</dt><dd>Ciudadana del mundo</dd></div>
+          </dl>
+          <p class="ella__note">Colección de <b data-n="fotos">143</b> fotografías reunida
+             por su familia y sus amigas. Sigue abierta.</p>
         </div>
-        <sc-if value="{{ displayHasPreload }}" hint-placeholder-val="{{ false }}">
-          <img src="{{ displayPreloadSrc }}" alt="" style="position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none;">
-        </sc-if>
-      </div>
-      <div style="text-align: center; margin-top: 40px;">
-        <button onClick="{{ addPhoto }}" style="border: none; cursor: pointer; background: linear-gradient(92deg,#E07B39,#D94E8A,#834CA6); color: #fff; padding: 13px 28px; border-radius: 999px; font-weight: 700; font-size: 15px; box-shadow: 0 10px 24px rgba(217,78,138,.24);">＋ Sube una foto al mural</button>
       </div>
     </div>
   </section>
 
-  <!-- ============ MURO DE RECUERDOS ============ -->
-  <section id="muro" style="scroll-margin-top: 76px; padding: 84px 24px;">
-    <div style="max-width: 1080px; margin: 0 auto;">
-      <div style="text-align: center; margin-bottom: 42px;">
-        <p style="font-family: 'Caveat', cursive; font-size: 26px; color: #E07B39; margin: 0; font-weight: 600;">Lo que dejó en cada uno de nosotros</p>
-        <h2 style="font-family: 'Cormorant Garamond', serif; font-size: clamp(34px,5vw,52px); margin: 4px 0 8px; color: #3E2A44; font-weight: 700;">Muro de recuerdos</h2>
-        <sc-if value="{{ hasMemories }}" hint-placeholder-val="{{ false }}">
-          <p style="color: #7A6470; font-size: 16.5px;">{{ memoryCount }} recuerdos compartidos por familia y amigas</p>
-        </sc-if>
-        <sc-if value="{{ noMemories }}" hint-placeholder-val="{{ true }}">
-          <p style="color: #7A6470; font-size: 16.5px;">Aún no hay recuerdos escritos — sé quien deje el primero</p>
-        </sc-if>
+  <!-- ══ 2 · SU VIDA. Lateral travel reads as chronology. ══ -->
+  <section id="vida" data-sc-act="pan" data-sc-span="2.4" data-sc-drift="#121110">
+    <div data-sc-stage class="stage-pad">
+      <div class="rail" data-sc-pan="0.04" id="rail">
+        <div class="rail__lead">
+          <h2>Su vida</h2>
+          <p>Lo que se sabe con fecha. Cualquiera puede añadir un momento y
+             queda en su sitio, en el año que le toca.</p>
+        </div>
+        <!-- nodes injected here -->
+        <div class="rail__end" id="rail-end">
+          <p>La cronología termina aquí porque todavía nadie ha escrito el resto.
+             Si te acuerdas de un año, de un viaje, de una mudanza, ponlo.</p>
+        </div>
       </div>
-      <div style="columns: 320px 3; column-gap: 22px;">
-        <sc-for list="{{ memories }}" as="m" hint-placeholder-count="4">
-          <div style="break-inside: avoid; margin: 0 0 22px; background: #FFFCF6; border: 1px solid #EBD9C0; border-radius: 16px; padding: 22px; box-shadow: 0 10px 26px rgba(62,42,68,.06);">
-            <sc-if value="{{ m.hasPhoto }}" hint-placeholder-val="{{ false }}">
-              <img src="{{ m.photo }}" alt="" style="display: block; width: 100%; border-radius: 10px; margin-bottom: 14px;">
-            </sc-if>
-            <sc-if value="{{ m.epocaShown }}" hint-placeholder-val="{{ false }}">
-              <span style="display: inline-block; font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: {{ m.color }}; font-weight: 700; margin-bottom: 8px;">{{ m.epoca }}</span>
-            </sc-if>
-            <p style="margin: 0 0 16px; font-family: 'Cormorant Garamond', serif; font-size: 20px; line-height: 1.42; color: #4A3550; font-style: italic;">{{ m.text }}</p>
-            <div style="display: flex; align-items: center; gap: 11px;">
-              <div style="width: 38px; height: 38px; border-radius: 50%; background: {{ m.color }}; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 16px; flex: 0 0 auto;">{{ m.initial }}</div>
-              <div>
-                <p style="margin: 0; font-weight: 700; font-size: 14.5px; color: #3E2A44;">{{ m.author }}</p>
-                <sc-if value="{{ m.relShown }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 12.5px; color: #9A8590;">{{ m.rel }}</p></sc-if>
-              </div>
-            </div>
+    </div>
+  </section>
+
+  <!-- ══ 3 · EL ÁLBUM. The peak. 5.5vh, more than three times any other act. ══ -->
+  <section id="album" data-sc-act="pin" data-sc-span="5.8" data-sc-drift="#0A0908">
+    <div data-sc-stage class="stage-pad">
+      <div class="room alb">
+        <div class="alb__frame" id="alb-frame"><!-- slides injected --></div>
+        <div class="alb__cap ced" id="alb-cap">
+          <h2 class="ced__t" id="alb-t">El álbum</h2>
+          <p class="ced__f" id="alb-f">Van pasando conforme bajas. Tú llevas el paso.</p>
+          <p class="ced__p" id="alb-p">Archivo de la familia</p>
+          <p class="alb__hint">Cada fotografía que pasa se queda abajo, en la hoja
+             de contactos. Puedes volver a cualquiera desde ahí.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ 4 · LO QUE DEJÓ. The one act that reads as a document. ══ -->
+  <section id="muro" class="sc-section" data-sc-act="flow" data-sc-drift="#151312">
+    <div class="room stage-pad">
+      <div data-sc-in>
+        <h2 class="ella__name">Lo que dejó en cada quien</h2>
+      </div>
+      <div class="muro" id="muro-lista"><!-- memories injected --></div>
+      <p id="muro-vacio" hidden style="color: var(--sc-ink-soft); max-width: 44ch;">
+        Todavía no hay nada escrito aquí. El primero que escriba deja el tono
+        para todos los demás.</p>
+      <p style="margin-top: var(--sc-6)">
+        <button class="btn btn--ghost" type="button" data-go="texto">Escribir un recuerdo</button>
+      </p>
+    </div>
+  </section>
+
+  <!-- ══ 5 · SU COCINA, SUS LUGARES. A rail: lateral travel reads as range. ══ -->
+  <section id="cocina" data-sc-act="pan" data-sc-span="1.8" data-sc-drift="#121110">
+    <div data-sc-stage class="stage-pad">
+      <div class="rail" data-sc-pan="0.04" id="rail-cosas">
+        <div class="rail__lead">
+          <h2>Su cocina y sus lugares</h2>
+          <p>Lo que se puede volver a hacer y los sitios a los que se puede
+             volver. Es la parte de ella que todavía se usa.</p>
+        </div>
+        <!-- recipes and places injected here -->
+        <div class="rail__end" id="cosas-end">
+          <p style="margin-bottom: var(--sc-5)">¿Guardas una receta suya, escrita
+             a mano o de memoria? ¿Hay un lugar que te la recuerda?</p>
+          <button class="btn btn--ghost" type="button" data-go="receta">Subir una receta</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ 6 · SUS CANCIONES, Y LA PLACA. ══ -->
+  <section id="cierre" class="sc-section sc-section--tight" data-sc-act="flow" data-sc-drift="#0F0E0C">
+    <div class="room stage-pad">
+      <div class="close">
+
+        <div data-sc-in>
+          <h2 class="ella__name">Las canciones que la hacían bailar</h2>
+          <p style="color: var(--sc-ink-soft); font-size: var(--sc-t-sm); max-width: 38ch; margin: var(--sc-4) 0 var(--sc-6);">
+            Vota por las que de verdad le gustaban. Las más queridas suben.</p>
+          <div id="songs"></div>
+          <div class="two" style="margin-top: var(--sc-5);">
+            <label class="fld"><span>Canción</span><input id="song-t" placeholder="Nombre"></label>
+            <label class="fld"><span>Quién la canta</span><input id="song-a" placeholder="Artista"></label>
           </div>
-        </sc-for>
-      </div>
-      <div style="text-align: center; margin-top: 34px;">
-        <button onClick="{{ addMemory }}" style="border: none; cursor: pointer; background: linear-gradient(92deg,#E07B39,#D94E8A,#834CA6); color: #fff; padding: 13px 28px; border-radius: 999px; font-weight: 700; font-size: 15px; box-shadow: 0 10px 24px rgba(217,78,138,.24);">＋ Comparte un recuerdo</button>
-      </div>
-    </div>
-  </section>
+          <button class="btn btn--ghost" type="button" id="song-add">Añadir la canción</button>
 
-  <!-- ============ COMPARTIR ============ -->
-  <section id="compartir" style="scroll-margin-top: 70px; padding: 84px 24px; background: linear-gradient(180deg,#F5E9D8,#F0DFC8);">
-    <div style="max-width: 720px; margin: 0 auto;">
-      <div style="text-align: center; margin-bottom: 34px;">
-        <h2 style="font-family: 'Cormorant Garamond', serif; font-size: clamp(34px,5vw,52px); margin: 0 0 8px; color: #3E2A44; font-weight: 700;">Comparte un recuerdo</h2>
-        <p style="color: #7A6470; font-size: 16.5px; max-width: 460px; margin: 0 auto;">Tu historia mantiene viva su memoria. Escribe una anécdota, sube una foto, añade un momento a su línea de vida o comparte una receta suya.</p>
-      </div>
-
-      <form onSubmit="{{ submit }}" style="background: #FFFCF6; border: 1px solid #EBD9C0; border-radius: 22px; padding: 30px; box-shadow: 0 18px 44px rgba(62,42,68,.1);">
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
-          <label style="display: block;">
-            <span style="display: block; font-weight: 700; font-size: 14px; color: #3E2A44; margin-bottom: 7px;">Tu nombre</span>
-            <input value="{{ form.name }}" onInput="{{ onName }}" placeholder="¿Cómo te llamas?" style="width: 100%; padding: 13px 15px; border: 1.5px solid #E6D3B4; border-radius: 12px; background: #FEFBF4; font-size: 15px; color: #3E2A44;">
-          </label>
-          <label style="display: block;">
-            <span style="display: block; font-weight: 700; font-size: 14px; color: #3E2A44; margin-bottom: 7px;">Relación</span>
-            <input value="{{ form.rel }}" onInput="{{ onRel }}" placeholder="Nieta, amiga, vecino..." style="width: 100%; padding: 13px 15px; border: 1.5px solid #E6D3B4; border-radius: 12px; background: #FEFBF4; font-size: 15px; color: #3E2A44;">
-          </label>
-        </div>
-
-        <p style="font-weight: 700; font-size: 14px; color: #3E2A44; margin: 20px 0 9px;">Tipo de recuerdo</p>
-        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-          <button type="button" onClick="{{ pickTexto }}" style="{{ segTexto }}">Anécdota</button>
-          <button type="button" onClick="{{ pickFoto }}" style="{{ segFoto }}">Foto</button>
-          <button type="button" onClick="{{ pickMomento }}" style="{{ segMomento }}">Momento en su línea de vida</button>
-          <button type="button" onClick="{{ pickReceta }}" style="{{ segReceta }}">Receta suya</button>
-        </div>
-
-        <!-- ANÉCDOTA -->
-        <sc-if value="{{ isTexto }}" hint-placeholder-val="{{ true }}">
-          <div style="margin-top: 20px;">
-            <span style="display: block; font-weight: 700; font-size: 14px; color: #3E2A44; margin-bottom: 7px;">Tu recuerdo o anécdota</span>
-            <textarea value="{{ form.text }}" onInput="{{ onText }}" placeholder="Cuéntanos esa historia especial con María Luz..." style="width: 100%; min-height: 130px; padding: 14px 15px; border: 1.5px solid #E6D3B4; border-radius: 12px; background: #FEFBF4; font-size: 15px; color: #3E2A44; resize: vertical; line-height: 1.5;"></textarea>
-            <div style="margin-top: 14px;">
-              <span style="display: block; font-weight: 700; font-size: 14px; color: #3E2A44; margin-bottom: 7px;">Época del recuerdo <span style="color:#B0895F;font-weight:500;">(opcional)</span></span>
-              <input value="{{ form.epoca }}" onInput="{{ onEpoca }}" placeholder="Ej: Navidad 2015, los años 90, un domingo cualquiera..." style="width: 100%; padding: 13px 15px; border: 1.5px solid #E6D3B4; border-radius: 12px; background: #FEFBF4; font-size: 15px; color: #3E2A44;">
+          <div class="lugs-extra">
+            <h3 class="ced__t" style="font-size: var(--sc-t-lg)">Añadir un lugar suyo</h3>
+            <div class="two" style="margin-top: var(--sc-4);">
+              <label class="fld"><span>Un lugar</span>
+                <input id="lug-n" placeholder="Chapultepec, La Habana…"></label>
+              <label class="fld"><span>Por qué era suyo</span>
+                <input id="lug-p" placeholder="Opcional"></label>
             </div>
-            <div style="margin-top: 14px;">
-              <span style="display: block; font-weight: 700; font-size: 14px; color: #3E2A44; margin-bottom: 7px;">¿Dónde fue? <span style="color:#B0895F;font-weight:500;">(opcional)</span></span>
-              <input value="{{ form.lugar }}" onInput="{{ onLugar }}" placeholder="Ej: Acapulco, la casa de la abuela, Chapultepec..." style="width: 100%; padding: 13px 15px; border: 1.5px solid #E6D3B4; border-radius: 12px; background: #FEFBF4; font-size: 15px; color: #3E2A44;">
-              <p style="margin: 7px 0 0; font-size: 12.5px; color: #9A8590; font-style: italic;">Si lo escribes, ese lugar se sumará a "Lugares que amó".</p>
-            </div>
+            <button class="btn btn--ghost" type="button" id="lug-add">Añadir el lugar</button>
           </div>
-        </sc-if>
+        </div>
 
-        <!-- FOTO -->
-        <sc-if value="{{ isFoto }}" hint-placeholder-val="{{ false }}">
-          <div style="margin-top: 20px;">
-            <label style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; padding: 28px; border: 2px dashed #E0C49E; border-radius: 14px; background: #FEFBF4; cursor: pointer; text-align: center;">
-              <span style="font-family: 'Cormorant Garamond', serif; font-size: 22px; color: #834CA6;">Elige una foto</span>
-              <span style="font-size: 13px; color: #9A8590;">Se sumará al mural de fotos de todos</span>
-              <input type="file" accept="image/*" onChange="{{ onPhotoFile }}" style="display: none;">
+        <!-- the accession plate: the ask, typeset exactly like a label -->
+        <form class="plate" id="plate" data-sc-in>
+          <h2>Falta la tuya</h2>
+          <p>La hoja de contactos de abajo tiene una celda vacía al final y es
+             tuya. Deja una fotografía, un recuerdo, un momento con fecha o una
+             receta suya. Lo verá todo el que entre.</p>
+
+          <div class="seg" role="group" aria-label="Qué vas a dejar">
+            <button type="button" data-t="foto"    aria-pressed="true">Fotografía</button>
+            <button type="button" data-t="texto"   aria-pressed="false">Recuerdo</button>
+            <button type="button" data-t="momento" aria-pressed="false">Momento</button>
+            <button type="button" data-t="receta"  aria-pressed="false">Receta</button>
+          </div>
+
+          <div class="two">
+            <label class="fld"><span>Tu nombre</span>
+              <input id="f-name" autocomplete="name" required placeholder="Como te conocía ella"></label>
+            <label class="fld"><span>Quién eras para ella</span>
+              <input id="f-rel" placeholder="Nieta, amiga, vecino…"></label>
+          </div>
+
+          <div data-p="foto">
+            <label class="drop">
+              <b>Elige la fotografía</b>
+              <span>Se suma al álbum de todos, con tu nombre en el pie.</span>
+              <input type="file" accept="image/*" id="f-file" hidden>
             </label>
-            <sc-if value="{{ hasPhotoPreview }}" hint-placeholder-val="{{ false }}">
-              <div style="margin-top: 14px; text-align: center;">
-                <img src="{{ form.photoData }}" alt="preview" style="max-height: 200px; border-radius: 10px; box-shadow: 0 8px 20px rgba(62,42,68,.12);">
-              </div>
-            </sc-if>
-            <div style="margin-top: 14px;">
-              <span style="display: block; font-weight: 700; font-size: 14px; color: #3E2A44; margin-bottom: 7px;">Pie de foto <span style="color:#B0895F;font-weight:500;">(opcional)</span></span>
-              <input value="{{ form.text }}" onInput="{{ onText }}" placeholder="Ej: De viaje en Acapulco, 1988" style="width: 100%; padding: 13px 15px; border: 1.5px solid #E6D3B4; border-radius: 12px; background: #FEFBF4; font-size: 15px; color: #3E2A44;">
+            <div id="f-prev" hidden style="margin-bottom: var(--sc-4)"></div>
+            <label class="fld"><span>Pie de foto</span>
+              <input id="f-cap" placeholder="Acapulco, 1988"></label>
+          </div>
+
+          <div data-p="texto" hidden>
+            <label class="fld"><span>Tu recuerdo</span>
+              <textarea id="f-text" placeholder="Esa vez que…"></textarea></label>
+            <div class="two">
+              <label class="fld"><span>Cuándo fue</span>
+                <input id="f-epoca" placeholder="Navidad 2015, los noventa…"></label>
+              <label class="fld"><span>Dónde fue</span>
+                <input id="f-lugar" placeholder="Se suma a sus lugares"></label>
             </div>
           </div>
-        </sc-if>
 
-        <!-- MOMENTO -->
-        <sc-if value="{{ isMomento }}" hint-placeholder-val="{{ false }}">
-          <div style="margin-top: 20px;">
-            <div style="display: grid; grid-template-columns: 1fr 1.4fr; gap: 16px;">
-              <label style="display: block;">
-                <span style="display: block; font-weight: 700; font-size: 14px; color: #3E2A44; margin-bottom: 7px;">Fecha</span>
-                <input type="date" value="{{ form.date }}" onInput="{{ onDate }}" style="width: 100%; padding: 12px 14px; border: 1.5px solid #E6D3B4; border-radius: 12px; background: #FEFBF4; font-size: 15px; color: #3E2A44;">
-              </label>
-              <label style="display: block;">
-                <span style="display: block; font-weight: 700; font-size: 14px; color: #3E2A44; margin-bottom: 7px;">Título del momento</span>
-                <input value="{{ form.title }}" onInput="{{ onTitle }}" placeholder="Ej: Su viaje a España" style="width: 100%; padding: 13px 15px; border: 1.5px solid #E6D3B4; border-radius: 12px; background: #FEFBF4; font-size: 15px; color: #3E2A44;">
-              </label>
+          <div data-p="momento" hidden>
+            <div class="two">
+              <label class="fld"><span>Fecha</span><input type="date" id="f-date"></label>
+              <label class="fld"><span>Qué pasó</span><input id="f-title" placeholder="Su viaje a Japón"></label>
             </div>
-            <div style="margin-top: 14px;">
-              <span style="display: block; font-weight: 700; font-size: 14px; color: #3E2A44; margin-bottom: 7px;">Descripción <span style="color:#B0895F;font-weight:500;">(opcional)</span></span>
-              <textarea value="{{ form.desc }}" onInput="{{ onDesc }}" placeholder="Cuéntanos qué pasó en ese momento..." style="width: 100%; min-height: 90px; padding: 14px 15px; border: 1.5px solid #E6D3B4; border-radius: 12px; background: #FEFBF4; font-size: 15px; color: #3E2A44; resize: vertical; line-height: 1.5;"></textarea>
-            </div>
-            <p style="margin: 12px 0 0; font-size: 13px; color: #9A8590; font-style: italic;">Tu momento aparecerá en la línea de vida, ordenado por su fecha.</p>
+            <label class="fld"><span>Cuéntalo</span><textarea id="f-desc" placeholder="Opcional"></textarea></label>
           </div>
-        </sc-if>
 
-        <!-- RECETA -->
-        <sc-if value="{{ isReceta }}" hint-placeholder-val="{{ false }}">
-          <div style="margin-top: 20px;">
-            <span style="display: block; font-weight: 700; font-size: 14px; color: #3E2A44; margin-bottom: 7px;">Nombre del platillo</span>
-            <input value="{{ form.title }}" onInput="{{ onTitle }}" placeholder="Ej: Su mole, su flan napolitano..." style="width: 100%; padding: 13px 15px; border: 1.5px solid #E6D3B4; border-radius: 12px; background: #FEFBF4; font-size: 15px; color: #3E2A44;">
-            <div style="margin-top: 14px;">
-              <span style="display: block; font-weight: 700; font-size: 14px; color: #3E2A44; margin-bottom: 7px;">La receta <span style="color:#B0895F;font-weight:500;">(escríbela aquí, o solo sube la foto)</span></span>
-              <textarea value="{{ form.text }}" onInput="{{ onText }}" placeholder="Ingredientes y preparación, tal como ella la hacía..." style="width: 100%; min-height: 130px; padding: 14px 15px; border: 1.5px solid #E6D3B4; border-radius: 12px; background: #FEFBF4; font-size: 15px; color: #3E2A44; resize: vertical; line-height: 1.5;"></textarea>
-            </div>
-            <div style="margin-top: 14px;">
-              <label style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; padding: 24px; border: 2px dashed #E0C49E; border-radius: 14px; background: #FEFBF4; cursor: pointer; text-align: center;">
-                <span style="font-family: 'Cormorant Garamond', serif; font-size: 22px; color: #834CA6;">Sube la receta escaneada o en foto</span>
-                <span style="font-size: 13px; color: #9A8590;">Vale una foto de la tarjeta, del cuaderno o del platillo (opcional)</span>
-                <input type="file" accept="image/*" onChange="{{ onPhotoFile }}" style="display: none;">
-              </label>
-              <sc-if value="{{ hasPhotoPreview }}" hint-placeholder-val="{{ false }}">
-                <div style="margin-top: 14px; text-align: center;">
-                  <img src="{{ form.photoData }}" alt="preview" style="max-height: 200px; border-radius: 10px; box-shadow: 0 8px 20px rgba(62,42,68,.12);">
-                </div>
-              </sc-if>
-            </div>
+          <div data-p="receta" hidden>
+            <label class="fld"><span>El platillo</span>
+              <input id="f-plato" placeholder="Su flan napolitano"></label>
+            <label class="fld"><span>La receta</span>
+              <textarea id="f-rec" placeholder="Como ella la hacía. O sube la foto de la tarjeta."></textarea></label>
+            <label class="drop">
+              <b>Sube la receta en foto</b>
+              <span>La tarjeta, el cuaderno o el platillo. Opcional.</span>
+              <input type="file" accept="image/*" id="f-file2" hidden>
+            </label>
+            <div id="f-prev2" hidden style="margin-bottom: var(--sc-4)"></div>
           </div>
-        </sc-if>
 
-        <button type="submit" style="margin-top: 24px; width: 100%; border: none; cursor: pointer; background: linear-gradient(92deg,#E07B39,#D94E8A,#834CA6); color: #fff; padding: 16px; border-radius: 14px; font-weight: 700; font-size: 16.5px; letter-spacing: .3px; box-shadow: 0 12px 26px rgba(217,78,138,.26);">Compartir recuerdo</button>
-      </form>
-      <p style="text-align: center; font-size: 12.5px; color: #A08C79; margin-top: 16px; font-family: ui-monospace, monospace;">Todo lo que compartas se guarda y lo verán todas las personas que visiten esta página.</p>
-    </div>
-  </section>
-
-  <!-- ============ RECETAS ============ -->
-  <section id="recetas" style="scroll-margin-top: 76px; padding: 84px 24px;">
-    <div style="max-width: 1080px; margin: 0 auto;">
-      <div style="text-align: center; margin-bottom: 40px;">
-        <p style="font-family: 'Caveat', cursive; font-size: 26px; color: #E07B39; margin: 0; font-weight: 600;">Le encantaba comer rico</p>
-        <h2 style="font-family: 'Cormorant Garamond', serif; font-size: clamp(34px,5vw,52px); margin: 4px 0 8px; color: #3E2A44; font-weight: 700;">Su cocina</h2>
-        <sc-if value="{{ hasRecetas }}" hint-placeholder-val="{{ false }}">
-          <p style="color: #7A6470; font-size: 16.5px;">Los sabores que reunían a la familia alrededor de la mesa</p>
-        </sc-if>
-        <sc-if value="{{ noRecetas }}" hint-placeholder-val="{{ true }}">
-          <p style="color: #7A6470; font-size: 16.5px; max-width: 520px; margin: 0 auto;">¿Guardas alguna receta suya? Súbela aquí — escaneada, en foto o escrita — para que sus sabores sigan en la mesa de todos.</p>
-        </sc-if>
-      </div>
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px;">
-        <sc-for list="{{ recetas }}" as="r" hint-placeholder-count="4">
-          <div style="background: #FFFCF6; border: 1px solid #EBD9C0; border-radius: 18px; padding: 24px; box-shadow: 0 10px 24px rgba(62,42,68,.06); border-top: 4px solid {{ r.color }};">
-            <p style="font-family: 'Cormorant Garamond', serif; font-size: 25px; font-weight: 700; color: #3E2A44; margin: 0 0 8px;">{{ r.name }}</p>
-            <sc-if value="{{ r.hasPhoto }}" hint-placeholder-val="{{ false }}">
-              <img src="{{ r.photo }}" alt="{{ r.name }}" style="display: block; width: 100%; border-radius: 10px; margin: 0 0 10px; cursor: pointer;">
-            </sc-if>
-            <p style="margin: 0; color: #7A6470; font-size: 15px; line-height: 1.55; white-space: pre-line;">{{ r.note }}</p>
-            <sc-if value="{{ r.authorShown }}" hint-placeholder-val="{{ false }}">
-              <p style="margin: 10px 0 0; font-family: 'Caveat', cursive; font-size: 18px; color: #834CA6;">— compartida por {{ r.author }}</p>
-            </sc-if>
-          </div>
-        </sc-for>
-      </div>
-      <div style="text-align: center; margin-top: 34px;">
-        <button onClick="{{ addReceta }}" style="border: none; cursor: pointer; background: linear-gradient(92deg,#E07B39,#D94E8A,#834CA6); color: #fff; padding: 13px 28px; border-radius: 999px; font-weight: 700; font-size: 15px; box-shadow: 0 10px 24px rgba(217,78,138,.24);">＋ Sube una receta suya</button>
+          <button class="btn" type="submit">Dejarlo aquí</button>
+          <p style="font-size: var(--sc-t-xs); color: var(--sc-ink-soft); margin: var(--sc-4) 0 0; line-height: 1.6;">
+            No hay cuentas ni contraseñas. Lo que dejes se guarda y aparece al
+            instante para todos.</p>
+        </form>
       </div>
     </div>
   </section>
 
-  <!-- ============ CANCIONES (votación) ============ -->
-  <section style="padding: 78px 24px; background: #2E2036; color: #F5E9D8;">
-    <div style="max-width: 720px; margin: 0 auto;">
-      <div style="text-align: center; margin-bottom: 30px;">
-        <p style="font-family: 'Caveat', cursive; font-size: 27px; color: #F0A66A; margin: 0; font-weight: 600;">so beat it</p>
-        <h2 style="font-family: 'Cormorant Garamond', serif; font-size: clamp(32px,5vw,48px); margin: 4px 0 8px; color: #FDF6EA; font-weight: 700;">Las canciones que la hacían bailar</h2>
-        <p style="color: #C7B2C4; font-size: 16px;">Vota por las que de verdad le gustaban — las más queridas suben a la cima</p>
-      </div>
-      <div style="background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1); border-radius: 18px; padding: 10px;">
-        <sc-for list="{{ songs }}" as="t" hint-placeholder-count="4">
-          <div style="display: flex; align-items: center; gap: 14px; padding: 13px 14px; border-radius: 12px;">
-            <span style="width: 26px; text-align: center; font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 700; color: #8C7690; flex: 0 0 auto;">{{ t.rank }}</span>
-            <div style="flex: 1; min-width: 0;">
-              <p style="margin: 0; font-weight: 700; font-size: 15.5px; color: #FDF6EA; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ t.title }}</p>
-              <p style="margin: 0; font-size: 13px; color: #C7B2C4;">{{ t.artist }}</p>
-            </div>
-            <button onClick="{{ t.onVote }}" style="{{ t.voteStyle }}">
-              <span style="font-size: 15px; line-height: 1;">{{ t.heart }}</span>
-              <span style="font-weight: 700; font-size: 14px;">{{ t.votes }}</span>
-            </button>
-          </div>
-        </sc-for>
-      </div>
-      <div style="display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap;">
-        <input value="{{ newSongTitle }}" onInput="{{ onNewSongTitle }}" placeholder="Nombre de la canción" style="flex: 2; min-width: 160px; padding: 12px 15px; border: 1px solid rgba(255,255,255,.16); border-radius: 12px; background: rgba(255,255,255,.06); color: #FDF6EA; font-size: 14.5px;">
-        <input value="{{ newSongArtist }}" onInput="{{ onNewSongArtist }}" placeholder="Artista" style="flex: 1.4; min-width: 120px; padding: 12px 15px; border: 1px solid rgba(255,255,255,.16); border-radius: 12px; background: rgba(255,255,255,.06); color: #FDF6EA; font-size: 14.5px;">
-        <button onClick="{{ addSong }}" style="border: none; cursor: pointer; background: linear-gradient(92deg,#E07B39,#D94E8A,#834CA6); color: #fff; padding: 12px 22px; border-radius: 12px; font-weight: 700; font-size: 14.5px;">Agregar</button>
-      </div>
-      <p style="text-align: center; font-size: 12.5px; color: #8C7690; margin-top: 14px;">Cada quien puede votar por sus favoritas y sumar las que falten.</p>
-    </div>
-  </section>
-
-  <!-- ============ LUGARES ============ -->
-  <section id="lugares" style="scroll-margin-top: 76px; padding: 84px 24px; background: #F5E9D8; border-top: 1px solid #EBDBC4; border-bottom: 1px solid #EBDBC4;">
-    <div style="max-width: 1080px; margin: 0 auto;">
-      <div style="text-align: center; margin-bottom: 40px;">
-        <p style="font-family: 'Caveat', cursive; font-size: 26px; color: #834CA6; margin: 0; font-weight: 600;">Ciudadana del mundo</p>
-        <h2 style="font-family: 'Cormorant Garamond', serif; font-size: clamp(34px,5vw,52px); margin: 4px 0 8px; color: #3E2A44; font-weight: 700;">Lugares que amó</h2>
-        <sc-if value="{{ hasLugares }}" hint-placeholder-val="{{ false }}">
-          <p style="color: #7A6470; font-size: 16.5px;">Del Bosque de Chapultepec a cada rincón del mundo que la vio sonreír</p>
-        </sc-if>
-        <sc-if value="{{ noLugares }}" hint-placeholder-val="{{ true }}">
-          <p style="color: #7A6470; font-size: 16.5px; max-width: 520px; margin: 0 auto;">¿Qué lugar te la recuerda? Agrégalo aquí abajo y se irá dibujando el mapa de su vida.</p>
-        </sc-if>
-      </div>
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 18px;">
-        <sc-for list="{{ lugares }}" as="l" hint-placeholder-count="4">
-          <div style="background: #FFFCF6; border: 1px solid #EBD9C0; border-radius: 18px; padding: 22px; box-shadow: 0 10px 24px rgba(62,42,68,.06); display: flex; gap: 14px; align-items: flex-start;">
-            <div style="width: 12px; height: 12px; border-radius: 50%; margin-top: 6px; flex: 0 0 auto; background: {{ l.color }}; box-shadow: 0 0 0 4px {{ l.halo }};"></div>
-            <div>
-              <p style="font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 700; color: #3E2A44; margin: 0 0 4px;">{{ l.name }}</p>
-              <p style="margin: 0; color: #7A6470; font-size: 14.5px; line-height: 1.5;">{{ l.note }}</p>
-            </div>
-          </div>
-        </sc-for>
-      </div>
-      <div style="display: flex; gap: 10px; margin-top: 30px; flex-wrap: wrap; max-width: 720px; margin-left: auto; margin-right: auto;">
-        <input value="{{ newLugarName }}" onInput="{{ onNewLugarName }}" placeholder="Un lugar que amaba" style="flex: 1.4; min-width: 150px; padding: 12px 15px; border: 1.5px solid #E6D3B4; border-radius: 12px; background: #FFFCF6; font-size: 14.5px; color: #3E2A44;">
-        <input value="{{ newLugarNote }}" onInput="{{ onNewLugarNote }}" placeholder="¿Por qué era especial? (opcional)" style="flex: 2; min-width: 180px; padding: 12px 15px; border: 1.5px solid #E6D3B4; border-radius: 12px; background: #FFFCF6; font-size: 14.5px; color: #3E2A44;">
-        <button onClick="{{ addLugar }}" style="border: none; cursor: pointer; background: linear-gradient(92deg,#E07B39,#D94E8A,#834CA6); color: #fff; padding: 12px 22px; border-radius: 12px; font-weight: 700; font-size: 14.5px;">＋ Agregar lugar</button>
+  <!-- ══ 7 · SU ÚLTIMA PALABRA. Short, pinned, holds to the end. ══ -->
+  <section id="final" data-sc-act="pin" data-sc-span="1.2" data-sc-drift="#0B0A09">
+    <div data-sc-stage class="stage-pad">
+      <div class="room fin" data-sc-cue="0 1 0 0">
+        <div class="tally">
+          <div><b data-n="fotos">–</b><span>fotografías</span></div>
+          <div><b data-n="personas">–</b><span>personas trajeron una</span></div>
+          <div><b data-n="recuerdos">–</b><span>recuerdos</span></div>
+          <div><b data-n="velitas">–</b><span>velitas encendidas</span></div>
+        </div>
+        <button class="btn btn--ghost" type="button" id="velita">Encender una velita</button>
+        <div class="lastword">
+          <q>so beat it</q>
+          <p>Ella tiene la última palabra</p>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- ============ FOOTER ============ -->
-  <footer style="padding: 70px 24px 56px; text-align: center;">
-    <p style="font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: clamp(24px,4vw,34px); color: #4A3550; max-width: 640px; margin: 0 auto 20px; line-height: 1.35;">Mientras la recordemos, mientras contemos sus historias y cocinemos sus recetas, María Luz seguirá aquí, con nosotros.</p>
-    <div style="display: flex; align-items: center; justify-content: center; gap: 14px; margin: 24px 0;">
-      <span style="width: 60px; height: 1px; background: #DBBE96;"></span>
-      <span style="font-family: 'Caveat', cursive; font-size: 30px; font-weight: 700; background: linear-gradient(92deg,#E07B39,#D94E8A,#834CA6); -webkit-background-clip: text; background-clip: text; color: transparent;">so beat it</span>
-      <span style="width: 60px; height: 1px; background: #DBBE96;"></span>
-    </div>
-    <p style="font-family: 'Cormorant Garamond', serif; font-size: 20px; color: #6A5560; margin: 0;">María Luz Galindo Rodríguez · 1949 — 2026</p>
-    <p style="font-size: 13px; color: #A08C79; margin: 8px 0 0;">Hecho con amor por todas las personas que te querían</p>
-  </footer>
+</main>
 
-  <!-- ============ LIGHTBOX ============ -->
-  <sc-if value="{{ showLightbox }}" hint-placeholder-val="{{ false }}">
-    <div onClick="{{ closeLightbox }}" style="position: fixed; inset: 0; z-index: 90; background: rgba(46,32,54,.86); display: flex; align-items: center; justify-content: center; padding: 32px; backdrop-filter: blur(4px);">
-      <div style="background: #FFFEFB; padding: 16px 16px 54px; box-shadow: 0 30px 80px rgba(0,0,0,.5); transform: rotate(-1.5deg); max-width: 90vw;">
-        <sc-if value="{{ lightboxHasSrc }}" hint-placeholder-val="{{ false }}">
-          <img src="{{ lightboxSrc }}" alt="" style="display: block; max-width: 78vw; max-height: 68vh; object-fit: contain;">
-        </sc-if>
-        <sc-if value="{{ lightboxNoSrc }}" hint-placeholder-val="{{ true }}">
-          <div style="width: min(60vw, 420px); height: min(60vw, 420px); background: repeating-linear-gradient(45deg,#F0E1CD,#F0E1CD 14px,#E9D5BB 14px,#E9D5BB 28px); display: flex; align-items: center; justify-content: center;">
-            <span style="font-family: ui-monospace, monospace; font-size: 13px; color: #9A7E5C;">reemplaza esta foto en Claude Code</span>
-          </div>
-        </sc-if>
-        <p style="font-family: 'Caveat', cursive; font-size: 26px; color: #5C4A54; text-align: center; margin: 12px 0 0;">{{ lightboxCaption }}</p>
-      </div>
-    </div>
-  </sc-if>
+<!-- ══ the signature move ══ -->
+<aside class="hoja" id="hoja" aria-label="Hoja de contactos">
+  <div class="hoja__in">
+    <div class="hoja__lbl">Hoja de<br>contactos<br><b id="hoja-n">0</b></div>
+    <div class="hoja__strip" id="hoja-strip" role="list"></div>
+  </div>
+</aside>
 
-  <!-- ============ TOAST ============ -->
-  <sc-if value="{{ showToast }}" hint-placeholder-val="{{ false }}">
-    <div style="position: fixed; left: 50%; bottom: 28px; z-index: 95; transform: translateX(-50%); background: #3E2A44; color: #FDF6EA; padding: 15px 26px; border-radius: 999px; font-weight: 600; font-size: 15px; box-shadow: 0 16px 40px rgba(62,42,68,.4); animation: mltoast .35s ease; border: 1px solid rgba(224,123,57,.5);">{{ toast }}</div>
-  </sc-if>
-
+<div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Fotografía">
+  <button class="lb__x" id="lb-x" aria-label="Cerrar">✕</button>
+  <div class="lb__cap ced">
+    <p class="ced__t" id="lb-t" style="font-size: var(--sc-t-lg)"></p>
+    <p class="ced__p" id="lb-p" style="justify-content: center"></p>
+  </div>
 </div>
-</x-dc>
-<script type="text/x-dc" data-dc-script>
-class Component extends DCLogic {
-  MONTHS = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
-  COLORS = ['#E07B39', '#D94E8A', '#834CA6', '#C98A2E'];
 
-  // ⬇️ Base de datos compartida (Firebase) — velitas, recuerdos, fotos y canciones de todos los visitantes
-  FIREBASE_CONFIG = {
-    apiKey: "AIzaSyAPfk0_DweyLwoRy_zKmNvrwsUBgHXagak",
-    authDomain: "memorial-marilu.firebaseapp.com",
-    projectId: "memorial-marilu",
-    storageBucket: "memorial-marilu.firebasestorage.app",
-    messagingSenderId: "994871922156",
-    appId: "1:994871922156:web:3e337d06e96aed65f204c9",
-    measurementId: "G-2PFL19FZE2"
-  };
-  CANDLES_BASE = 128; // velitas iniciales; se les suman las encendidas en la nube
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-  // ⬇️ EDITA AQUÍ — momentos base de la línea de vida (fecha AAAA-MM-DD)
-  TIMELINE_SEED = [
-    { id: 's1', date: '1949-01-21', title: 'Nace María Luz', text: 'Llega al mundo en la Ciudad de México, un 21 de enero.' },
-    { id: 's2', date: '1968-09-20', title: 'Se casa', text: 'El 20 de septiembre comienza a construir su familia.' },
-    { id: 's3', date: '1974-08-31', title: 'Nace su primera hija', text: 'Se convierte en mamá por primera vez.' },
-    { id: 's4', date: '1977-04-09', title: 'Nace su primer hijo', text: 'La familia sigue creciendo.' },
-  ];
-
-  // ⬇️ EDITA AQUÍ — recuerdos fijos (los de visitantes llegan solos desde la nube)
-  MEMORIES_SEED = [];
-
-  // ⬇️ EDITA AQUÍ — fotos. Pon la ruta en "src" (ej: 'fotos/abuela-01.jpg'). Déjalo vacío para ver un marcador.
-  PHOTOS_SEED = [
-    { id: 'p1', src: 'fotos/marilu-sentada-jardin-orquideas.jpg' },
-    { id: 'p2', src: 'fotos/marilu-soplando-un-diente-de-leon.jpg' },
-    { id: 'p3', src: 'fotos/marilu-en-bahia-halong-vietnam.jpg' },
-    { id: 'p4', src: 'fotos/sonriente-en-el-jardin.jpg' },
-    { id: 'p5', src: 'fotos/familia-01.jpg' },
-    { id: 'p6', src: 'fotos/familia-02.jpg' },
-    { id: 'p7', src: 'fotos/familia-03.jpg' },
-    { id: 'p8', src: 'fotos/familia-04.jpg' },
-    { id: 'p9', src: 'fotos/familia-05.jpg' },
-    { id: 'p10', src: 'fotos/familia-06.jpg' },
-    { id: 'p11', src: 'fotos/familia-07.jpg' },
-    { id: 'p12', src: 'fotos/familia-08.jpg' },
-    { id: 'p13', src: 'fotos/familia-09.jpg' },
-    { id: 'p14', src: 'fotos/familia-10.jpg' },
-    { id: 'p15', src: 'fotos/cena-familiar-con-nietos.jpg' },
-    { id: 'p16', src: 'fotos/abrazo-carinoso-en-fiesta.jpg' },
-    { id: 'p17', src: 'fotos/atardecer-en-la-playa-familia.jpg' },
-    { id: 'p18', src: 'fotos/marilu-con-cigarro-en-la-habana.jpg' },
-    { id: 'p19', src: 'fotos/amigas-junto-a-auto-clasico-cuba.jpg' },
-    { id: 'p20', src: 'fotos/cena-de-gala-con-diez-invitados.jpg' },
-    { id: 'p21', src: 'fotos/comida-con-copas-de-vino.jpg' },
-    { id: 'p22', src: 'fotos/graduacion-con-flores-de-noche.jpg' },
-    { id: 'p23', src: 'fotos/atardecer-en-la-terraza.jpg' },
-    { id: 'p24', src: 'fotos/con-bebe-y-nieta-en-jardin.jpg' },
-    { id: 'p25', src: 'fotos/retrato-con-nietos-en-porche.jpg' },
-    { id: 'p26', src: 'fotos/paseo-en-cuatriciclo-ciudad.jpg' },
-    { id: 'p27', src: 'fotos/cuatriciclo-junto-al-muelle.jpg' },
-    { id: 'p28', src: 'fotos/abrazo-con-su-nieta.jpg' },
-    { id: 'p29', src: 'fotos/familia-en-ruinas-mayas.jpg' },
-    { id: 'p30', src: 'fotos/tira-de-fotomaton-familiar.jpg' },
-    { id: 'p31', src: 'fotos/abrazo-navideno-con-nochebuenas.jpg' },
-    { id: 'p32', src: 'fotos/celebracion-familiar-con-pastel.jpg' },
-    { id: 'p33', src: 'fotos/de-paseo-con-pinguinos-de-peluche.jpg' },
-    { id: 'p34', src: 'fotos/grupo-de-amigas-en-evento.jpg' },
-    { id: 'p35', src: 'fotos/boda-familiar-abrazo-carinoso.jpg' },
-    { id: 'p36', src: 'fotos/noche-de-ano-nuevo-en-pareja.jpg' },
-    { id: 'p37', src: 'fotos/marilu-con-bebe-recien-nacido.jpg' },
-    { id: 'p38', src: 'fotos/retrato-familiar-en-el-jardin.jpg' },
-    { id: 'p39', src: 'fotos/paseo-en-tuk-tuk-mercado-guatemala.jpg' },
-    { id: 'p40', src: 'fotos/marilu-abrazada-por-sus-nietos.jpg' },
-    { id: 'p41', src: 'fotos/selfie-con-nieto-en-munich.jpg' },
-    { id: 'p42', src: 'fotos/dos-amigas-elegantes-en-fiesta.jpg' },
-    { id: 'p43', src: 'fotos/marilu-jardin-tropical-viaje.jpg' },
-    { id: 'p44', src: 'fotos/cena-con-amigas-restaurante.jpg' },
-    { id: 'p45', src: 'fotos/grupo-amigas-sala-de-espera.jpg' },
-    { id: 'p46', src: 'fotos/marilu-y-su-esposo-en-evento.jpg' },
-    { id: 'p47', src: 'fotos/marcha-el-ine-no-se-toca.jpg' },
-    { id: 'p48', src: 'fotos/cumpleanos-con-nietos-en-casa.jpg' },
-    { id: 'p49', src: 'fotos/marilu-el-dia-de-su-boda.jpg' },
-    { id: 'p50', src: 'fotos/marilu-con-esposo-y-nieto-bebe.jpg' },
-    { id: 'p51', src: 'fotos/selfie-marilu-con-nieta.jpg' },
-    { id: 'p52', src: 'fotos/cena-en-terraza-con-familia.jpg' },
-    { id: 'p53', src: 'fotos/cumpleanos-con-amigas-bengala.jpg' },
-    { id: 'p54', src: 'fotos/cena-familiar-frente-al-mar.jpg' },
-    { id: 'p55', src: 'fotos/marilu-comiendo-hot-dog-en-ny.jpg' },
-    { id: 'p56', src: 'fotos/amigas-en-alberca-anos-70.jpg' },
-    { id: 'p57', src: 'fotos/tres-mujeres-foto-vintage.jpg' },
-    { id: 'p58', src: 'fotos/retrato-familiar-en-jardin.jpg' },
-    { id: 'p59', src: 'fotos/boda-vintage-blanco-y-negro.jpg' },
-    { id: 'p60', src: 'fotos/torii-naranjas-bajo-la-lluvia.jpg' },
-    { id: 'p61', src: 'fotos/grupo-de-amigas-evento-elegante.jpg' },
-    { id: 'p62', src: 'fotos/retrato-familiar-vintage-anos-80.jpg' },
-    { id: 'p63', src: 'fotos/comida-grupo-amigos-terraza.jpg' },
-    { id: 'p64', src: 'fotos/postre-en-restaurante-tropical.jpg' },
-    { id: 'p65', src: 'fotos/reunion-de-mujeres-en-jardin.jpg' },
-    { id: 'p66', src: 'fotos/familia-con-impermeables-en-japon.jpg' },
-    { id: 'p67', src: 'fotos/retrato-familiar-vintage-elegante.jpg' },
-    { id: 'p68', src: 'fotos/pareja-vintage-evento-de-gala.jpg' },
-    { id: 'p69', src: 'fotos/paseo-en-bicicleta-en-familia.jpg' },
-    { id: 'p70', src: 'fotos/libros-de-decoracion-en-repisa.jpg' },
-    { id: 'p71', src: 'fotos/globos-de-colores-en-el-parque.jpg' },
-    { id: 'p72', src: 'fotos/familia-frente-a-convento-izamal.jpg' },
-    { id: 'p73', src: 'fotos/cinco-amigas-frente-a-helechos.jpg' },
-    { id: 'p74', src: 'fotos/marilu-soplando-velas-de-cumpleanos.jpg' },
-    { id: 'p75', src: 'fotos/seis-amigas-vestidos-de-colores.jpg' },
-    { id: 'p76', src: 'fotos/amigas-frente-a-arbol-iluminado.jpg' },
-    { id: 'p77', src: 'fotos/amigas-en-escalera-casa-de-playa.jpg' },
-    { id: 'p78', src: 'fotos/selfie-con-nieta-en-restaurante.jpg' },
-    { id: 'p79', src: 'fotos/comida-de-amigas-mesa-festiva.jpg' },
-    { id: 'p80', src: 'fotos/celebracion-con-amigas-en-restaurante.jpg' },
-    { id: 'p81', src: 'fotos/abrazo-con-nieta-en-barco.jpg' },
-    { id: 'p82', src: 'fotos/comida-navidena-con-amigas.jpg' },
-    { id: 'p83', src: 'fotos/marilu-y-esposo-con-sus-nietos.jpg' },
-    { id: 'p84', src: 'fotos/soplando-el-pastel-con-nietos.jpg' },
-    { id: 'p85', src: 'fotos/retrato-con-nietos-en-el-salon.jpg' },
-    { id: 'p86', src: 'fotos/marilu-con-amigos-en-evento.jpg' },
-    { id: 'p87', src: 'fotos/reunion-de-generaciones-en-el-jardin.jpg' },
-    { id: 'p88', src: 'fotos/con-su-esposo-en-el-jardin-de-noche.jpg' },
-    { id: 'p89', src: 'fotos/festejo-con-amigas-y-bengala.jpg' },
-    { id: 'p90', src: 'fotos/mesa-de-gala-en-una-boda.jpg' },
-    { id: 'p91', src: 'fotos/visita-nocturna-en-grupo.jpg' },
-    { id: 'p92', src: 'fotos/cumpleanos-en-familia-soplando-velas.jpg' },
-    { id: 'p93', src: 'fotos/ano-nuevo-con-sus-nietas.jpg' },
-    { id: 'p94', src: 'fotos/bajo-la-aurora-boreal.jpg' },
-    { id: 'p95', src: 'fotos/entre-fiordos-nevados.jpg' },
-    { id: 'p96', src: 'fotos/nueve-amigas-en-el-comedor.jpg' },
-    { id: 'p97', src: 'fotos/sorpresa-de-pastel-con-bengala.jpg' },
-    { id: 'p98', src: 'fotos/atardecer-con-nietos-junto-al-mar.jpg' },
-    { id: 'p99', src: 'fotos/atardecer-en-familia-junto-al-mar.jpg' },
-    { id: 'p100', src: 'fotos/gran-reunion-familiar-con-pastel.jpg' },
-    { id: 'p101', src: 'fotos/retrato-en-salon-verde-elegante.jpg' },
-    { id: 'p102', src: 'fotos/paseo-con-nietos-junto-al-lago.jpg' },
-    { id: 'p103', src: 'fotos/festejo-familiar-con-los-perritos.jpg' },
-    { id: 'p104', src: 'fotos/soplando-la-velita-con-su-esposo.jpg' },
-    { id: 'p105', src: 'fotos/amigos-frente-a-la-casa.jpg' },
-    { id: 'p106', src: 'fotos/tarde-en-el-jardin-entre-amigos.jpg' },
-    { id: 'p107', src: 'fotos/con-esposo-y-amigas-en-el-jardin.jpg' },
-    { id: 'p108', src: 'fotos/comida-familiar-en-patio-de-hotel.jpg' },
-    { id: 'p109', src: 'fotos/con-su-nieta-en-sacre-coeur.jpg' },
-    { id: 'p110', src: 'fotos/selfie-de-tres-sonrisas-al-sol.jpg' },
-    { id: 'p111', src: 'fotos/cena-de-amigas-noche-tropical.jpg' },
-    { id: 'p112', src: 'fotos/cumpleanos-en-casa-con-pastel.jpg' },
-    { id: 'p113', src: 'fotos/grupo-de-mujeres-frente-a-obra-de-arte.jpg' },
-    { id: 'p114', src: 'fotos/selfie-en-el-coche-con-nieta.jpg' },
-    { id: 'p115', src: 'fotos/en-una-boda-familiar.jpg' },
-    { id: 'p116', src: 'fotos/marilu-bailando-en-la-fiesta.jpg' },
-    { id: 'p117', src: 'fotos/festejo-con-su-nieto-en-restaurante.jpg' },
-    { id: 'p118', src: 'fotos/pastelito-de-cumpleanos-en-restaurante.jpg' },
-    { id: 'p119', src: 'fotos/un-cafe-con-su-nieta.jpg' },
-    { id: 'p120', src: 'fotos/brindando-en-la-mesa-festiva.jpg' },
-    { id: 'p121', src: 'fotos/retrato-de-juventud-en-marco-de-madera.jpg' },
-    { id: 'p122', src: 'fotos/apuntes-a-mano-de-historia.jpg' },
-    { id: 'p123', src: 'fotos/apuntes-de-historia-del-arte.jpg' },
-    { id: 'p124', src: 'fotos/notas-a-mano-para-usar-el-correo.jpg' },
-    { id: 'p125', src: 'fotos/tres-amigas-riendo-foto-antigua.jpg' },
-    { id: 'p126', src: 'fotos/tres-amigas-ante-casona-inglesa.jpg' },
-    { id: 'p127', src: 'fotos/entre-roosevelt-y-churchill-en-londres.jpg' },
-    { id: 'p128', src: 'fotos/dos-mujeres-junto-al-mar-vintage.jpg' },
-    { id: 'p129', src: 'fotos/amigas-de-excursion-en-la-cascada.jpg' },
-    { id: 'p130', src: 'fotos/ocho-amigas-en-el-jardin.jpg' },
-    { id: 'p131', src: 'fotos/gran-reunion-de-amigas-de-gala.jpg' },
-    { id: 'p132', src: 'fotos/con-su-esposo-en-un-cafe.jpg' },
-    { id: 'p133', src: 'fotos/cena-de-mujeres-en-casa.jpg' },
-    { id: 'p134', src: 'fotos/cena-familiar-en-vacaciones.jpg' },
-    { id: 'p135', src: 'fotos/cantando-en-la-fiesta.jpg' },
-    { id: 'p136', src: 'fotos/rompiendo-la-pinata.jpg' },
-    { id: 'p137', src: 'fotos/comida-de-amigas-en-restaurante.jpg' },
-    { id: 'p138', src: 'fotos/festejo-entre-amigas-de-rosa.jpg' },
-    { id: 'p139', src: 'fotos/festejo-con-pastel-entre-amigos.jpg' },
-  ];
-
-  // ⬇️ EDITA AQUÍ — recetas fijas (las de visitantes llegan solas desde la nube)
-  RECETAS_SEED = [];
-
-  // ⬇️ EDITA AQUÍ — lugares fijos (los de visitantes llegan solos desde la nube)
-  LUGARES_SEED = [];
-
-  // ⬇️ EDITA AQUÍ — canciones iniciales y sus votos base para el ranking
-  SONGS_SEED = [
-    { id: 'song1', title: 'Las Sevillanas', artist: 'Tradicional (folclore andaluz)', base: 30 },
-    { id: 'song2', title: 'Flowers', artist: 'Miley Cyrus', base: 25 },
-    { id: 'song3', title: 'Muchachita Consentida', artist: 'Rayito Colombiano', base: 20 },
-    { id: 'song4', title: 'A Contracorriente', artist: 'Álvaro Soler & David Bisbal', base: 15 },
-    { id: 'song5', title: 'Tie a Yellow Ribbon', artist: 'Tony Orlando & Dawn', base: 10 },
-    { id: 'song6', title: 'La Suavecita', artist: 'Manduco', base: 6 },
-  ];
-
-  state = {
-    userTimeline: [], userMemories: [], userPhotos: [], userLugares: [], candles: 128,
-    userRecetas: [], cloudLugares: [], newLugarName: '', newLugarNote: '',
-    songs: [], songVotes: {}, myVotes: [], newSongTitle: '', newSongArtist: '',
-    form: { name: '', rel: '', type: 'texto', text: '', epoca: '', lugar: '', date: '', title: '', desc: '', photoData: null },
-    lightbox: null, toast: '',
-    dispHist: [], dispPos: -1, dispPlay: true,
-  };
-
-  lsGet(k, fb) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : fb; } catch (e) { return fb; } }
-  lsSet(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
-
-  componentDidMount() {
-    this.setState({
-      userTimeline: this.lsGet('ml_timeline', []),
-      userMemories: this.lsGet('ml_memories', []),
-      userPhotos: this.lsGet('ml_photos', []),
-      userLugares: this.lsGet('ml_lugares', []),
-      userRecetas: this.lsGet('ml_recetas', []),
-      songs: this.lsGet('ml_songs', []),
-      songVotes: this.lsGet('ml_songvotes', {}),
-      myVotes: this.lsGet('ml_myvotes', []),
-      candles: this.lsGet('ml_candles', 128),
-    });
-    this.initCloud();
-    // Display aleatorio: primera foto ya, y avance automático cada 5 s
-    this.displayNext();
-    this._dispTimer = setInterval(() => {
-      if (this.state.dispPlay && !this.state.lightbox) this.displayNext();
-    }, 5000);
-  }
-
-  // --- Nube compartida (Firestore) ---
-  // Si Firebase no carga o las reglas lo impiden, la página sigue funcionando
-  // con localStorage (solo en este dispositivo), como antes.
-  initCloud() {
-    try {
-      if (typeof firebase === 'undefined' || !this.FIREBASE_CONFIG.apiKey) return;
-      if (!firebase.apps.length) firebase.initializeApp(this.FIREBASE_CONFIG);
-      this.db = firebase.firestore();
-    } catch (e) { console.warn('Firebase no disponible:', e); this.db = null; return; }
-    const db = this.db;
-    const warn = tag => e => console.warn('nube (' + tag + '):', e && e.code || e);
-    // Contador global de velitas, en vivo
-    db.doc('contadores/velitas').onSnapshot(d => {
-      const n = (d.exists && d.data().n) || 0;
-      this.setState({ candles: this.CANDLES_BASE + n });
-    }, warn('velitas'));
-    // Muro de recuerdos + lugares mencionados en ellos
-    db.collection('recuerdos').onSnapshot(q => {
-      const arr = this.snapArr(q);
-      const lug = arr.filter(m => m.lugar).map(m => ({
-        name: m.lugar,
-        note: 'Recordado por ' + (m.author || 'alguien') + (m.epoca ? ' · ' + m.epoca : ''),
-      }));
-      this.setState({ userMemories: arr, userLugares: lug });
-    }, warn('recuerdos'));
-    // Momentos de la línea de vida
-    db.collection('momentos').onSnapshot(q => this.setState({ userTimeline: this.snapArr(q) }), warn('momentos'));
-    // Fotos del mural
-    db.collection('fotos').onSnapshot(q => this.setState({ userPhotos: this.snapArr(q) }), warn('fotos'));
-    // Recetas compartidas
-    db.collection('recetas').onSnapshot(q => this.setState({ userRecetas: this.snapArr(q) }), warn('recetas'));
-    // Lugares agregados directamente
-    db.collection('lugares').onSnapshot(q => this.setState({ cloudLugares: this.snapArr(q) }), warn('lugares'));
-    // Canciones agregadas por visitantes + votos globales
-    db.collection('canciones').onSnapshot(q => {
-      this.setState({ songs: this.snapArr(q).map(c => ({ id: c.id, title: c.title, artist: c.artist, base: 0 })) });
-    }, warn('canciones'));
-    db.collection('votos').onSnapshot(q => {
-      const v = {};
-      q.forEach(d => { v[d.id] = (d.data() && d.data().n) || 0; });
-      this.setState({ songVotes: v });
-    }, warn('votos'));
-  }
-
-  // QuerySnapshot → array ordenado por fecha de creación (lo pendiente de servidor va al final)
-  snapArr(q) {
-    const arr = [];
-    q.forEach(d => arr.push(Object.assign({ id: d.id }, d.data())));
-    arr.sort((a, b) => (a.t && a.t.toMillis ? a.t.toMillis() : 9e15) - (b.t && b.t.toMillis ? b.t.toMillis() : 9e15));
-    return arr;
-  }
-
-  saveLocal(lsKey, stateKey, entry) {
-    const arr = this.state[stateKey].concat([entry]);
-    this.setState({ [stateKey]: arr });
-    this.lsSet(lsKey, arr);
-  }
-
-  saveMemoryLocal(entry) {
-    this.saveLocal('ml_memories', 'userMemories', Object.assign({ id: 'u' + Date.now() }, entry));
-    if (entry.lugar) {
-      this.saveLocal('ml_lugares', 'userLugares', {
-        name: entry.lugar,
-        note: 'Recordado por ' + entry.author + (entry.epoca ? ' · ' + entry.epoca : ''),
-      });
-    }
-  }
-
-  // --- Display aleatorio sin repetición consecutiva ---
-  // Baraja todas las fotos en una "ronda"; al agotarse vuelve a barajar
-  // cuidando que la primera de la nueva ronda no repita la última mostrada.
-  allPhotos() { return this.PHOTOS_SEED.concat(this.state.userPhotos); }
-
-  shuffleArr(a) {
-    for (let i = a.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      const t = a[i]; a[i] = a[j]; a[j] = t;
-    }
-    return a;
-  }
-
-  refillBag(lastIdx) {
-    const n = this.allPhotos().length;
-    const bag = this.shuffleArr(Array.from({ length: n }, (_, i) => i));
-    if (n > 1 && bag[0] === lastIdx) {
-      const k = 1 + Math.floor(Math.random() * (n - 1));
-      const t = bag[0]; bag[0] = bag[k]; bag[k] = t;
-    }
-    return bag;
-  }
-
-  displayNext() {
-    const s = this.state;
-    if (s.dispPos < s.dispHist.length - 1) { this.setState({ dispPos: s.dispPos + 1 }); return; }
-    if (!this.allPhotos().length) return;
-    if (!this._bag || !this._bag.length) this._bag = this.refillBag(s.dispHist[s.dispHist.length - 1]);
-    const idx = this._bag.shift();
-    const hist = s.dispHist.concat([idx]);
-    this.setState({ dispHist: hist, dispPos: hist.length - 1 });
-  }
-
-  displayPrev() {
-    if (this.state.dispPos > 0) this.setState({ dispPos: this.state.dispPos - 1 });
-  }
-
-  fmt(d) {
-    const p = String(d).split('-');
-    if (p.length < 3) return d;
-    return (+p[2]) + ' ' + (this.MONTHS[(+p[1]) - 1] || '') + ' ' + p[0];
-  }
-
-  setF(k, v) { this.setState(s => ({ form: Object.assign({}, s.form, { [k]: v }) })); }
-  blankForm() { return { name: '', rel: '', type: this.state.form.type, text: '', epoca: '', lugar: '', date: '', title: '', desc: '', photoData: null }; }
-
-  toastMsg(m) {
-    this.setState({ toast: m });
-    clearTimeout(this._t);
-    this._t = setTimeout(() => this.setState({ toast: '' }), 3400);
-  }
-
-  lightCandle() {
-    if (this.db) {
-      this.db.doc('contadores/velitas')
-        .set({ n: firebase.firestore.FieldValue.increment(1) }, { merge: true })
-        .catch(() => {
-          const n = this.state.candles + 1;
-          this.setState({ candles: n });
-          this.lsSet('ml_candles', n);
-        });
-    } else {
-      const n = this.state.candles + 1;
-      this.setState({ candles: n });
-      this.lsSet('ml_candles', n);
-    }
-    this.toastMsg('Encendiste una velita en su memoria');
-  }
-
-  scrollTo(id) {
-    const el = document.getElementById(id);
-    if (el) { const y = el.getBoundingClientRect().top + window.scrollY - 68; window.scrollTo({ top: y, behavior: 'smooth' }); }
-  }
-  goAddMoment() { this.setF('type', 'momento'); this.scrollTo('compartir'); }
-  goAddPhoto() { this.setF('type', 'foto'); this.scrollTo('compartir'); }
-  goAddMemory() { this.setF('type', 'texto'); this.scrollTo('compartir'); }
-  goAddReceta() { this.setF('type', 'receta'); this.scrollTo('compartir'); }
-
-  addLugar() {
-    const name = this.state.newLugarName.trim();
-    if (!name) { this.toastMsg('Escribe el nombre del lugar'); return; }
-    const entry = { name: name, note: this.state.newLugarNote.trim() };
-    if (this.db) {
-      this.db.collection('lugares').add(Object.assign({ t: firebase.firestore.FieldValue.serverTimestamp() }, entry))
-        .catch(() => this.saveLocal('ml_lugares', 'userLugares', entry));
-    } else {
-      this.saveLocal('ml_lugares', 'userLugares', entry);
-    }
-    this.setState({ newLugarName: '', newLugarNote: '' });
-    this.toastMsg('¡Gracias! El lugar ya está en su mapa');
-  }
-
-  // Lee la foto y la comprime (máx 1100 px, JPEG) para que quepa en la nube (límite 1 MB)
-  onPhotoFile(e) {
-    const file = e.target.files && e.target.files[0];
-    if (!file) return;
-    const r = new FileReader();
-    r.onload = ev => {
-      const raw = ev.target.result;
-      const img = new Image();
-      img.onload = () => {
-        try {
-          const MAX = 1100;
-          const k = Math.min(1, MAX / Math.max(img.width, img.height));
-          const c = document.createElement('canvas');
-          c.width = Math.round(img.width * k);
-          c.height = Math.round(img.height * k);
-          c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
-          let q = 0.8, out = c.toDataURL('image/jpeg', q);
-          while (out.length > 900000 && q > 0.35) { q -= 0.1; out = c.toDataURL('image/jpeg', q); }
-          this.setF('photoData', out);
-        } catch (err) { this.setF('photoData', raw); }
-      };
-      img.onerror = () => this.setF('photoData', raw);
-      img.src = raw;
-    };
-    r.readAsDataURL(file);
-  }
-
-  submit(e) {
-    if (e) e.preventDefault();
-    const f = this.state.form;
-    if (!f.name.trim()) { this.toastMsg('Escribe tu nombre para compartir'); return; }
-
-    if (f.type === 'momento') {
-      if (!f.date || !f.title.trim()) { this.toastMsg('Falta la fecha o el título del momento'); return; }
-      const entry = { date: f.date, title: f.title.trim(), text: f.desc.trim(), kind: 'user', author: f.name.trim() };
-      if (this.db) {
-        this.db.collection('momentos').add(Object.assign({ t: firebase.firestore.FieldValue.serverTimestamp() }, entry))
-          .catch(() => this.saveLocal('ml_timeline', 'userTimeline', Object.assign({ id: 'u' + Date.now() }, entry)));
-      } else {
-        this.saveLocal('ml_timeline', 'userTimeline', Object.assign({ id: 'u' + Date.now() }, entry));
-      }
-      this.setState({ form: this.blankForm() });
-      this.toastMsg('¡Gracias! Tu momento se añadió a su línea de vida');
-      this.scrollTo('vida');
-    } else if (f.type === 'foto') {
-      if (!f.photoData) { this.toastMsg('Elige una foto para subir'); return; }
-      const entry = { src: f.photoData, label: f.text.trim() || 'Un recuerdo', author: f.name.trim() };
-      if (this.db) {
-        this.db.collection('fotos').add(Object.assign({ t: firebase.firestore.FieldValue.serverTimestamp() }, entry))
-          .catch(() => this.saveLocal('ml_photos', 'userPhotos', Object.assign({ id: 'u' + Date.now() }, entry)));
-      } else {
-        this.saveLocal('ml_photos', 'userPhotos', Object.assign({ id: 'u' + Date.now() }, entry));
-      }
-      this.setState({ form: this.blankForm() });
-      this.toastMsg('¡Gracias! Tu foto ya está en el mural');
-      this.scrollTo('galeria');
-    } else if (f.type === 'receta') {
-      if (!f.title.trim()) { this.toastMsg('Escribe el nombre del platillo'); return; }
-      if (!f.text.trim() && !f.photoData) { this.toastMsg('Escribe la receta o sube una foto de ella'); return; }
-      const entry = { name: f.title.trim(), note: f.text.trim(), photo: f.photoData || null, author: f.name.trim() };
-      if (this.db) {
-        this.db.collection('recetas').add(Object.assign({ t: firebase.firestore.FieldValue.serverTimestamp() }, entry))
-          .catch(() => this.saveLocal('ml_recetas', 'userRecetas', Object.assign({ id: 'u' + Date.now() }, entry)));
-      } else {
-        this.saveLocal('ml_recetas', 'userRecetas', Object.assign({ id: 'u' + Date.now() }, entry));
-      }
-      this.setState({ form: this.blankForm() });
-      this.toastMsg('¡Gracias! Su receta ya está en su cocina');
-      this.scrollTo('recetas');
-    } else {
-      if (!f.text.trim()) { this.toastMsg('Escribe tu recuerdo'); return; }
-      const entry = { text: f.text.trim(), author: f.name.trim(), rel: f.rel.trim(), epoca: f.epoca.trim(), lugar: f.lugar.trim(), photo: f.photoData || null };
-      if (this.db) {
-        this.db.collection('recuerdos').add(Object.assign({ t: firebase.firestore.FieldValue.serverTimestamp() }, entry))
-          .catch(() => this.saveMemoryLocal(entry));
-      } else {
-        this.saveMemoryLocal(entry);
-      }
-      this.setState({ form: this.blankForm() });
-      this.toastMsg('¡Gracias por compartir este recuerdo!');
-      this.scrollTo('muro');
-    }
-  }
-
-  voteSong(id) {
-    const my = this.state.myVotes.slice();
-    const idx = my.indexOf(id);
-    const delta = idx >= 0 ? -1 : 1;
-    if (idx >= 0) my.splice(idx, 1); else my.push(id);
-    if (this.db) {
-      this.db.doc('votos/' + id)
-        .set({ n: firebase.firestore.FieldValue.increment(delta) }, { merge: true })
-        .catch(e => console.warn('nube (voto):', e && e.code || e));
-      this.setState({ myVotes: my });
-      this.lsSet('ml_myvotes', my);
-    } else {
-      const votes = Object.assign({}, this.state.songVotes);
-      votes[id] = (votes[id] || 0) + delta;
-      this.setState({ myVotes: my, songVotes: votes });
-      this.lsSet('ml_myvotes', my); this.lsSet('ml_songvotes', votes);
-    }
-  }
-
-  addSong() {
-    const title = this.state.newSongTitle.trim();
-    if (!title) { this.toastMsg('Escribe el nombre de la canción'); return; }
-    const artist = this.state.newSongArtist.trim() || 'Artista';
-    if (this.db) {
-      const ref = this.db.collection('canciones').doc();
-      ref.set({ title: title, artist: artist, t: firebase.firestore.FieldValue.serverTimestamp() })
-        .catch(e => console.warn('nube (cancion):', e && e.code || e));
-      this.db.doc('votos/' + ref.id)
-        .set({ n: firebase.firestore.FieldValue.increment(1) }, { merge: true })
-        .catch(e => console.warn('nube (voto):', e && e.code || e));
-      const my = this.state.myVotes.concat([ref.id]);
-      this.setState({ myVotes: my, newSongTitle: '', newSongArtist: '' });
-      this.lsSet('ml_myvotes', my);
-    } else {
-      const entry = { id: 'us' + Date.now(), title: title, artist: artist, base: 1 };
-      const arr = this.state.songs.concat([entry]);
-      const my = this.state.myVotes.concat([entry.id]);
-      this.setState({ songs: arr, myVotes: my, newSongTitle: '', newSongArtist: '' });
-      this.lsSet('ml_songs', arr); this.lsSet('ml_myvotes', my);
-    }
-    this.toastMsg('¡Canción agregada con tu voto!');
-  }
-
-  openLightbox(p) { this.setState({ lightbox: { src: p.src, caption: p.label || '', hasSrc: !!p.src } }); }
-  closeLightbox() { this.setState({ lightbox: null }); }
-
-  seg(active) {
-    const base = 'border:1.5px solid ' + (active ? 'transparent' : '#E6D3B4') + ';cursor:pointer;padding:10px 18px;border-radius:999px;font-weight:700;font-size:14px;';
-    return base + (active
-      ? 'background:linear-gradient(92deg,#E07B39,#D94E8A,#834CA6);color:#fff;box-shadow:0 6px 16px rgba(217,78,138,.22);'
-      : 'background:#FEFBF4;color:#6A5560;');
-  }
-
-  renderVals() {
-    const s = this.state, f = s.form;
-
-    // Línea de vida
-    const allT = this.TIMELINE_SEED.concat(s.userTimeline).slice()
-      .sort((a, b) => String(a.date).localeCompare(String(b.date)));
-    const timeline = allT.map((e, i) => ({
-      year: String(e.date).slice(0, 4),
-      title: e.title,
-      text: e.text || '',
-      above: i % 2 === 0,
-      below: i % 2 === 1,
-      isUser: e.kind === 'user',
-      author: e.author || '',
-      color: this.COLORS[i % this.COLORS.length],
-    }));
-
-    // Fotos
-    const rots = [-4, 3, -2, 5, -3, 2, 4, -5, 1, -3, 4];
-    const durs = [6, 7.5, 6.8, 8, 7];
-    const allP = this.PHOTOS_SEED.concat(s.userPhotos);
-    const photos = allP.map((p, i) => ({
-      src: p.src, label: p.label || '',
-      hasSrc: !!p.src, noSrc: !p.src,
-      rot: rots[i % rots.length],
-      onOpen: () => this.openLightbox(p),
-    }));
-    const heroPhotos = photos.slice(0, 4).map((p, i) => Object.assign({}, p, { dur: durs[i % durs.length] }));
-
-    // Muro (usuarios más recientes primero, luego semillas)
-    const allM = s.userMemories.slice().reverse().concat(this.MEMORIES_SEED);
-    const memories = allM.map((m, i) => ({
-      text: m.text, author: m.author || 'Anónimo', rel: m.rel || '', epoca: m.epoca || '',
-      relShown: !!(m.rel && m.rel.trim()), epocaShown: !!(m.epoca && m.epoca.trim()),
-      hasPhoto: !!m.photo, photo: m.photo || '',
-      initial: (m.author || 'A').trim().charAt(0).toUpperCase(),
-      color: this.COLORS[i % this.COLORS.length],
-    }));
-
-    const allR = this.RECETAS_SEED.concat(s.userRecetas);
-    const recetas = allR.map((r, i) => ({
-      name: r.name, note: r.note || '',
-      hasPhoto: !!r.photo, photo: r.photo || '',
-      author: r.author || '', authorShown: !!(r.author && r.author.trim()),
-      color: this.COLORS[i % this.COLORS.length],
-    }));
-    const halos = ['rgba(224,123,57,.18)', 'rgba(217,78,138,.18)', 'rgba(131,76,166,.18)', 'rgba(201,138,46,.18)'];
-    const lugares = this.LUGARES_SEED.concat(s.userLugares).concat(s.cloudLugares).map((l, i) => Object.assign({}, l, { color: this.COLORS[i % this.COLORS.length], halo: halos[i % halos.length] }));
-
-    const VOTED = 'display:flex;align-items:center;gap:7px;border:none;cursor:pointer;padding:8px 14px;border-radius:999px;background:linear-gradient(92deg,#E07B39,#D94E8A);color:#fff;';
-    const UNVOTED = 'display:flex;align-items:center;gap:7px;cursor:pointer;padding:8px 14px;border-radius:999px;background:rgba(255,255,255,.08);color:#E8B9CE;border:1px solid rgba(255,255,255,.16);';
-    const allSongs = this.SONGS_SEED.concat(s.songs).map(sg => ({
-      id: sg.id, title: sg.title, artist: sg.artist,
-      votes: (sg.base || 0) + (s.songVotes[sg.id] || 0),
-      voted: s.myVotes.indexOf(sg.id) >= 0,
-    }));
-    allSongs.sort((a, b) => b.votes - a.votes);
-    const songs = allSongs.map((sg, i) => ({
-      title: sg.title, artist: sg.artist, votes: sg.votes, rank: i + 1,
-      heart: sg.voted ? '♥' : '♡',
-      voteStyle: sg.voted ? VOTED : UNVOTED,
-      onVote: () => this.voteSong(sg.id),
-    }));
-
-    const lb = s.lightbox;
-
-    // Display aleatorio
-    const dIdx = (s.dispPos >= 0 && s.dispPos < s.dispHist.length) ? s.dispHist[s.dispPos] : -1;
-    const dPhoto = (dIdx >= 0 && dIdx < allP.length) ? allP[dIdx] : null;
-    const dLabel = dPhoto && dPhoto.label ? String(dPhoto.label).trim() : '';
-    const atTip = s.dispPos === s.dispHist.length - 1;
-    const bagLeft = this._bag ? this._bag.length : 0;
-    const roundPos = allP.length ? (allP.length - bagLeft) : 0;
-    const preloadIdx = (atTip && bagLeft) ? this._bag[0] : -1;
-    const PREV_ON = 'border:1.5px solid #E3C9A6;cursor:pointer;background:#FFFCF6;color:#834CA6;padding:10px 20px;border-radius:999px;font-weight:700;font-size:14.5px;';
-    const PREV_OFF = 'border:1.5px solid #EBDDC8;cursor:default;background:#FAF4E9;color:#C9B69E;padding:10px 20px;border-radius:999px;font-weight:700;font-size:14.5px;';
-
-    return {
-      candles: s.candles,
-      lightCandle: () => this.lightCandle(),
-      timeline, photos, heroPhotos,
-      photoCount: allP.length, memoryCount: allM.length,
-
-      displaySrc: dPhoto ? dPhoto.src : '',
-      displayLabel: dLabel,
-      displayHasLabel: !!dLabel, displayNoLabel: !dLabel,
-      displayHasSrc: !!(dPhoto && dPhoto.src), displayNoSrc: !(dPhoto && dPhoto.src),
-      displayOpen: () => { if (dPhoto) this.openLightbox(dPhoto); },
-      displayNext: () => this.displayNext(),
-      displayPrev: () => this.displayPrev(),
-      displayPrevStyle: s.dispPos > 0 ? PREV_ON : PREV_OFF,
-      displayCounter: roundPos + ' / ' + allP.length,
-      displayTogglePlay: () => this.setState({ dispPlay: !s.dispPlay }),
-      displayPlayLabel: s.dispPlay ? '❚❚ Pausa' : '▶ Reanudar',
-      displayHasPreload: preloadIdx >= 0 && !!allP[preloadIdx].src,
-      displayPreloadSrc: preloadIdx >= 0 ? (allP[preloadIdx].src || '') : '',
-      memories, recetas, lugares, songs,
-      hasMemories: allM.length > 0, noMemories: allM.length === 0,
-      hasRecetas: allR.length > 0, noRecetas: allR.length === 0,
-      hasLugares: lugares.length > 0, noLugares: lugares.length === 0,
-      addToTimeline: () => this.goAddMoment(),
-      addPhoto: () => this.goAddPhoto(),
-      addMemory: () => this.goAddMemory(),
-      addReceta: () => this.goAddReceta(),
-      newLugarName: s.newLugarName, newLugarNote: s.newLugarNote,
-      onNewLugarName: e => this.setState({ newLugarName: e.target.value }),
-      onNewLugarNote: e => this.setState({ newLugarNote: e.target.value }),
-      addLugar: () => this.addLugar(),
-      newSongTitle: s.newSongTitle, newSongArtist: s.newSongArtist,
-      onNewSongTitle: e => this.setState({ newSongTitle: e.target.value }),
-      onNewSongArtist: e => this.setState({ newSongArtist: e.target.value }),
-      addSong: () => this.addSong(),
-
-      form: f,
-      onName: e => this.setF('name', e.target.value),
-      onRel: e => this.setF('rel', e.target.value),
-      onText: e => this.setF('text', e.target.value),
-      onEpoca: e => this.setF('epoca', e.target.value),
-      onLugar: e => this.setF('lugar', e.target.value),
-      onDate: e => this.setF('date', e.target.value),
-      onTitle: e => this.setF('title', e.target.value),
-      onDesc: e => this.setF('desc', e.target.value),
-      onPhotoFile: e => this.onPhotoFile(e),
-      pickTexto: () => this.setF('type', 'texto'),
-      pickFoto: () => this.setF('type', 'foto'),
-      pickMomento: () => this.setF('type', 'momento'),
-      pickReceta: () => this.setF('type', 'receta'),
-      isTexto: f.type === 'texto', isFoto: f.type === 'foto', isMomento: f.type === 'momento', isReceta: f.type === 'receta',
-      segTexto: this.seg(f.type === 'texto'), segFoto: this.seg(f.type === 'foto'), segMomento: this.seg(f.type === 'momento'), segReceta: this.seg(f.type === 'receta'),
-      hasPhotoPreview: !!f.photoData,
-      submit: e => this.submit(e),
-
-      showLightbox: !!lb,
-      lightboxSrc: lb ? lb.src : '', lightboxCaption: lb ? lb.caption : '',
-      lightboxHasSrc: !!(lb && lb.hasSrc), lightboxNoSrc: !!(lb && !lb.hasSrc),
-      closeLightbox: () => this.closeLightbox(),
-
-      showToast: !!s.toast, toast: s.toast,
-    };
-  }
-}
-</script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
+<script src="fotos.js"></script>
+<script src="scrollcraft.js"></script>
+<script src="memorial.js"></script>
 </body>
 </html>

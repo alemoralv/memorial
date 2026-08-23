@@ -1,96 +1,116 @@
-# Sitio conmemorativo — Marilú (María Luz Galindo Rodríguez)
+# Marilú · María Luz Galindo Rodríguez (1949 – 2026)
 
-Un espacio para recordarla: su historia, sus fotos, sus recuerdos, su
-cocina, sus canciones y los lugares que amó.
+Un álbum abierto de su vida. Publicado en
+<https://alemoralv.github.io/memorial/> desde la raíz de este repo (GitHub
+Pages, rama `main`, sin build).
+
+La página es una **colección**: cada fotografía, cada receta y cada lugar lleva
+la misma cédula (título, dato, procedencia), y las 141 del archivo de la familia
+se etiquetan igual que las que trae la gente. Al bajar, las fotografías van
+pasando **al ritmo de tu scroll**, nunca solas, y cada una que pasa se queda en
+la hoja de contactos fija abajo. Esa hoja es el índice de la página, se puede
+picar, y su última celda siempre está vacía: es la que falta, la tuya.
 
 ---
 
-## 1. Ver el sitio en tu compu
+## 1. Verla en tu compu
 
-Necesitas abrirlo con un pequeño servidor local (no basta con doble clic,
-porque el navegador bloquea la carga de `support.js` desde `file://`).
-
-Con Python instalado, desde esta carpeta:
+Hace falta un servidor local (abrirla con doble clic no funciona: el navegador
+bloquea los scripts desde `file://`).
 
     python3 -m http.server 8000
 
-Luego abre http://localhost:8000 en tu navegador.
-
-(Otra opción, si usas VS Code: la extensión "Live Server".)
+Y abre <http://localhost:8000>.
 
 ---
 
-## 2. Estructura de archivos
+## 2. Los archivos
 
-    sitio/
-      index.html      ← la página completa (aquí se edita TODO el contenido)
-      support.js      ← motor que hace funcionar la página (no lo toques)
-      fotos/          ← aquí van las fotos de Marilú (mira fotos/LEEME.txt)
-      README.md       ← este archivo
-
----
-
-## 3. Dónde editar cada cosa
-
-Abre **index.html** y busca los comentarios marcados con
-`// ⬇️ EDITA AQUÍ`. Cada uno es una lista fácil de editar:
-
-- **Fotos** → `PHOTOS_SEED` (pon la ruta en `src`, ej: `'fotos/abuela-01.jpg'`)
-- **Línea de vida** → `TIMELINE_SEED` (fecha en formato `AAAA-MM-DD`)
-- **Recuerdos de ejemplo** → `MEMORIES_SEED` (reemplázalos por los reales o bórralos)
-- **Recetas / platillos** → `RECETAS_SEED`
-- **Lugares que amó** → `LUGARES_SEED`
-- **Canciones y votos iniciales** → `SONGS_SEED`
-
-También puedes cambiar textos directamente en el HTML (nombre, fechas,
-la frase "so beat it", etc.).
+    index.html        la página: estructura y estilos
+    memorial.js       toda la lógica (álbum, hoja de contactos, formularios, nube)
+    fotos.js          GENERADO. El catálogo del archivo, con pie de foto y medidas
+    scrollcraft.css   motor de scroll (de la skill scrollcraft). No editar
+    scrollcraft.js    motor de scroll. No editar
+    fotos/            los originales. Es el archivo, no se tocan
+    fotos/v/          versiones web de 1400 px. GENERADAS
+    fotos/t/          miniaturas de 360 px para la hoja de contactos. GENERADAS
+    scripts/          cómo se regenera lo generado
 
 ---
 
-## 4. IMPORTANTE — recuerdos y fotos que sube la gente
+## 3. Añadir fotografías al archivo
 
-Ahora mismo, todo lo que un visitante escribe o sube (recuerdos, fotos,
-momentos de la línea de vida, votos de canciones, velitas) se guarda en
-**su propio navegador** (`localStorage`). Es decir: cada persona ve lo suyo,
-pero **no se comparte** entre visitantes todavía.
+1. Copia los `.jpg` en `fotos/`. **El nombre del archivo es el pie de foto**:
+   escríbelo descriptivo y en español, con guiones.
+   `marilu-el-dia-de-su-boda.jpg` → «Marilú el día de su boda».
+2. Convierte y regenera el catálogo:
 
-Para que las aportaciones de familia y amigas se vean para TODOS, hay que
-conectar una base de datos / backend. Los puntos exactos donde el sitio
-guarda datos están en `index.html`, en la función `lsSet(...)` y en los
-métodos `submit`, `voteSong`, `addSong`, `lightCandle`. Ahí es donde hay
-que cambiar el guardado local por llamadas a tu API.
+       bash scripts/optimizar.sh     # sólo convierte las nuevas
+       node scripts/manifest.mjs
 
-Opciones sencillas y gratuitas para empezar:
-- **Supabase** (Postgres + API automática) — la más directa.
-- **Firebase Firestore**.
-- Un pequeño endpoint propio (Cloudflare Workers, Vercel Functions).
+`manifest.mjs` devuelve los acentos que el nombre del archivo pierde
+(`cumpleanos` → cumpleaños). Si una foto sale con un pie raro, añádela al mapa
+`REWRITE` de ese script y vuelve a correrlo. **No edites `fotos.js` a mano**: se
+sobrescribe.
 
-Mientras tanto, el sitio funciona perfecto como página estática para
-mostrar todo lo que ya está cargado.
-
-Nota sobre fotos subidas por la gente: se guardan como imagen embebida en
-el navegador. Con backend, conviene subirlas a un almacenamiento (Supabase
-Storage, Cloudflare R2, etc.) y guardar solo la URL.
+Las doce con las que abre el álbum están en `CORRIDA_ARCHIVO`, dentro de
+`memorial.js`. Ahí se cambia con qué empieza.
 
 ---
 
-## 5. Deploy con tu dominio de Porkbun
+## 4. Lo que sube la gente
 
-Porkbun vende el dominio; para publicar el sitio conéctalo a un hosting
-estático gratuito (cualquiera de estos sirve):
+Todo lo que alguien escribe o sube se guarda en **Firebase Firestore**
+(proyecto `memorial-marilu`, sin cuentas ni contraseñas) y aparece al instante
+para todos:
 
-**Opción recomendada — Cloudflare Pages / Netlify / Vercel:**
-1. Sube esta carpeta `sitio/` a un repo de GitHub.
-2. En Cloudflare Pages (o Netlify/Vercel) crea un proyecto desde ese repo.
-   - Build command: (ninguno)
-   - Output / publish directory: la raíz (donde está `index.html`)
-3. En el panel del hosting, agrega tu dominio de Porkbun como dominio
-   personalizado. Te dará unos registros DNS.
-4. En Porkbun → tu dominio → DNS, pega esos registros (o cambia los
-   nameservers a los de Cloudflare si usas Cloudflare).
+| Qué | Colección |
+|---|---|
+| Fotografías | `fotos` |
+| Recuerdos del muro | `recuerdos` |
+| Momentos de la línea de vida | `momentos` |
+| Recetas | `recetas` |
+| Lugares | `lugares` |
+| Canciones y sus votos | `canciones`, `votos` |
+| Velitas | `contadores/velitas` |
 
-Con eso, tu dominio quedará apuntando al memorial.
+Si la nube no responde, cada envío cae a `localStorage` y la página sigue
+funcionando en ese dispositivo.
+
+**Por qué `fotos` se lee distinto.** Cada documento de `fotos` lleva la imagen
+metida dentro como base64, así que traerse la colección entera son megas y
+megas en cuanto abres. La página pide primero sólo los pies de foto y los
+nombres (REST, con máscara de campos) y baja los bytes de cada imagen nada más
+cuando esa fotografía está a punto de verse. Las demás colecciones son chicas y
+sí van por `onSnapshot`, en vivo.
+
+Si algún día son muchas más fotos, lo que conviene es mover las imágenes a
+Firebase Storage y guardar sólo la URL.
 
 ---
 
-Hecho con cariño para Marilú. so beat it 🧡💜
+## 5. Publicar un cambio
+
+    git add -A && git commit -m "..." && git push
+
+GitHub Pages republica solo en un par de minutos. Las rutas son **relativas**
+a propósito: una ruta que empiece con `/` se rompe, porque el sitio no vive en
+la raíz del dominio sino en `/memorial/`.
+
+---
+
+## 6. Notas para quien le meta mano
+
+- `scrollcraft.js` mide dónde empieza y acaba cada sección **una sola vez**, al
+  cargar. Como aquí el contenido llega después desde Firestore y cambia la
+  altura de la página, hay que volver a medir: eso hace `remedir()` en
+  `memorial.js`, y hay que llamarlo desde cualquier función nueva que pinte
+  contenido. Si se olvida, las secciones de abajo se quedan trabadas.
+- Las fotos se muestran **completas** (`object-fit: contain`), nunca recortadas
+  para caber en una forma. Son evidencia.
+- Todo número en la página es real: velitas, fotografías, personas, recuerdos.
+  No hay ninguno inventado, y no debe haberlo.
+
+---
+
+Hecho con cariño para Marilú. so beat it
