@@ -57,6 +57,14 @@
 
   ::selection { background: var(--sc-accent); color: var(--sc-accent-ink); }
 
+  /* `hidden` tiene que ganarle a la clase. El navegador lo aplica con
+     `[hidden] { display: none }`, que pesa lo mismo que un selector de clase
+     y pierde contra la hoja de la página: `.libro` es `flex` y `.alb` es
+     `grid`, así que el álbum se veía de las dos formas a la vez y el libro
+     apagado salía con las hojas en blanco. Aquí se cierra para toda la
+     página, no sólo para el álbum. */
+  [hidden] { display: none !important; }
+
   /* ── the collection's label schema ──────────────────────────────────────
      Every object on this page is labelled the same way, with no exceptions:
      a title, a fact line, and a provenance line. That schema is what makes

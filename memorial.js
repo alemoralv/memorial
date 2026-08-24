@@ -964,12 +964,18 @@
     window.scrollTo({ top: y, behavior: prefiereQuieto() ? "auto" : "smooth" });
     setTimeout(function () { $("#f-name").focus({ preventScroll: true }); }, 620);
   }
+  /* `.seg` es la forma del interruptor y la usan tres cosas distintas: el tipo
+     de lo que vas a compartir, cómo quieres ver el álbum y la velocidad del
+     pase. Buscando `.seg button` a secas, este selector agarraba los tres, así
+     que al elegir un tipo se apagaban los dos botones del álbum, y al cambiar
+     de modo se prendían los tres de velocidad y se escondían todos los campos
+     del formulario. Sólo son de aquí los que traen `data-t`. */
   function ponerTipo(t) {
     S.tipo = t;
-    $$(".seg button").forEach(function (b) { b.setAttribute("aria-pressed", String(b.dataset.t === t)); });
+    $$(".seg button[data-t]").forEach(function (b) { b.setAttribute("aria-pressed", String(b.dataset.t === t)); });
     $$("[data-p]").forEach(function (p) { p.hidden = p.dataset.p !== t; });
   }
-  $$(".seg button").forEach(function (b) {
+  $$(".seg button[data-t]").forEach(function (b) {
     b.addEventListener("click", function () { ponerTipo(b.dataset.t); });
   });
   $$("[data-go]").forEach(function (b) {
