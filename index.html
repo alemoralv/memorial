@@ -356,6 +356,137 @@
                 text-transform: uppercase; color: var(--sc-ink-soft);
                 margin: var(--sc-4) 0 0; }
 
+
+  /* ── el álbum como libro ──────────────────────────────────────────────────
+     La misma colección, pasada a mano en lugar de con el scroll. Las hojas
+     suben al tono de las superficies del sitio para despegarse del caqui de la
+     página: un álbum abierto sobre la mesa, no un álbum del color de la mesa. */
+  .modo { padding: var(--sc-7) 0 0; }
+  .modo__in { display: flex; flex-wrap: wrap; align-items: center;
+              gap: var(--sc-4) var(--sc-5); }
+  .modo p { margin: 0; font-size: var(--sc-t-xs); letter-spacing: 0.09em;
+            text-transform: uppercase; color: var(--sc-ink-soft); }
+  .seg--modo { display: inline-flex; width: auto; }
+  .seg--modo button { padding: 0.6rem 1.1rem; }
+
+  .libro { display: flex; flex-direction: column; align-items: center;
+           justify-content: center; gap: clamp(0.6rem, 1.6vh, 1.4rem);
+           height: 100%; }
+
+  .libro__marco { position: relative; width: min(66rem, 100%, calc(60vh * 1.6));
+                  aspect-ratio: 1.6 / 1; perspective: 2800px;
+                  perspective-origin: 50% 45%; cursor: pointer;
+                  filter: drop-shadow(0 26px 42px hsl(var(--sc-shadow-color) / 0.34)); }
+  /* los cantos del libro, para que tenga grosor */
+  .libro__canto { position: absolute; top: 1.5%; bottom: 1.5%; width: 9px;
+                  background: linear-gradient(90deg,
+                    color-mix(in oklab, var(--sc-canvas) 74%, var(--sc-ink)),
+                    color-mix(in oklab, var(--sc-canvas) 92%, #FFF)); }
+  .libro__canto--i { left: -9px; }
+  .libro__canto--d { right: -9px; transform: scaleX(-1); }
+
+  .pag { position: absolute; top: 0; height: 100%; width: 50%; overflow: hidden;
+         background: var(--sc-surface); }
+  .pag--izq { left: 0; box-shadow: inset -16px 0 30px -14px hsl(var(--sc-shadow-color) / 0.5); }
+  .pag--der { left: 50%; box-shadow: inset 16px 0 30px -14px hsl(var(--sc-shadow-color) / 0.5); }
+
+  .pag__in { position: absolute; inset: 0; padding: 4.5% 5.5% 3.5%;
+             display: flex; flex-direction: column; align-items: center;
+             justify-content: center; gap: 4%; }
+  .pag__marco { flex: 1 1 auto; min-height: 0; width: 100%;
+                display: flex; align-items: center; justify-content: center; }
+  .pag__marco img { max-width: 100%; max-height: 100%; object-fit: contain;
+                    box-shadow: 0 10px 22px hsl(var(--sc-shadow-color) / 0.3); }
+  .pag__ced { flex: 0 0 auto; text-align: center; max-width: 92%; }
+  .pag__ced p { margin: 0; }
+  .pag__t { font-family: var(--sc-font-display); font-weight: 500;
+            font-size: clamp(0.8rem, 1.35vw, 1.4rem); line-height: 1.15;
+            color: var(--sc-ink); text-wrap: pretty; }
+  .pag__p { margin-top: 0.5em !important; display: flex; align-items: center;
+            justify-content: center; gap: 0.55em;
+            font-size: clamp(0.44rem, 0.62vw, 0.66rem); letter-spacing: 0.14em;
+            text-transform: uppercase; color: var(--sc-ink-soft); }
+  .pag__p::before { content: ""; display: block; width: 1.4em; height: 1px;
+                    background: var(--sc-accent); flex: 0 0 auto; }
+  .pag__p--gift { color: var(--sc-accent); }
+
+  /* la hoja que gira: dos caras, la de atrás ya volteada */
+  .hoja3d { position: absolute; top: 0; left: 50%; width: 50%; height: 100%;
+            z-index: 5; transform-style: preserve-3d; transform-origin: left center;
+            will-change: transform; }
+  .cara { position: absolute; inset: 0; overflow: hidden; background: var(--sc-surface);
+          backface-visibility: hidden; }
+  .cara--frente { box-shadow: inset 16px 0 30px -14px hsl(var(--sc-shadow-color) / 0.45); }
+  .cara--dorso { transform: rotateY(180deg);
+                 box-shadow: inset -16px 0 30px -14px hsl(var(--sc-shadow-color) / 0.45); }
+  /* la sombra que barre la hoja mientras gira es lo que le da bulto */
+  .cara__sombra { position: absolute; inset: 0; pointer-events: none; opacity: 0;
+                  background: linear-gradient(90deg,
+                    hsl(var(--sc-shadow-color) / 0.55),
+                    hsl(var(--sc-shadow-color) / 0.12) 30%,
+                    hsl(var(--sc-shadow-color) / 0.3)); }
+  .cara--dorso .cara__sombra { background: linear-gradient(270deg,
+                    hsl(var(--sc-shadow-color) / 0.55),
+                    hsl(var(--sc-shadow-color) / 0.12) 30%,
+                    hsl(var(--sc-shadow-color) / 0.3)); }
+  .libro__lomo { position: absolute; top: 0; bottom: 0; left: 50%; width: 30px;
+                 transform: translateX(-50%); z-index: 6; pointer-events: none;
+                 background: linear-gradient(90deg,
+                   hsl(var(--sc-shadow-color) / 0.02),
+                   hsl(var(--sc-shadow-color) / 0.24) 46%,
+                   hsl(var(--sc-shadow-color) / 0.32) 50%,
+                   hsl(var(--sc-shadow-color) / 0.24) 54%,
+                   hsl(var(--sc-shadow-color) / 0.02)); }
+
+  .libro__pista { width: min(66rem, 100%, calc(60vh * 1.6)); height: 2px;
+                  background: var(--sc-hairline); }
+  /* escala, no ancho: animar width obliga al navegador a re-maquetar en cada
+     cuadro, y esto corre mientras la hoja está girando */
+  .libro__pista i { display: block; height: 100%; width: 100%;
+                    background: var(--sc-accent); transform: scaleX(0);
+                    transform-origin: 0 50%;
+                    transition: transform 320ms var(--sc-ease-out); }
+  .libro__mando { display: flex; align-items: center; justify-content: center;
+                  gap: var(--sc-3); flex-wrap: wrap; }
+  .libro__mando button { width: 2.5rem; height: 2.5rem; display: grid;
+                         place-items: center; background: transparent;
+                         border: 1px solid var(--sc-hairline-strong);
+                         color: var(--sc-ink); font-size: 0.8rem; cursor: pointer;
+                         transition: color var(--sc-d-fast) var(--sc-ease-out),
+                                     border-color var(--sc-d-fast) var(--sc-ease-out); }
+  .libro__mando button:active { transform: translateY(1px); }
+  @media (hover: hover) and (pointer: fine) {
+    .libro__mando button:hover { color: var(--sc-accent); border-color: var(--sc-accent); }
+  }
+  .libro__cuenta { margin-left: var(--sc-2); font-size: var(--sc-t-xs);
+                   letter-spacing: 0.12em; text-transform: uppercase;
+                   color: var(--sc-ink-soft); font-variant-numeric: tabular-nums; }
+  .libro__ritmo { display: flex; align-items: center; justify-content: center;
+                  gap: var(--sc-3); flex-wrap: wrap; }
+  .libro__ritmo > span { font-size: var(--sc-t-xs); letter-spacing: 0.14em;
+                         text-transform: uppercase; color: var(--sc-ink-soft); }
+  .libro__pie { margin: 0; font-size: var(--sc-t-xs); letter-spacing: 0.04em;
+                color: var(--sc-ink-soft); text-align: center; }
+
+  @media (max-width: 900px) {
+    /* De canto el libro queda ilegible, así que en vertical se enseña una sola
+       hoja: la que gira ocupa el marco entero y la de abajo es la siguiente. */
+    .libro__marco { aspect-ratio: 0.82 / 1; width: min(30rem, 100%); }
+    .pag--izq { display: none; }
+    .pag--der { left: 0; width: 100%; box-shadow: none; }
+    .hoja3d { left: 0; width: 100%; transform-origin: left center; }
+    .libro__lomo, .libro__canto { display: none; }
+    .libro__pista { width: min(30rem, 100%); }
+    .libro__pie { display: none; }
+    /* el selector de velocidad se partía en dos renglones y se encimaba */
+    .libro__ritmo { flex-direction: column; gap: var(--sc-2); }
+    .libro__ritmo .seg { grid-template-columns: repeat(3, 1fr); width: min(20rem, 100%); }
+    .libro__ritmo .seg button:nth-child(2) { border-right: 1px solid var(--sc-hairline-strong); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .cara__sombra { display: none; }
+  }
+
   /* ── the signature move: la hoja de contactos ───────────────────────────── */
   .hoja { position: fixed; left: 0; right: 0; bottom: 0; z-index: 55;
           background: color-mix(in oklab, var(--sc-canvas) 93%, var(--sc-ink));
@@ -573,10 +704,58 @@
     </div>
   </section>
 
+  <!-- ══ cómo se ve el álbum. Va justo encima de donde arranca. ══ -->
+  <div class="room modo">
+    <div class="modo__in">
+      <p id="modo-lbl">Cómo quieres ver el álbum</p>
+      <div class="seg seg--modo" role="group" aria-labelledby="modo-lbl">
+        <button type="button" data-modo="scroll" aria-pressed="true">Con el scroll</button>
+        <button type="button" data-modo="libro" aria-pressed="false">Como libro</button>
+      </div>
+    </div>
+  </div>
+
   <!-- ══ 3 · EL ÁLBUM. The peak. 5.5vh, more than three times any other act. ══ -->
   <section id="album" data-sc-act="pin" data-sc-span="11" data-sc-drift="#DED6BD">
     <div data-sc-stage class="stage-pad">
-      <div class="room alb">
+      <div class="room libro" id="libro" hidden>
+        <div class="libro__marco" id="libro-marco" role="button" tabindex="0"
+             aria-label="Pausar o reanudar el pase de hojas">
+          <div class="libro__canto libro__canto--i" aria-hidden="true"></div>
+          <div class="libro__canto libro__canto--d" aria-hidden="true"></div>
+          <div class="pag pag--izq"><div class="pag__in" data-pag="izq"></div></div>
+          <div class="pag pag--der"><div class="pag__in" data-pag="bajo"></div></div>
+          <div class="hoja3d" id="hoja3d">
+            <div class="cara cara--frente">
+              <div class="pag__in" data-pag="frente"></div>
+              <div class="cara__sombra" aria-hidden="true"></div>
+            </div>
+            <div class="cara cara--dorso">
+              <div class="pag__in" data-pag="dorso"></div>
+              <div class="cara__sombra" aria-hidden="true"></div>
+            </div>
+          </div>
+          <div class="libro__lomo" aria-hidden="true"></div>
+        </div>
+
+        <div class="libro__pista" aria-hidden="true"><i id="libro-barra"></i></div>
+
+        <div class="libro__mando">
+          <button type="button" id="libro-ant" aria-label="La hoja anterior">◂</button>
+          <button type="button" id="libro-pausa" aria-pressed="false"
+                  aria-label="Pausar el pase de hojas">❚❚</button>
+          <button type="button" id="libro-sig" aria-label="La hoja siguiente">▸</button>
+          <span class="libro__cuenta" id="libro-cuenta"></span>
+        </div>
+
+        <div class="libro__ritmo" role="group" aria-label="Velocidad del pase">
+          <span>Velocidad</span>
+          <div class="seg" id="libro-ritmos"></div>
+        </div>
+
+        <p class="libro__pie">Pícale al álbum para pausar · las flechas del teclado pasan la hoja a mano</p>
+      </div>
+      <div class="room alb" id="scrollalb">
         <div class="alb__frame" id="alb-frame"><!-- slides injected --></div>
         <div class="alb__cap ced" id="alb-cap">
           <h2 class="ced__t" id="alb-t">El álbum</h2>

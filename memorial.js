@@ -43,24 +43,20 @@
   var MESES = ["enero","febrero","marzo","abril","mayo","junio","julio",
                "agosto","septiembre","octubre","noviembre","diciembre"];
 
-  /* `foto` sólo se pone donde la fotografía corresponde de verdad al momento:
-     su boda es su boda, y las dos décadas son las dos únicas fechas que el
-     archivo registra por su cuenta. Nada aquí empareja por parecido. */
+  /* Sólo fechas que la familia puso. Aquí llegó a haber fotografías pegadas a
+     cada momento y dos décadas sacadas de los nombres de los archivos: se
+     quitaron por lo mismo que los pies de foto, porque emparejar una foto con
+     una fecha por parecido es inventar. Lo que la gente añada sí trae su
+     fecha, porque la escribió alguien. */
   var MOMENTOS_SEMILLA = [
     { id: "s1", date: "1949-01-21", title: "Nace María Luz",
       text: "Llega al mundo en la Ciudad de México." },
     { id: "s2", date: "1968-09-20", title: "Se casa",
-      text: "El 20 de septiembre empieza a construir su familia.",
-      foto: "marilu-el-dia-de-su-boda" },
+      text: "El 20 de septiembre empieza a construir su familia." },
     { id: "s3", date: "1974-08-31", title: "Nace su primera hija",
       text: "Se vuelve mamá." },
-    { id: "d70", date: "1975-01-01", title: "Los años setenta", decada: true,
-      text: "Una de las dos décadas que el archivo fecha por su cuenta.",
-      foto: "amigas-en-alberca-anos-70" },
     { id: "s4", date: "1977-04-09", title: "Nace su primer hijo",
       text: "La familia sigue creciendo." },
-    { id: "d80", date: "1985-01-01", title: "Los años ochenta", decada: true,
-      text: "La otra.", foto: "retrato-familiar-vintage-anos-80" },
     { id: "s5", date: "2026-07-01", title: "Fallece en la Ciudad de México",
       text: "El álbum se queda abierto." }
   ];
@@ -135,11 +131,21 @@
   var db = null;
   var $ = function (s, r) { return (r || document).querySelector(s); };
   var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+  /* El archivo no trae descripciones y no debe traerlas: los nombres de los
+     archivos describen la escena, pero nadie de la familia los escribió ni los
+     revisó, así que un pie sacado de ahí es una afirmación sin respaldo sobre
+     quién sale en la foto. Sólo lleva pie lo que escribió una persona. */
   var ARCH = (window.ARCHIVO || []).map(function (o) {
-    return { k: "arch", id: o.s, c: o.c, f: o.f || "", w: o.w, h: o.h, v: o.v || null };
+    return { k: "arch", id: o.s, c: "", f: "", w: o.w, h: o.h, v: o.v || null };
   });
   var ARCH_POR_ID = {};
   ARCH.forEach(function (o) { ARCH_POR_ID[o.id] = o; });
+
+  /* Un recuerdo de prueba que quedó en la base. Las reglas de Firestore
+     permiten crear pero no borrar, así que desde aquí no se puede quitar de
+     verdad: hay que hacerlo desde la consola de Firebase. Mientras tanto no se
+     enseña, porque el muro es de quien la conoció. */
+  var RECUERDO_DE_PRUEBA = "rreH9VdYiacR2cDMttYH";
 
   function ls(k, fb) { try { var v = localStorage.getItem(k); return v ? JSON.parse(v) : fb; } catch (e) { return fb; } }
   function lsSet(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
@@ -168,6 +174,17 @@
     }, 90);
   }
 
+  function ponerSpan(el, span) {
+    el.setAttribute("data-sc-span", String(span));
+    if (window.ScrollCraft && ScrollCraft.instances) {
+      ScrollCraft.instances.forEach(function (inst) {
+        if (!inst || !inst.acts) return;
+        inst.acts.forEach(function (a) { if (a.el === el) a.span = span; });
+      });
+    }
+    remedir();
+  }
+
   var toastEl = $("#toast"), toastT;
   function toast(m) {
     toastEl.textContent = m; toastEl.classList.add("is-on");
@@ -180,6 +197,8 @@
   function procedencia(o) {
     return o.k === "arch" ? "Archivo de la familia" : "Compartida por " + o.by;
   }
+  // Sin pie no hay título; el texto alterno sí tiene que decir algo.
+  function alterno(o) { return o.c || "Fotografía del archivo de la familia"; }
 
   // pide los bytes de una foto subida, una sola vez
   var pidiendo = {};
@@ -226,6 +245,11 @@
         }).sort(function (a, b) { return a.t < b.t ? -1 : 1; });
         contar();
         armarCorrida();
+        /* El libro pudo montarse antes de que llegara este índice, y entonces
+           contaba sólo las del archivo. Las subidas se añaden al final, así que
+           los índices de las hojas que ya se ven no se mueven: basta con volver
+           a escribirlas, y nunca a media vuelta. */
+        if (L.montado && !L.girando) libroHojas();
       })
       .catch(function () { contar(); armarCorrida(); });
   }
@@ -256,7 +280,7 @@
           var fig = $('.alb__slide[data-i="' + S.corrida.indexOf(o) + '"]', $("#alb-frame"));
           if (fig && !fig.firstChild) {
             var im = new Image();
-            im.src = src; im.alt = o.c; im.decoding = "async";
+            im.src = src; im.alt = alterno(o); im.decoding = "async";
             fig.appendChild(im);
           }
         });
@@ -272,7 +296,7 @@
     frame.innerHTML = S.corrida.map(function (o, i) {
       var src = vistaSrc(o);
       return '<figure class="alb__slide" data-i="' + i + '">' +
-        (src ? '<img src="' + esc(src) + '" alt="' + esc(o.c) + '"' +
+        (src ? '<img src="' + esc(src) + '" alt="' + esc(alterno(o)) + '"' +
                (o.w ? ' width="' + o.w + '" height="' + o.h + '"' : "") +
                ' loading="' + (i < 3 ? "eager" : "lazy") + '" decoding="async">' : "") +
         "</figure>";
@@ -291,7 +315,9 @@
     var o = S.corrida[i];
     if (!o) return;
     asegurarSrc(i);
-    $("#alb-t").textContent = o.c;
+    var t = $("#alb-t");
+    t.textContent = o.c;
+    t.hidden = !o.c;
     var f = $("#alb-f");
     if (o.f) { f.textContent = o.f; f.hidden = false; } else { f.hidden = true; }
     var p = $("#alb-p");
@@ -319,7 +345,7 @@
     b.className = "cell" + (o.k === "gift" ? " cell--gift" : "");
     b.dataset.id = o.k + ":" + o.id;
     b.setAttribute("role", "listitem");
-    b.setAttribute("aria-label", o.c + ". " + procedencia(o) + ".");
+    b.setAttribute("aria-label", (o.c ? o.c + ". " : "") + procedencia(o) + ".");
     var src = thumbSrc(o);
     if (src) {
       b.innerHTML = '<img src="' + esc(src) + '" alt="" loading="lazy" decoding="async">';
@@ -384,6 +410,255 @@
     strip.appendChild(celdaVacia);
   }
 
+
+  /* ── el álbum como libro ──────────────────────────────────────────────────
+     La misma colección de 190, pasada a mano. La página t enseña las
+     fotografías 2t (izquierda) y 2t+1 (derecha); la de la derecha es en
+     realidad la cara de una hoja que gira, y su dorso es 2t+2, que al aterrizar
+     queda de página izquierda. Debajo espera 2t+3. Por eso al terminar el giro
+     basta con subir t en uno y todo cuadra sin recolocar nada.
+
+     Al girar sólo se toca `transform` y dos opacidades, en un rAF: el contenido
+     de las cuatro páginas se escribe una vez por hoja, no una vez por cuadro. */
+  var RITMOS = [{ label: "Lenta", s: 6 }, { label: "Normal", s: 3.5 }, { label: "Rápida", s: 2 }];
+  var LIBRO_MODO = "ml_modo_album";
+
+  var L = {
+    t: 0, ang: 0, girando: false, pasando: false, seg: 3.5,
+    dir: 1, raf: 0, timer: 0, vivo: false, montado: false
+  };
+
+  function libroFoto(i) {
+    var todas = todasLasFotos();
+    if (!todas.length) return null;
+    var n = todas.length;
+    return todas[((i % n) + n) % n];
+  }
+
+  function libroPinta(cual, o) {
+    var caja = document.querySelector('[data-pag="' + cual + '"]');
+    if (!caja) return;
+    if (!o) { caja.innerHTML = ""; return; }
+    var src = vistaSrc(o);
+    caja.innerHTML =
+      '<div class="pag__marco">' +
+        (src ? '<img src="' + esc(src) + '" alt="' + esc(alterno(o)) + '" decoding="async">' : "") +
+      "</div>" +
+      '<div class="pag__ced">' +
+        (o.c ? '<p class="pag__t">' + esc(o.c) + "</p>" : "") +
+        '<p class="pag__p' + (o.k === "gift" ? " pag__p--gift" : "") + '">' +
+          esc(procedencia(o)) + "</p>" +
+      "</div>";
+    if (o.k === "gift" && !src) {
+      pedirSrc(o.id).then(function (s2) {
+        if (!s2) return;
+        var m = caja.querySelector(".pag__marco");
+        if (m && !m.firstChild) {
+          var im = new Image(); im.src = s2; im.alt = alterno(o); im.decoding = "async";
+          m.appendChild(im);
+        }
+      });
+    }
+  }
+
+  /* De canto no caben dos hojas, así que en vertical se enseña una sola. Y con
+     una sola hay que cambiar la cuenta: en el libro abierto cada vuelta pasa
+     dos fotografías, en la hoja suelta pasa una. Si no, la de en medio sólo se
+     asoma durante el giro y nunca se queda quieta, o sea que se salta. */
+  function dosPaginas() { return window.matchMedia("(min-width: 901px)").matches; }
+
+  function libroHojas() {
+    var t = L.t, dos = dosPaginas();
+    var n = todasLasFotos().length || 1;
+    var iFrente = dos ? 2 * t + 1 : t;
+    var vistas;
+
+    if (dos) {
+      libroPinta("izq", libroFoto(2 * t));
+      libroPinta("frente", libroFoto(2 * t + 1));
+      libroPinta("dorso", libroFoto(2 * t + 2));
+      libroPinta("bajo", libroFoto(2 * t + 3));
+      vistas = [libroFoto(2 * t), libroFoto(2 * t + 1)];
+    } else {
+      libroPinta("izq", null);
+      libroPinta("frente", libroFoto(t));
+      libroPinta("dorso", libroFoto(t + 1));
+      libroPinta("bajo", libroFoto(t + 1));
+      vistas = [libroFoto(t)];
+    }
+
+    var m = function (i) { return ((i % n) + n) % n; };
+    var c = $("#libro-cuenta");
+    if (c) {
+      c.textContent = dos
+        ? m(2 * t) + 1 + "–" + (m(2 * t + 1) + 1) + " de " + n
+        : m(t) + 1 + " de " + n;
+    }
+    var barra = $("#libro-barra");
+    if (barra) barra.style.transform = "scaleX(" + ((m(iFrente) + 1) / n).toFixed(4) + ")";
+
+    // las hojas que vienen se van bajando por adelantado
+    for (var k = 1; k <= 9; k++) {
+      var o = libroFoto(iFrente + k);
+      if (!o) continue;
+      if (o.k === "gift") pedirSrc(o.id);
+      else { var im = new Image(); im.src = vistaSrc(o); }
+    }
+    // la hoja de contactos sigue siendo el registro de por dónde pasaste
+    vistas.forEach(function (o) { if (o) sumarAHoja(o); });
+    if (vistas.length) hojaMarcar(vistas[vistas.length - 1]);
+  }
+
+  function libroAplica() {
+    var h = $("#hoja3d");
+    if (!h) return;
+    h.style.transform = "rotateY(" + L.ang.toFixed(2) + "deg)";
+    var p = Math.min(1, Math.abs(L.ang) / 180);
+    var mitad = Math.abs(L.ang) > 90;
+    var fr = document.querySelector(".cara--frente"), dr = document.querySelector(".cara--dorso");
+    if (fr) { fr.style.opacity = mitad ? "0" : "1";
+              fr.querySelector(".cara__sombra").style.opacity = (0.5 * p).toFixed(3); }
+    if (dr) { dr.style.opacity = mitad ? "1" : "0";
+              dr.querySelector(".cara__sombra").style.opacity = (0.5 * (1 - p)).toFixed(3); }
+  }
+
+  function libroDuracion() { return Math.min(1050, Math.max(460, L.seg * 280)); }
+  function suave(p) { return p < 0.5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2; }
+
+  function libroPrograma() {
+    clearTimeout(L.timer);
+    if (!L.pasando || !L.vivo) return;
+    L.timer = setTimeout(function () { libroGira(1); }, Math.max(500, L.seg * 1000));
+  }
+
+  function libroAterriza() {
+    if (L.dir === 1) L.t += 1;
+    L.ang = 0; L.girando = false;
+    libroHojas(); libroAplica(); libroPrograma();
+  }
+
+  function libroGira(dir) {
+    if (!todasLasFotos().length) return;
+    clearTimeout(L.timer);
+    cancelAnimationFrame(L.raf);
+    if (L.girando) libroAterriza();
+    L.dir = dir;
+    L.girando = true;
+    if (dir === -1) { L.t -= 1; L.ang = -180; libroHojas(); }
+    else { L.ang = 0; }
+    libroAplica();
+    if (prefiereQuieto()) { libroAterriza(); return; }   // sin giro, pero pasa la hoja
+    var dur = libroDuracion(), t0 = performance.now();
+    var paso = function (ahora) {
+      var pr = Math.min(1, (ahora - t0) / dur), e = suave(pr);
+      L.ang = dir === 1 ? -180 * e : -180 * (1 - e);
+      libroAplica();
+      if (pr < 1) L.raf = requestAnimationFrame(paso);
+      else libroAterriza();
+    };
+    L.raf = requestAnimationFrame(paso);
+  }
+
+  function libroPausaMarca() {
+    var b = $("#libro-pausa");
+    if (!b) return;
+    b.textContent = L.pasando ? "❚❚" : "▶";
+    b.setAttribute("aria-pressed", String(!L.pasando));
+    b.setAttribute("aria-label", L.pasando ? "Pausar el pase de hojas" : "Reanudar el pase de hojas");
+  }
+  function libroAlterna() { L.pasando = !L.pasando; libroPausaMarca(); libroPrograma(); }
+
+  function libroRitmos() {
+    var caja = $("#libro-ritmos");
+    if (!caja) return;
+    caja.innerHTML = RITMOS.map(function (r) {
+      return '<button type="button" data-seg="' + r.s + '" aria-pressed="' +
+        (Math.abs(r.s - L.seg) < 0.01) + '">' + r.label + "</button>";
+    }).join("");
+  }
+
+  function libroMonta() {
+    if (L.montado) return;
+    L.montado = true;
+    // girar el teléfono cambia de una hoja a dos, y con ello la cuenta
+    var mq = window.matchMedia("(min-width: 901px)");
+    var alCambiar = function () { if (!L.girando) { libroHojas(); libroAplica(); } };
+    if (mq.addEventListener) mq.addEventListener("change", alCambiar);
+    else if (mq.addListener) mq.addListener(alCambiar);
+    libroRitmos();
+    libroHojas();
+    libroAplica();
+    libroPausaMarca();
+
+    $("#libro-sig").addEventListener("click", function () { libroGira(1); });
+    $("#libro-ant").addEventListener("click", function () { libroGira(-1); });
+    $("#libro-pausa").addEventListener("click", libroAlterna);
+    $("#libro-ritmos").addEventListener("click", function (e) {
+      var b = e.target.closest("[data-seg]");
+      if (!b) return;
+      L.seg = parseFloat(b.dataset.seg);
+      L.pasando = true;
+      libroRitmos(); libroPausaMarca(); libroPrograma();
+    });
+    var marco = $("#libro-marco");
+    marco.addEventListener("click", function (e) {
+      if (e.target.closest("button")) return;
+      libroAlterna();
+    });
+    marco.addEventListener("keydown", function (e) {
+      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); libroAlterna(); }
+    });
+    document.addEventListener("keydown", function (e) {
+      if (modoActual() !== "libro" || !L.vivo) return;
+      if (lb.hasAttribute("open")) return;          // el proyector manda
+      if (e.key === "ArrowRight") { e.preventDefault(); libroGira(1); }
+      else if (e.key === "ArrowLeft") { e.preventDefault(); libroGira(-1); }
+      else if (e.key === " " && !/^(INPUT|TEXTAREA|BUTTON)$/.test(document.activeElement.tagName)) {
+        e.preventDefault(); libroAlterna();
+      }
+    });
+  }
+
+  // ── el interruptor: con el scroll o como libro ────────────────────────────
+  function modoActual() { return ls(LIBRO_MODO, "scroll") === "libro" ? "libro" : "scroll"; }
+
+  function ponerModo(m, guardar) {
+    var libro = m === "libro";
+    if (guardar) lsSet(LIBRO_MODO, m);
+    $$(".seg--modo button").forEach(function (b) {
+      b.setAttribute("aria-pressed", String(b.dataset.modo === m));
+    });
+    $("#libro").hidden = !libro;
+    $("#scrollalb").hidden = libro;
+
+    /* El acto sigue fijado en los dos modos, pero el libro no necesita once
+       pantallas de recorrido: se pasa solo. Con el span corto la página se
+       acorta, que es justo lo que debe pasar cuando el scroll deja de ser el
+       que manda.
+       El motor lee `data-sc-span` UNA vez, al recoger los actos, y a partir de
+       ahí usa su copia: cambiar el atributo y re-medir no mueve nada. Hay que
+       tocar también el acto vivo, que el motor expone en `instances[].acts`. */
+    ponerSpan($("#album"), libro ? 2.4 : 11);
+
+    if (libro) {
+      libroMonta();
+      L.pasando = true;
+      libroPausaMarca();
+      libroPrograma();
+    } else {
+      clearTimeout(L.timer);
+      cancelAnimationFrame(L.raf);
+      L.pasando = false;
+    }
+  }
+
+  function conectarModo() {
+    $$(".seg--modo button").forEach(function (b) {
+      b.addEventListener("click", function () { ponerModo(b.dataset.modo, true); });
+    });
+    ponerModo(modoActual(), false);
+  }
+
   // ── el motor del acto del álbum ──────────────────────────────────────────
   function conectarAlbum() {
     var act = $("#album");
@@ -391,10 +666,18 @@
 
     new IntersectionObserver(function (es) {
       vivo = es[0].isIntersecting;
-      if (vivo) { hoja.classList.add("is-up"); asegurarSrc(albActual < 0 ? 0 : albActual); tick(); }
+      L.vivo = vivo;
+      if (vivo) {
+        hoja.classList.add("is-up");
+        if (modoActual() === "libro") { libroPrograma(); }
+        else { asegurarSrc(albActual < 0 ? 0 : albActual); tick(); }
+      } else {
+        clearTimeout(L.timer);
+      }
     }, { rootMargin: "40% 0px" }).observe(act);
 
     function tick() {
+      if (modoActual() === "libro") return;
       var p = parseFloat(act.style.getPropertyValue("--sc-p")) || 0;
       var n = S.corrida.length;
       if (n) {
@@ -429,6 +712,9 @@
 
   function abrirProyector(lista, i) {
     ultimoFoco = document.activeElement;
+    // el libro no sigue pasando hojas detrás de una sala a oscuras
+    L.suspendido = L.pasando;
+    clearTimeout(L.timer);
     proy.lista = lista;
     lb.setAttribute("open", "");
     document.body.style.overflow = "hidden";
@@ -468,9 +754,11 @@
         lbVid.addEventListener("ended", function () { siguiente(); reanudar(); });
         lb.insertBefore(lbVid, lbImg);
       } else if (src) {
-        lbImg.src = src; lbImg.alt = o.c; lbImg.hidden = false;
+        lbImg.src = src; lbImg.alt = alterno(o); lbImg.hidden = false;
       }
-      $("#lb-t").textContent = o.c + (o.f ? " " + o.f : "");
+      var lbT = $("#lb-t");
+      lbT.textContent = o.c + (o.f ? " " + o.f : "");
+      lbT.hidden = !o.c;
       $("#lb-p").textContent = procedencia(o);
       $("#lb-p").classList.toggle("ced__p--gift", o.k === "gift");
       $("#lb-cuenta").textContent = (proy.i + 1) + " de " + proy.lista.length;
@@ -508,6 +796,7 @@
     lbImg.hidden = true; lbImg.removeAttribute("src");
     document.body.style.overflow = "";
     if (ultimoFoco) ultimoFoco.focus();
+    if (L.suspendido) { L.suspendido = false; libroPrograma(); }
   }
 
   $("#lb-x").addEventListener("click", cerrar);
@@ -546,7 +835,8 @@
       S.velitas = VELITAS_BASE + ((d.exists && d.data().n) || 0); contar();
     }, q("velitas"));
     db.collection("recuerdos").onSnapshot(function (s) {
-      S.recuerdos = arr(s); pintarMuro(); pintarCosas(); contar();
+      S.recuerdos = arr(s).filter(function (r) { return r.id !== RECUERDO_DE_PRUEBA; });
+      pintarMuro(); pintarCosas(); contar();
     }, q("recuerdos"));
     db.collection("momentos").onSnapshot(function (s) { S.momentos = arr(s); pintarVida(); }, q("momentos"));
     db.collection("recetas").onSnapshot(function (s) { S.recetas = arr(s); pintarCosas(); contar(); }, q("recetas"));
@@ -877,6 +1167,7 @@
     ponerTipo("foto");
     conectarIndice();
     conectarAlbum();
+    conectarModo();
 
     armarCorrida();            // pinta ya con puro archivo
     cargarSubidas();           // y se rehace en cuanto llega el índice de la nube

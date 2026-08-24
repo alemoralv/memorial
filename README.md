@@ -4,17 +4,25 @@ Un álbum abierto de su vida. Publicado en
 <https://alemoralv.github.io/memorial/> desde la raíz de este repo (GitHub
 Pages, rama `main`, sin build).
 
-La página es una **colección**: cada fotografía, cada receta y cada lugar lleva
-la misma cédula (título, dato, procedencia), y las 141 del archivo de la familia
-se etiquetan igual que las que trae la gente. Al bajar, las fotografías van
+La página es una **colección**: cada objeto lleva su cédula. Las 141 del archivo
+de la familia sólo dicen «Archivo de la familia», sin descripción: los nombres
+de los archivos describen la escena, pero nadie de la familia los escribió ni
+los revisó, así que un pie sacado de ahí afirma quién sale en la foto sin
+respaldo. **Las únicas descripciones de la página son las que escribió una
+persona al subir su fotografía**, y esas van con su nombre. Al bajar, las fotografías van
 pasando **al ritmo de tu scroll**, nunca solas, y cada una que pasa se queda en
 la hoja de contactos fija abajo. Esa hoja es el índice de la página, y su última
 celda siempre está vacía: es la que falta, la tuya.
 
 Y si quieres sentarte a verlas en lugar de bajarlas tú, **pícale a cualquier
 foto de la hoja y arranca el pase automático de las 190**, con pausa, flechas y
-teclado. Es la única parte de la página que avanza sola, y sólo porque alguien
-lo pidió.
+teclado.
+
+Justo encima de donde arranca el álbum hay un interruptor: **con el scroll** o
+**como libro**. El libro es la misma colección puesta en hojas que se pasan
+solas, con su velocidad y sus flechas, y se acuerda de lo que elegiste. En
+horizontal enseña las dos páginas del pliego; en vertical una sola, porque de
+canto no caben dos y porque con dos se saltaría una fotografía de cada dos.
 
 Paleta: **caqui de fondo, tinta verde oscuro, y un solo acento, rosa profundo**.
 El rosa tuvo que irse a un tono hondo (`#962F4F`): sobre papel claro un rosa
@@ -55,18 +63,15 @@ Y abre <http://localhost:8000>.
 
 ## 3. Añadir fotografías al archivo
 
-1. Copia los `.jpg` en `fotos/`. **El nombre del archivo es el pie de foto**:
-   escríbelo descriptivo y en español, con guiones.
-   `marilu-el-dia-de-su-boda.jpg` → «Marilú el día de su boda».
+1. Copia los `.jpg` en `fotos/`. El nombre sirve para encontrarla, no como pie
+   de foto: la página no le va a poner descripción.
 2. Convierte y regenera el catálogo:
 
        bash scripts/optimizar.sh     # sólo convierte las nuevas
        node scripts/manifest.mjs
 
-`manifest.mjs` devuelve los acentos que el nombre del archivo pierde
-(`cumpleanos` → cumpleaños). Si una foto sale con un pie raro, añádela al mapa
-`REWRITE` de ese script y vuelve a correrlo. **No edites `fotos.js` a mano**: se
-sobrescribe.
+`manifest.mjs` guarda nada más lo comprobable: el nombre del archivo y el
+tamaño real de la imagen. **No edites `fotos.js` a mano**: se sobrescribe.
 
 Cuáles del archivo pasan grandes en el álbum, y en qué orden, está en
 `CORRIDA_ARCHIVO` dentro de `memorial.js`. Va curado a propósito: de joven,
@@ -134,6 +139,15 @@ la raíz del dominio sino en `/memorial/`.
   `data-sc-span` de `#album` o pasan demasiado rápido: unos 0.19 vh por foto.
 - El pase automático (`PASO`, 5 s) se detiene solo cuando llega al único vídeo
   del archivo y sigue cuando termina. Con `prefers-reduced-motion` no arranca.
+- El motor lee `data-sc-span` **una sola vez**, al recoger los actos: cambiar el
+  atributo y volver a medir no mueve nada. Para cambiar el largo de un acto en
+  caliente (lo hace el interruptor del libro) hay que tocar también el acto
+  vivo, que el motor expone en `ScrollCraft.instances[].acts`. Eso hace
+  `ponerSpan()`.
+- Hay un recuerdo de prueba en la colección `recuerdos`
+  (`rreH9VdYiacR2cDMttYH`). Las reglas de Firestore permiten crear pero **no
+  borrar**, así que desde el sitio no se puede quitar: hay que borrarlo en la
+  consola de Firebase. Mientras tanto la página lo filtra por su id.
 - Una escena fijada es una caja de exactamente una pantalla y **recorta lo que
   no cabe**, no lo hace scrollear. Por eso el recibidor en teléfono lleva las
   fechas a una línea y todo apretado: hay que medirlo, no suponerlo.

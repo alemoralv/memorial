@@ -1,21 +1,20 @@
 Aquí viven las fotografías del archivo de la familia.
 
-EL NOMBRE DEL ARCHIVO ES EL PIE DE FOTO.
+LA PÁGINA NO LES PONE DESCRIPCIÓN, Y ES A PROPÓSITO.
 
-Esto es lo único que hay que entender de esta carpeta. Cuando pongas una foto
-nueva, ponle un nombre descriptivo, en español, todo en minúsculas y separado
-con guiones, porque ese nombre es lo que la gente va a leer debajo de la
-fotografía en la página:
+Los nombres de estos archivos describen la escena ("festejo-con-su-nieto-en-
+restaurante"), pero nadie de la familia los escribió ni los revisó. Usarlos
+como pie de foto sería afirmar quién sale en cada fotografía sin que nadie lo
+haya confirmado, y en un memorial eso pesa más que la comodidad de tener un
+pie. Las únicas descripciones que la página enseña son las que escribió una
+persona al subir su fotografía.
 
-    marilu-el-dia-de-su-boda.jpg      ->  "Marilú el día de su boda"
-    cena-de-amigas-noche-tropical.jpg ->  "Cena de amigas, noche tropical"
-    bajo-la-aurora-boreal.jpg         ->  "Bajo la aurora boreal"
+Así que el nombre del archivo aquí sirve nada más para encontrar la foto. Aun
+así conviene que sea descriptivo, en minúsculas y con guiones, porque es lo que
+vas a leer tú cuando busques algo:
 
-Sin acentos ni eñes en el nombre: el programa se los devuelve solo
-(cumpleanos -> cumpleaños, marilu -> Marilú, pinata -> piñata).
-
-Un nombre como IMG_4471.jpg no dice nada, así que la página la etiqueta
-honestamente como "Sin título". Vale más ponerle nombre.
+    marilu-el-dia-de-su-boda.jpg
+    cena-de-amigas-noche-tropical.jpg
 
 DESPUÉS DE COPIAR FOTOS NUEVAS, corre esto desde la carpeta sitio/:
 
@@ -23,8 +22,10 @@ DESPUÉS DE COPIAR FOTOS NUEVAS, corre esto desde la carpeta sitio/:
     node scripts/manifest.mjs
 
 Lo primero crea las versiones ligeras (fotos/v y fotos/t) que es lo que la
-página carga de verdad. Lo segundo actualiza el catálogo. Los .jpg originales
-de esta carpeta no se tocan nunca: son el archivo.
+página carga de verdad. Lo segundo actualiza el catálogo, que sólo guarda el
+nombre del archivo y el tamaño real de la imagen. Los .jpg originales de esta
+carpeta no se tocan nunca: son el archivo.
 
-No hace falta editar index.html. Ya no hay ninguna lista de fotos que mantener
-a mano.
+Si alguna fotografía sí tiene una descripción que alguien de la familia pueda
+confirmar, lo correcto es subirla desde la página misma, con su nombre en el
+pie, y no meterla aquí.
