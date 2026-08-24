@@ -61,7 +61,7 @@
       text: "La familia sigue creciendo." },
     { id: "d80", date: "1985-01-01", title: "Los años ochenta", decada: true,
       text: "La otra.", foto: "retrato-familiar-vintage-anos-80" },
-    { id: "s5", date: "2026-07-01", title: "Muere en la Ciudad de México",
+    { id: "s5", date: "2026-07-01", title: "Fallece en la Ciudad de México",
       text: "El álbum se queda abierto." }
   ];
 
@@ -854,6 +854,23 @@
         });
       });
     }, { root: strip, rootMargin: "300px" });
+
+    /* En el teléfono el primer acto tiene mucha menos altura de recorrido que
+       en escritorio, así que con el mismo span la foto de entrada aparece y se
+       va de un tirón. El span y la ventana del barrido se aflojan antes de
+       montar, que es cuando el motor los lee. */
+    if (window.innerWidth < 1080) {
+      var ella = document.getElementById("ella");
+      if (ella) {
+        ella.setAttribute("data-sc-span", "2.8");
+        /* La ventana va en fracción del acto, no en píxeles: con el span al
+           doble, 0.35 de recorrido es cuatro veces más scroll que antes y aun
+           así deja la foto entera durante el resto del acto, en lugar de
+           dejarla a medio revelar media pantalla. */
+        var plate = ella.querySelector("[data-sc-reveal]");
+        if (plate) plate.setAttribute("data-sc-reveal-at", "0 0.35");
+      }
+    }
 
     crearVacia();
     pintarVida(); pintarMuro(); pintarCosas(); pintarCanciones(); contar();

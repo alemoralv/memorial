@@ -16,7 +16,15 @@ foto de la hoja y arranca el pase automático de las 190**, con pausa, flechas y
 teclado. Es la única parte de la página que avanza sola, y sólo porque alguien
 lo pidió.
 
-Paleta: verde oscuro de fondo, tipografía beige, y un solo acento, rosa.
+Paleta: **caqui de fondo, tinta verde oscuro, y un solo acento, rosa profundo**.
+El rosa tuvo que irse a un tono hondo (`#962F4F`): sobre papel claro un rosa
+suave se queda en 2:1 y no aguanta ni como marca. Así clava 4.70:1 en los dos
+sentidos, lo mismo como texto que como relleno de botón.
+
+El proyector es la única parte que invierte a fondo oscuro, y es a propósito:
+una fotografía proyectada necesita la sala apagada. Ahí el acento toma su
+segunda claridad, mismo tono, y se reafirma `color` sobre el subárbol, porque
+redefinir el token no re-tinta lo que ya heredó color.
 
 ---
 
@@ -126,6 +134,14 @@ la raíz del dominio sino en `/memorial/`.
   `data-sc-span` de `#album` o pasan demasiado rápido: unos 0.19 vh por foto.
 - El pase automático (`PASO`, 5 s) se detiene solo cuando llega al único vídeo
   del archivo y sigue cuando termina. Con `prefers-reduced-motion` no arranca.
+- Una escena fijada es una caja de exactamente una pantalla y **recorta lo que
+  no cabe**, no lo hace scrollear. Por eso el recibidor en teléfono lleva las
+  fechas a una línea y todo apretado: hay que medirlo, no suponerlo.
+- El span de un acto es un atributo del HTML, igual para todos los tamaños. El
+  del recibidor se afloja a 2.8 en teléfono desde `memorial.js`, antes de
+  montar, que es cuando el motor lo lee. La ventana del barrido va en fracción
+  del acto, así que al alargar el span hay que **acortar** la fracción o la
+  foto se queda a medio revelar media pantalla.
 
 ---
 

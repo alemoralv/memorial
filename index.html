@@ -8,8 +8,8 @@
 <meta property="og:title" content="María Luz Galindo Rodríguez · 1949 – 2026">
 <meta property="og:description" content="Un álbum abierto de su vida. Cualquiera puede añadir una fotografía, un recuerdo o una receta suya.">
 <meta property="og:image" content="https://alemoralv.github.io/memorial/fotos/v/marilu-soplando-un-diente-de-leon.webp">
-<meta name="theme-color" content="#11241C">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%2311241C'/><circle cx='16' cy='16' r='6' fill='%23F2789C'/></svg>">
+<meta name="theme-color" content="#D6CDB2">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%23D6CDB2'/><circle cx='16' cy='16' r='6' fill='%23962F4F'/></svg>">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -19,19 +19,21 @@
 
 <style>
   /* ── The whole theme: six colours and two faces. ─────────────────────────
-     A deep green wall, beige type, and one accent: pink. The green is dark
-     enough to hang photographs on and green enough to read as green rather
-     than as black. Pink is hers, it is all over the archive, and it is what
-     rings the keeper on the contact sheet.
-     Measured on the render: beige on green 13.4:1, pink on green 6.1:1,
-     green on pink 6.1:1, secondary beige on green 7.3:1. */
+     Khaki paper, dark green ink, one accent: a deep rose. The photographs are
+     mounted on the page rather than hung on a wall, which is what an album
+     actually is.
+     Every pair measured on the render, and the rose is the tight one: a light
+     pink on khaki lands near 2:1, so the accent had to go deep enough to
+     survive as body text, not just as a mark.
+       green on khaki   8.95:1      rose on khaki       4.70:1
+       secondary        5.73:1      khaki inside a rose 4.70:1 */
   :root {
-    --sc-canvas:     #11241C;
-    --sc-surface:    #183328;
-    --sc-ink:        #F2E8D5;
-    --sc-ink-soft:   #B0AE9C;
-    --sc-accent:     #F2789C;
-    --sc-accent-ink: #11241C;
+    --sc-canvas:     #D6CDB2;
+    --sc-surface:    #E3DBC5;
+    --sc-ink:        #17301F;
+    --sc-ink-soft:   #3E4C3F;
+    --sc-accent:     #962F4F;
+    --sc-accent-ink: #D6CDB2;
 
     --sc-font-display: "Bodoni Moda", Didot, Georgia, serif;
     --sc-font-text:    "Archivo", system-ui, sans-serif;
@@ -40,7 +42,7 @@
        rather than left pointing at a face this page never asked for. */
     --sc-font-mono:    ui-monospace, "SFMono-Regular", Menlo, monospace;
 
-    --sc-shadow-color: 155 50% 2%;
+    --sc-shadow-color: 90 22% 16%;
     --sc-r-sm: 0px; --sc-r-md: 0px; --sc-r-lg: 0px; --sc-r-pill: 0px;
 
     /* The contact sheet's height. Constant, and reserved from the first
@@ -141,6 +143,7 @@
   .ella__dl dt { color: var(--sc-ink-soft); font-size: var(--sc-t-xs);
                  letter-spacing: 0.1em; text-transform: uppercase; margin: 0; }
   .ella__dl dd { margin: 0; color: var(--sc-ink); }
+  .ella__dl dd span { display: block; }
   .ella__note { margin: var(--sc-6) 0 0; font-size: var(--sc-t-sm);
                 color: var(--sc-ink-soft); max-width: 26ch; line-height: 1.6; }
   .ella__note b { color: var(--sc-ink); font-weight: 500; font-variant-numeric: tabular-nums; }
@@ -355,7 +358,7 @@
 
   /* ── the signature move: la hoja de contactos ───────────────────────────── */
   .hoja { position: fixed; left: 0; right: 0; bottom: 0; z-index: 55;
-          background: color-mix(in oklab, var(--sc-canvas) 88%, #000);
+          background: color-mix(in oklab, var(--sc-canvas) 93%, var(--sc-ink));
           border-top: 1px solid var(--sc-hairline-strong);
           transform: translateY(101%); transition: transform 520ms var(--sc-ease-drawer);
           backdrop-filter: blur(6px); }
@@ -394,7 +397,9 @@
 
   /* ── lightbox ───────────────────────────────────────────────────────────── */
   .lb { position: fixed; inset: 0; z-index: 90; display: none;
-        background: color-mix(in oklab, var(--sc-canvas) 92%, #000);
+        --sc-ink: #EFE8D6; --sc-ink-soft: #B2B8A8; --sc-accent: #EE95AA;
+        color: var(--sc-ink);
+        background: #122619;
         padding: clamp(1rem, 4vw, 3rem); }
   /* `minmax(0, 1fr)` y no `1fr`: contra una pista `fr` el alto en porcentaje no
      resuelve, la imagen se pinta a tamaño natural y empuja el mando fuera de
@@ -438,6 +443,10 @@
            transition: opacity 220ms var(--sc-ease-out), translate 220ms var(--sc-ease-out); }
   .toast.is-on { opacity: 1; translate: -50% -0.4rem; }
 
+  /* El grano del motor está calibrado para un fondo oscuro. Sobre papel al
+     mismo 4.5 % se lee como suciedad, no como luz. */
+  .sc-grain { opacity: 0.018; }
+
   .skip { position: absolute; left: -9999px; top: 0; z-index: 100;
           background: var(--sc-accent); color: var(--sc-accent-ink); padding: 0.7rem 1rem; }
   .skip:focus { left: var(--sc-4); top: var(--sc-4); }
@@ -455,15 +464,19 @@
     .idx a { border: 0 !important; padding: 0; white-space: nowrap; display: block; }
     .idx a i { display: none; }
     .idx a[aria-current="true"] b::before { display: none; }
-    /* El recibidor lleva foto, cédula, nombre, fechas, la nota y la velita.
-       En una pantalla de 844 px eso no cabe entero, y un hero que se sale de
-       la pantalla queda cortado arriba y abajo por el clip de la escena. */
-    .ella { grid-template-columns: 1fr; gap: var(--sc-4); align-content: center; }
-    .ella__plate img { height: min(27vh, 13rem); }
+    /* El recibidor lleva foto, cédula, nombre, fechas, la nota y la velita, y
+       la escena lo encierra en una caja de exactamente una pantalla: lo que no
+       cabe no se recorre, se corta. Así que en el teléfono las fechas pasan a
+       una línea cada una y el resto se aprieta hasta caber con margen. */
+    .ella { grid-template-columns: 1fr; gap: var(--sc-3); align-content: center; }
+    .ella__plate img { height: min(26vh, 12.5rem); }
     .ella__plate .ced { margin-top: var(--sc-3) !important; }
     .ella__plate .ced__t { font-size: var(--sc-t-base) !important; }
-    .ella__dl { margin-top: var(--sc-4); gap: 0.4rem; }
-    .ella__dl div { padding-top: 0.45rem; }
+    .ella__plate .ced__p { margin-top: 0.45rem; }
+    .ella__dl { margin-top: var(--sc-4); gap: 0.15rem; }
+    .ella__dl div { padding-top: 0.4rem; grid-template-columns: 5rem 1fr; }
+    .ella__dl dd span { display: inline; }
+    .ella__dl dd span::before { content: ", "; }
     .ella__note { margin-top: var(--sc-4); }
     .velas { margin-top: var(--sc-4); padding-top: var(--sc-4); }
     .velas__n { margin-bottom: var(--sc-3); }
@@ -511,7 +524,7 @@
 <main>
 
   <!-- ══ 1 · ELLA. Object one, already in view, already labelled. ══ -->
-  <section id="ella" data-sc-act="pin" data-sc-span="1.5" data-sc-drift="#11241C">
+  <section id="ella" data-sc-act="pin" data-sc-span="1.5" data-sc-drift="#D6CDB2">
     <div data-sc-stage class="stage-pad">
       <div class="room ella">
         <div class="ella__plate" data-sc-reveal="up" data-sc-reveal-at="0 0.3">
@@ -527,8 +540,8 @@
           <h1 class="ella__name">María&nbsp;Luz<br>Galindo Rodríguez</h1>
           <p class="ella__alias">Marilú</p>
           <dl class="ella__dl">
-            <div><dt>Nació</dt><dd>21 de enero de 1949<br>Ciudad de México</dd></div>
-            <div><dt>Murió</dt><dd>1 de julio de 2026<br>Ciudad de México</dd></div>
+            <div><dt>Nació</dt><dd>21 de enero de 1949<span>Ciudad de México</span></dd></div>
+            <div><dt>Falleció</dt><dd>1 de julio de 2026<span>Ciudad de México</span></dd></div>
             <div><dt>Fue</dt><dd>Ciudadana del mundo</dd></div>
           </dl>
           <p class="ella__note">Colección de <b data-n="fotos">143</b> fotografías reunida
@@ -543,7 +556,7 @@
   </section>
 
   <!-- ══ 2 · SU VIDA. Lateral travel reads as chronology. ══ -->
-  <section id="vida" data-sc-act="pan" data-sc-span="2.4" data-sc-drift="#142A20">
+  <section id="vida" data-sc-act="pan" data-sc-span="2.4" data-sc-drift="#D2C8AB">
     <div data-sc-stage class="stage-pad">
       <div class="rail" data-sc-pan="0.04" id="rail">
         <div class="rail__lead">
@@ -561,7 +574,7 @@
   </section>
 
   <!-- ══ 3 · EL ÁLBUM. The peak. 5.5vh, more than three times any other act. ══ -->
-  <section id="album" data-sc-act="pin" data-sc-span="11" data-sc-drift="#0D1D16">
+  <section id="album" data-sc-act="pin" data-sc-span="11" data-sc-drift="#DED6BD">
     <div data-sc-stage class="stage-pad">
       <div class="room alb">
         <div class="alb__frame" id="alb-frame"><!-- slides injected --></div>
@@ -578,7 +591,7 @@
   </section>
 
   <!-- ══ 4 · LO QUE DEJÓ. The one act that reads as a document. ══ -->
-  <section id="muro" class="sc-section" data-sc-act="flow" data-sc-drift="#173226">
+  <section id="muro" class="sc-section" data-sc-act="flow" data-sc-drift="#CFC5A5">
     <div class="room stage-pad">
       <div data-sc-in>
         <h2 class="ella__name">Lo que dejó en cada quien</h2>
@@ -594,7 +607,7 @@
   </section>
 
   <!-- ══ 5 · SU COCINA, SUS LUGARES. A rail: lateral travel reads as range. ══ -->
-  <section id="cocina" data-sc-act="pan" data-sc-span="1.8" data-sc-drift="#142A20">
+  <section id="cocina" data-sc-act="pan" data-sc-span="1.8" data-sc-drift="#D2C8AB">
     <div data-sc-stage class="stage-pad">
       <div class="rail" data-sc-pan="0.04" id="rail-cosas">
         <div class="rail__lead">
@@ -613,7 +626,7 @@
   </section>
 
   <!-- ══ 6 · SUS CANCIONES, Y LA PLACA. ══ -->
-  <section id="cierre" class="sc-section sc-section--tight" data-sc-act="flow" data-sc-drift="#12261D">
+  <section id="cierre" class="sc-section sc-section--tight" data-sc-act="flow" data-sc-drift="#D4CBAF">
     <div class="room stage-pad">
       <div class="close">
 
@@ -714,7 +727,7 @@
   </section>
 
   <!-- ══ 7 · SU ÚLTIMA PALABRA. Short, pinned, holds to the end. ══ -->
-  <section id="final" data-sc-act="pin" data-sc-span="1.2" data-sc-drift="#0E1F18">
+  <section id="final" data-sc-act="pin" data-sc-span="1.2" data-sc-drift="#DAD2B8">
     <div data-sc-stage class="stage-pad">
       <div class="room fin" data-sc-cue="0 1 0 0">
         <div class="tally">
