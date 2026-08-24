@@ -19,8 +19,10 @@ foto de la hoja y arranca el pase automático de las 190**, con pausa, flechas y
 teclado.
 
 Justo encima de donde arranca el álbum hay un interruptor: **con el scroll** o
-**como libro**. El libro es la misma colección puesta en hojas que se pasan
-solas, con su velocidad y sus flechas, y se acuerda de lo que elegiste. En
+**como libro**, y se acuerda de lo que elegiste. El libro es la misma colección
+puesta en hojas, y **también lo mueve tu scroll**: la hoja va girando al ritmo
+con el que bajas y si te paras a media vuelta se queda a medio girar. Sólo se
+pasa sola si le picas a ▶, y entonces va a la velocidad que elijas. En
 horizontal enseña las dos páginas del pliego; en vertical una sola, porque de
 canto no caben dos y porque con dos se saltaría una fotografía de cada dos.
 
@@ -144,6 +146,19 @@ la raíz del dominio sino en `/memorial/`.
   caliente (lo hace el interruptor del libro) hay que tocar también el acto
   vivo, que el motor expone en `ScrollCraft.instances[].acts`. Eso hace
   `ponerSpan()`.
+- El largo del acto en modo libro no es un número fijo: sale de `libroSpan()`,
+  que le da a cada vuelta `LIBRO_POR_VUELTA` pantallas de scroll (hoy 0.26) con
+  un tope de 26. Cambia con las fotos que hay y con si se ven una o dos hojas,
+  así que se vuelve a poner al llegar el índice de la nube y al girar el
+  aparato.
+- En modo libro mandan dos relojes, nunca a la vez: el scroll (por defecto) y
+  el pase solo (con ▶). El scroll es el estado de verdad, así que el pase solo
+  mueve el scroll en cada aterrizaje (`libroIrA`) para que al pausar el relevo
+  no salte. Como el acto está fijado, ese movimiento no se ve.
+- `window.scrollTo({behavior: "auto"})` **no** es de golpe: `auto` quiere decir
+  «lo que diga la hoja de estilos», y `scrollcraft.css` pone
+  `scroll-behavior: smooth` en el `html`. Para que sea de golpe hay que
+  apagarlo un instante, que es lo que hace `libroIrA`.
 - Hay un recuerdo de prueba en la colección `recuerdos`
   (`rreH9VdYiacR2cDMttYH`). Las reglas de Firestore permiten crear pero **no
   borrar**, así que desde el sitio no se puede quitar: hay que borrarlo en la

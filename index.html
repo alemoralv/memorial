@@ -728,7 +728,7 @@
     <div data-sc-stage class="stage-pad">
       <div class="room libro" id="libro" hidden>
         <div class="libro__marco" id="libro-marco" role="button" tabindex="0"
-             aria-label="Pausar o reanudar el pase de hojas">
+             aria-label="Pasar las hojas solas o volver a pasarlas con el scroll">
           <div class="libro__canto libro__canto--i" aria-hidden="true"></div>
           <div class="libro__canto libro__canto--d" aria-hidden="true"></div>
           <div class="pag pag--izq"><div class="pag__in" data-pag="izq"></div></div>
@@ -751,17 +751,18 @@
         <div class="libro__mando">
           <button type="button" id="libro-ant" aria-label="La hoja anterior">◂</button>
           <button type="button" id="libro-pausa" aria-pressed="false"
-                  aria-label="Pausar el pase de hojas">❚❚</button>
+                  aria-label="Pasar las hojas solas, sin scroll">▶</button>
           <button type="button" id="libro-sig" aria-label="La hoja siguiente">▸</button>
           <span class="libro__cuenta" id="libro-cuenta"></span>
         </div>
 
         <div class="libro__ritmo" role="group" aria-label="Velocidad del pase">
-          <span>Velocidad</span>
+          <span>Velocidad del pase solo</span>
           <div class="seg" id="libro-ritmos"></div>
         </div>
 
-        <p class="libro__pie">Pícale al álbum para pausar · las flechas del teclado pasan la hoja a mano</p>
+        <p class="libro__pie">Baja y la hoja va girando contigo · pícale a ▶ y se pasan
+           solas · las flechas del teclado también pasan la hoja</p>
       </div>
       <div class="room alb" id="scrollalb">
         <div class="alb__frame" id="alb-frame"><!-- slides injected --></div>

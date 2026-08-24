@@ -250,6 +250,8 @@
            los índices de las hojas que ya se ven no se mueven: basta con volver
            a escribirlas, y nunca a media vuelta. */
         if (L.montado && !L.girando) libroHojas();
+        // y con más fotografías el libro tiene más vueltas, o sea más recorrido
+        if (modoActual() === "libro") ponerSpan($("#album"), libroSpan());
       })
       .catch(function () { contar(); armarCorrida(); });
   }
@@ -419,14 +421,75 @@
      basta con subir t en uno y todo cuadra sin recolocar nada.
 
      Al girar sólo se toca `transform` y dos opacidades, en un rAF: el contenido
-     de las cuatro páginas se escribe una vez por hoja, no una vez por cuadro. */
+     de las cuatro páginas se escribe una vez por hoja, no una vez por cuadro.
+
+     QUIÉN PASA LA HOJA. Por defecto, el scroll: la hoja va girando al ritmo con
+     el que bajas, igual que la corrida del otro modo, y si te paras a media
+     vuelta la hoja se queda a medio girar. El reloj sólo toma el mando cuando
+     le picas a ▶, y entonces pasa las hojas a la velocidad que hayas elegido.
+     El estado es el mismo en los dos casos, `L.t` más el ángulo, así que se
+     puede cambiar de uno a otro sin que la lectura salte:
+       · con el scroll, `L.t` sale del avance del acto;
+       · con el reloj, cada aterrizaje mueve el scroll a donde le toca a `L.t`,
+         y como el acto está fijado ese movimiento no se ve. Al pausar, el
+         scroll ya está donde debe y el relevo es invisible. */
   var RITMOS = [{ label: "Lenta", s: 6 }, { label: "Normal", s: 3.5 }, { label: "Rápida", s: 2 }];
   var LIBRO_MODO = "ml_modo_album";
 
+  /* Cuánto scroll se lleva cada vuelta, en pantallas. Es el número que decide
+     si el álbum se siente hojeado o disparado. Y un tope, porque de canto son
+     190 vueltas y sin él el acto se comería la página entera. */
+  var LIBRO_POR_VUELTA = 0.26, LIBRO_SPAN_MAX = 26, LIBRO_SPAN_MIN = 6;
+  /* La entrada y la salida del acto se quedan sin vueltas: la primera hoja se
+     alcanza a ver antes de empezar a girar y la última no se va de golpe. */
+  var LIBRO_ENTRA = 0.05, LIBRO_SALE = 0.95;
+
   var L = {
-    t: 0, ang: 0, girando: false, pasando: false, seg: 3.5,
+    t: 0, ang: 0, p: -1, girando: false, pasando: false, seg: 3.5,
     dir: 1, raf: 0, timer: 0, vivo: false, montado: false
   };
+
+  function libroPorVuelta() { return dosPaginas() ? 2 : 1; }
+  function libroVueltas() {
+    return Math.max(1, Math.ceil((todasLasFotos().length || 1) / libroPorVuelta()) - 1);
+  }
+  function libroSpan() {
+    return Math.min(LIBRO_SPAN_MAX,
+                    Math.max(LIBRO_SPAN_MIN, 1 + libroVueltas() * LIBRO_POR_VUELTA));
+  }
+
+  /* El acto fijado publica su avance como `p = (y - top) / (alto - pantalla)`.
+     Esto es esa cuenta al revés: en qué scroll queda la vuelta `t`. */
+  function libroScrollDe(t) {
+    var act = $("#album");
+    var top = act.getBoundingClientRect().top + window.scrollY;
+    var viaje = Math.max(act.offsetHeight - window.innerHeight, 1);
+    var recorrido = LIBRO_SALE - LIBRO_ENTRA;
+    var q = Math.min(1, Math.max(0, t / libroVueltas()));
+    /* Un pelo dentro del tramo, no en la raya. El motor publica el avance con
+       cuatro decimales, así que apuntar al borde exacto cae del lado de acá o
+       del lado de allá según el redondeo, y la hoja se quedaba sin pasar la
+       mitad de las veces. Un 2% de tramo son unos cuatro píxeles y medio grado
+       de giro: no se ve, y siempre cae del lado bueno. */
+    var dentro = recorrido / libroVueltas() * 0.02;
+    return Math.ceil(top + Math.min(1, LIBRO_ENTRA + q * recorrido + dentro) * viaje);
+  }
+  /* `behavior: "auto"` NO quiere decir de golpe: quiere decir «lo que diga la
+     hoja de estilos», y la del motor pone `scroll-behavior: smooth` en el
+     `html`. Para que de verdad sea de golpe hay que apagarlo un instante.
+     `behavior: "instant"` haría lo mismo, pero es nuevo y en un navegador que
+     no lo conozca tira excepción; esto funciona en todos. */
+  function libroIrA(t, deGolpe) {
+    var y = libroScrollDe(Math.min(libroVueltas(), Math.max(0, t)));
+    if (deGolpe || prefiereQuieto()) {
+      var raiz = document.documentElement, antes = raiz.style.scrollBehavior;
+      raiz.style.scrollBehavior = "auto";
+      window.scrollTo(0, y);
+      raiz.style.scrollBehavior = antes;
+    } else {
+      window.scrollTo({ top: y, behavior: "smooth" });
+    }
+  }
 
   function libroFoto(i) {
     var todas = todasLasFotos();
@@ -497,16 +560,25 @@
     var barra = $("#libro-barra");
     if (barra) barra.style.transform = "scaleX(" + ((m(iFrente) + 1) / n).toFixed(4) + ")";
 
-    // las hojas que vienen se van bajando por adelantado
-    for (var k = 1; k <= 9; k++) {
-      var o = libroFoto(iFrente + k);
-      if (!o) continue;
-      if (o.k === "gift") pedirSrc(o.id);
-      else { var im = new Image(); im.src = vistaSrc(o); }
+    /* Un empujón fuerte de scroll puede saltar veinte vueltas entre dos
+       cuadros. Bajar por adelantado y recentrar la tira en cada una de esas
+       veinte es trabajo tirado: nadie las vio. Cuando el salto es grande sólo
+       se escriben las páginas, que es lo único que se alcanza a ver. */
+    var salto = Math.abs(t - (libroHojas.ultimo == null ? t : libroHojas.ultimo));
+    libroHojas.ultimo = t;
+    var deCerca = salto <= 3;
+
+    if (deCerca) {                    // las hojas que vienen se van bajando ya
+      for (var k = 1; k <= 9; k++) {
+        var o = libroFoto(iFrente + k);
+        if (!o) continue;
+        if (o.k === "gift") pedirSrc(o.id);
+        else { var im = new Image(); im.src = vistaSrc(o); }
+      }
     }
     // la hoja de contactos sigue siendo el registro de por dónde pasaste
-    vistas.forEach(function (o) { if (o) sumarAHoja(o); });
-    if (vistas.length) hojaMarcar(vistas[vistas.length - 1]);
+    vistas.forEach(function (o) { if (o) sumarAHoja(o, !deCerca); });
+    if (deCerca && vistas.length) hojaMarcar(vistas[vistas.length - 1]);
   }
 
   function libroAplica() {
@@ -525,20 +597,52 @@
   function libroDuracion() { return Math.min(1050, Math.max(460, L.seg * 280)); }
   function suave(p) { return p < 0.5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2; }
 
+  /* El scroll llevando la hoja. El avance del acto se parte en tantos tramos
+     como vueltas: el número del tramo es la hoja en la que vas y lo que llevas
+     recorrido dentro del tramo es cuánto ha girado. Las páginas sólo se
+     reescriben al cambiar de tramo; dentro del tramo esto es un `transform`. */
+  function libroDesdeScroll(p) {
+    /* El acto está fijado, o sea que se queda en pantalla un buen rato quieto.
+       Si el avance no se movió no hay nada que repintar. `L.p = -1` es la
+       forma de decir «vuelve a leerlo aunque salga igual», y la usan los
+       relevos: entrar al modo libro y parar el pase solo. */
+    if (p === L.p) return;
+    L.p = p;
+    var v = libroVueltas();
+    var q = (p - LIBRO_ENTRA) / (LIBRO_SALE - LIBRO_ENTRA);
+    q = Math.min(1, Math.max(0, q));
+    var pos = q * v;
+    var t = Math.min(v, Math.floor(pos));
+    if (t !== L.t) { L.t = t; libroHojas(); }
+    L.ang = -180 * suave(Math.min(1, pos - t));
+    libroAplica();
+  }
+
   function libroPrograma() {
     clearTimeout(L.timer);
     if (!L.pasando || !L.vivo) return;
+    // en la última hoja ya no hay nada que pasar: el pase solo se apaga
+    if (L.t >= libroVueltas()) { L.pasando = false; libroPausaMarca(); return; }
     L.timer = setTimeout(function () { libroGira(1); }, Math.max(500, L.seg * 1000));
   }
 
   function libroAterriza() {
     if (L.dir === 1) L.t += 1;
+    L.t = Math.min(libroVueltas(), Math.max(0, L.t));
     L.ang = 0; L.girando = false;
-    libroHojas(); libroAplica(); libroPrograma();
+    libroHojas(); libroAplica();
+    /* Con el reloj al mando el scroll se queda quieto, y sin esto el acto se
+       acabaría en la hoja tres mientras el libro va en la sesenta: al pausar,
+       el scroll mandaría de vuelta a la tres. Se mueve en cada aterrizaje, de
+       golpe y sin animar, y como el acto está fijado no se ve nada. */
+    if (L.pasando) libroIrA(L.t, true);
+    libroPrograma();
   }
 
   function libroGira(dir) {
     if (!todasLasFotos().length) return;
+    if (dir === -1 && L.t <= 0) return;            // no hay hoja antes de la primera
+    if (dir === 1 && L.t >= libroVueltas()) return;  // ni después de la última
     clearTimeout(L.timer);
     cancelAnimationFrame(L.raf);
     if (L.girando) libroAterriza();
@@ -559,14 +663,44 @@
     L.raf = requestAnimationFrame(paso);
   }
 
+  /* Una hoja a mano. Con el reloj al mando se gira y ya. Con el scroll al
+     mando la hoja no se toca directo: se mueve el scroll a donde vive esa
+     vuelta y el giro sale solo de ahí, que es lo mismo que hace tu dedo. Si se
+     girara a mano, el cuadro siguiente leería el avance del acto, vería que no
+     se movió y devolvería la hoja a su sitio. */
+  function libroPaso(dir) {
+    if (L.pasando) { libroGira(dir); return; }
+    libroIrA(L.t + dir);
+  }
+
   function libroPausaMarca() {
     var b = $("#libro-pausa");
     if (!b) return;
     b.textContent = L.pasando ? "❚❚" : "▶";
-    b.setAttribute("aria-pressed", String(!L.pasando));
-    b.setAttribute("aria-label", L.pasando ? "Pausar el pase de hojas" : "Reanudar el pase de hojas");
+    b.setAttribute("aria-pressed", String(L.pasando));
+    b.setAttribute("aria-label", L.pasando
+      ? "Parar el pase solo y volver a pasar las hojas con el scroll"
+      : "Pasar las hojas solas, sin scroll");
   }
-  function libroAlterna() { L.pasando = !L.pasando; libroPausaMarca(); libroPrograma(); }
+
+  /* Al parar, el scroll ya quedó donde va la hoja (lo movió cada aterrizaje),
+     así que el relevo no salta. Al arrancar, el reloj sigue desde la hoja en
+     la que te dejó el scroll. */
+  function libroAlterna() {
+    cancelAnimationFrame(L.raf);   // si había una vuelta en el aire, se corta
+    L.girando = false;
+    /* El relevo puede caer a media vuelta, la deje así el scroll o el reloj.
+       La hoja termina de caer del lado al que ya iba en lugar de devolverse de
+       golpe: pasada de la mitad ya es la hoja siguiente. */
+    if (Math.abs(L.ang) > 90) L.t = Math.min(libroVueltas(), L.t + 1);
+    L.ang = 0;
+    L.pasando = !L.pasando;
+    libroHojas(); libroAplica();
+    libroIrA(L.t, true);           // hoja y scroll en el mismo sitio, mande quien mande
+    L.p = -1;                      // y que el scroll lo vuelva a leer aunque salga igual
+    libroPausaMarca();
+    libroPrograma();
+  }
 
   function libroRitmos() {
     var caja = $("#libro-ritmos");
@@ -580,9 +714,14 @@
   function libroMonta() {
     if (L.montado) return;
     L.montado = true;
-    // girar el teléfono cambia de una hoja a dos, y con ello la cuenta
+    /* Girar el teléfono cambia de una hoja a dos, y con ello la cuenta y el
+       número de vueltas: de canto son el doble, así que el acto también tiene
+       que cambiar de largo o el pase se dispara. */
     var mq = window.matchMedia("(min-width: 901px)");
-    var alCambiar = function () { if (!L.girando) { libroHojas(); libroAplica(); } };
+    var alCambiar = function () {
+      if (modoActual() === "libro") ponerSpan($("#album"), libroSpan());
+      if (!L.girando) { libroHojas(); libroAplica(); }
+    };
     if (mq.addEventListener) mq.addEventListener("change", alCambiar);
     else if (mq.addListener) mq.addListener(alCambiar);
     libroRitmos();
@@ -590,14 +729,14 @@
     libroAplica();
     libroPausaMarca();
 
-    $("#libro-sig").addEventListener("click", function () { libroGira(1); });
-    $("#libro-ant").addEventListener("click", function () { libroGira(-1); });
+    $("#libro-sig").addEventListener("click", function () { libroPaso(1); });
+    $("#libro-ant").addEventListener("click", function () { libroPaso(-1); });
     $("#libro-pausa").addEventListener("click", libroAlterna);
     $("#libro-ritmos").addEventListener("click", function (e) {
       var b = e.target.closest("[data-seg]");
       if (!b) return;
       L.seg = parseFloat(b.dataset.seg);
-      L.pasando = true;
+      if (!L.pasando) libroAlterna();   // elegir una velocidad enciende el pase solo
       libroRitmos(); libroPausaMarca(); libroPrograma();
     });
     var marco = $("#libro-marco");
@@ -611,8 +750,8 @@
     document.addEventListener("keydown", function (e) {
       if (modoActual() !== "libro" || !L.vivo) return;
       if (lb.hasAttribute("open")) return;          // el proyector manda
-      if (e.key === "ArrowRight") { e.preventDefault(); libroGira(1); }
-      else if (e.key === "ArrowLeft") { e.preventDefault(); libroGira(-1); }
+      if (e.key === "ArrowRight") { e.preventDefault(); libroPaso(1); }
+      else if (e.key === "ArrowLeft") { e.preventDefault(); libroPaso(-1); }
       else if (e.key === " " && !/^(INPUT|TEXTAREA|BUTTON)$/.test(document.activeElement.tagName)) {
         e.preventDefault(); libroAlterna();
       }
@@ -631,24 +770,28 @@
     $("#libro").hidden = !libro;
     $("#scrollalb").hidden = libro;
 
-    /* El acto sigue fijado en los dos modos, pero el libro no necesita once
-       pantallas de recorrido: se pasa solo. Con el span corto la página se
-       acorta, que es justo lo que debe pasar cuando el scroll deja de ser el
-       que manda.
+    /* El acto sigue fijado en los dos modos y en los dos lo mueve el scroll,
+       pero no dura lo mismo: la corrida son 51 fotografías y el libro las 190,
+       así que el recorrido del libro se calcula para que cada vuelta se lleve
+       su cacho de scroll en lugar de ir a un número fijo.
        El motor lee `data-sc-span` UNA vez, al recoger los actos, y a partir de
        ahí usa su copia: cambiar el atributo y re-medir no mueve nada. Hay que
        tocar también el acto vivo, que el motor expone en `instances[].acts`. */
-    ponerSpan($("#album"), libro ? 2.4 : 11);
+    ponerSpan($("#album"), libro ? libroSpan() : 11);
 
     if (libro) {
       libroMonta();
-      L.pasando = true;
+      L.p = -1;
+      /* De entrada manda el scroll. El reloj entra sólo si le pican a ▶ o si
+         eligen una velocidad. */
+      L.pasando = false;
       libroPausaMarca();
       libroPrograma();
     } else {
       clearTimeout(L.timer);
       cancelAnimationFrame(L.raf);
       L.pasando = false;
+      L.girando = false;
     }
   }
 
@@ -669,22 +812,35 @@
       L.vivo = vivo;
       if (vivo) {
         hoja.classList.add("is-up");
-        if (modoActual() === "libro") { libroPrograma(); }
-        else { asegurarSrc(albActual < 0 ? 0 : albActual); tick(); }
+        if (modoActual() === "libro") libroPrograma();
+        else asegurarSrc(albActual < 0 ? 0 : albActual);
+        cancelAnimationFrame(raf);   // que dos entradas no dejen dos bucles
+        tick();          // los dos modos van montados sobre el mismo scroll
       } else {
+        cancelAnimationFrame(raf);
         clearTimeout(L.timer);
       }
     }, { rootMargin: "40% 0px" }).observe(act);
 
     function tick() {
-      if (modoActual() === "libro") return;
       var p = parseFloat(act.style.getPropertyValue("--sc-p")) || 0;
-      var n = S.corrida.length;
-      if (n) {
-        var i = Math.min(n - 1, Math.floor((p / FIN_CORRIDA) * n));
-        albMostrar(Math.max(0, i));
+      if (modoActual() === "libro") {
+        /* Con ▶ encendido el reloj lleva la hoja y el scroll lo va siguiendo
+           por detrás, así que aquí no hay nada que hacer: leerlo sería pelear
+           con el reloj por el mismo ángulo. */
+        if (!L.pasando) libroDesdeScroll(p);
+        /* Al final del acto entra el resto de la colección a la hoja de
+           contactos, igual que en el otro modo. Hace falta porque un empujón
+           fuerte de scroll se salta vueltas, y con ellas sus fotografías. */
+        if (p >= LIBRO_SALE) desbordar();
+      } else {
+        var n = S.corrida.length;
+        if (n) {
+          var i = Math.min(n - 1, Math.floor((p / FIN_CORRIDA) * n));
+          albMostrar(Math.max(0, i));
+        }
+        if (p >= FIN_CORRIDA) desbordar();
       }
-      if (p >= FIN_CORRIDA) desbordar();
       if (vivo) raf = requestAnimationFrame(tick);
     }
   }
