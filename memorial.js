@@ -868,6 +868,7 @@
 
   function abrirProyector(lista, i) {
     ultimoFoco = document.activeElement;
+    callarCancion();
     // el libro no sigue pasando hojas detrás de una sala a oscuras
     L.suspendido = L.pasando;
     clearTimeout(L.timer);
@@ -1272,6 +1273,23 @@
     toast("Quedó anotada, con tu voto");
   });
 
+  // ── la canción ───────────────────────────────────────────────────────────
+  /* Seis minutos de audio dentro de una página que se recorre. Se calla sola
+     en cuanto te la llevas de la pantalla, y también cuando se abre el
+     proyector, porque ahí puede sonar el único vídeo del archivo y no se van a
+     encimar dos. Se calla cuando ya no queda nada del vídeo en la pantalla y
+     no antes: con un umbral a media altura, cualquier reacomodo del scroll
+     mientras la estás viendo la corta a media canción. */
+  var cancion = null;
+  function conectarCancion() {
+    cancion = $("#stay");
+    if (!cancion) return;
+    new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (!e.isIntersecting) callarCancion(); });
+    }).observe(cancion);
+  }
+  function callarCancion() { if (cancion && !cancion.paused) cancion.pause(); }
+
   // ── el índice sabe dónde estás ───────────────────────────────────────────
   function conectarIndice() {
     var links = $$(".idx a");
@@ -1328,6 +1346,7 @@
     pintarVida(); pintarMuro(); pintarCosas(); pintarCanciones(); contar();
     ponerTipo("foto");
     conectarIndice();
+    conectarCancion();
     conectarAlbum();
     conectarModo();
 

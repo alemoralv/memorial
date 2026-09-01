@@ -26,6 +26,12 @@ pasa sola si le picas a ▶, y entonces va a la velocidad que elijas. En
 horizontal enseña las dos páginas del pliego; en vertical una sola, porque de
 canto no caben dos y porque con dos se saltaría una fotografía de cada dos.
 
+Pasado el álbum la página **corta a oscuro** una sola vez: ahí está *Stay*, la
+canción que le hicieron, seis minutos con sus fotografías. Nunca arranca sola,
+tiene sonido, y se calla en cuanto te la llevas de la pantalla o abres el pase.
+También se puede
+[escuchar en Spotify](https://open.spotify.com/track/3xyti5jsVnth7AQZL2LEaI).
+
 Paleta: **caqui de fondo, tinta verde oscuro, y un solo acento, rosa profundo**.
 El rosa tuvo que irse a un tono hondo (`#962F4F`): sobre papel claro un rosa
 suave se queda en 2:1 y no aguanta ni como marca. Así clava 4.70:1 en los dos
@@ -60,6 +66,20 @@ Y abre <http://localhost:8000>.
     fotos/v/          versiones web de 1400 px. GENERADAS
     fotos/t/          miniaturas de 360 px para la hoja de contactos. GENERADAS
     scripts/          cómo se regenera lo generado
+    video/            la canción: stay.mp4 y su portada. GENERADOS
+
+`video/stay.mp4` no es el máster. El original vive fuera del repo, en
+`../stay.mp4` (126 MB, 1920×1080), y GitHub no acepta archivos de más de 100 MB.
+Lo que se publica sale de ahí con un pase de denoise, que es lo que de verdad lo
+encoge: el grano de la película se lleva casi todos los bits.
+
+    ffmpeg -i ../stay.mp4 -vf hqdn3d=1.5:1.5:6:6       -c:v libx264 -preset slow -crf 28 -maxrate 1400k -bufsize 2800k       -pix_fmt yuv420p -c:a aac -b:a 128k -movflags +faststart video/stay.mp4
+
+    ffmpeg -ss 309 -i ../stay.mp4 -frames:v 1 -vf scale=1400:-2 video/stay-portada.webp
+
+El `+faststart` no es opcional: sin él el índice queda al final del archivo y el
+vídeo no empieza hasta que se descargó entero. El `preload="none"` del `<video>`
+tampoco: son 45 MB que nadie debe pagar por entrar a la página.
 
 ---
 

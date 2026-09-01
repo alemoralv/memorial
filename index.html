@@ -217,6 +217,31 @@
                max-width: 26ch; transition: opacity 600ms var(--sc-ease-out); }
   .alb__hint.is-off { opacity: 0; }
 
+  /* ── acto 3½ · la canción. El otro corte a oscuro del sitio; el primero es
+     el proyector. Los hairlines se vuelven a escribir a mano: `--sc-hairline`
+     ya resolvió su `var(--sc-ink)` en `:root` y no lo vuelve a resolver aquí,
+     así que cambiar la tinta sola dejaría los filos oscuros sobre oscuro. ─── */
+  .cine { background: #122619;
+          --sc-ink: #EFE8D6; --sc-ink-soft: #B2B8A8; --sc-accent: #EE95AA;
+          --sc-hairline: rgba(239, 232, 214, 0.16);
+          --sc-hairline-strong: rgba(239, 232, 214, 0.32);
+          color: var(--sc-ink); }
+  .cine__in { display: grid; justify-items: center; text-align: center; }
+  /* El ancho del marco lo manda el alto que queda libre: un 16:9 que no cabe en
+     la ventana obliga a hacer scroll a media canción, y el scroll aquí mueve el
+     álbum de atrás. El `max()` es el piso, sin él una ventana baja resuelve a
+     negativo y el vídeo desaparece. */
+  .cine__marco { width: min(100%, 68rem,
+                            max(20rem, (100svh - var(--hoja-h) - 15rem) * 16 / 9));
+                 margin-top: var(--sc-5);
+                 border: 1px solid var(--sc-hairline-strong);
+                 background: #0B160F; box-shadow: var(--sc-e3); }
+  .cine__vid { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9;
+               background: #0B160F; }
+  .cine__ced { margin-top: var(--sc-6); max-width: 44ch; }
+  .cine__ced .ced__p { justify-content: center; }
+  .cine__spot { margin-top: var(--sc-5); text-decoration: none; }
+
   /* ── act 4 · Lo que dejó ────────────────────────────────────────────────── */
   .muro { columns: 21rem 3; column-gap: var(--sc-7); margin-top: var(--sc-8); }
   .rec { break-inside: avoid; margin: 0 0 var(--sc-7);
@@ -655,6 +680,7 @@
   <a href="#ella"><b>Ella</b><i data-n="ella">1</i></a>
   <a href="#vida"><b>Su vida</b><i data-n="vida">–</i></a>
   <a href="#album"><b>El álbum</b><i data-n="fotos">–</i></a>
+  <a href="#cancion"><b>Una canción</b><i>1</i></a>
   <a href="#muro"><b>Lo que dejó</b><i data-n="recuerdos">–</i></a>
   <a href="#cocina"><b>Su cocina</b><i data-n="recetas">–</i></a>
   <a href="#cierre"><b>Sus canciones</b><i data-n="canciones">–</i></a>
@@ -773,6 +799,36 @@
           <p class="alb__hint">Cada fotografía que pasa se queda abajo, en la hoja
              de contactos. Pícale a cualquiera y se vuelve un pase automático de
              las 190.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ 3½ · LA CANCIÓN. Un objeto más del catálogo, con su ficha igual que
+       todos, sólo que este suena y dura seis minutos. Va aquí y no al final
+       porque después del álbum el que llegó ya vio su cara 51 veces. ══ -->
+  <section id="cancion" class="cine sc-section" data-sc-act="flow">
+    <div class="room stage-pad">
+      <div class="cine__in" data-sc-in>
+        <p class="eyebrow">Una canción para ella</p>
+
+        <div class="cine__marco">
+          <video id="stay" class="cine__vid" controls playsinline preload="none"
+                 aria-label="Stay, la canción que le hicieron a Marilú"
+                 poster="video/stay-portada.webp" width="1920" height="1080">
+            <source src="video/stay.mp4" type="video/mp4">
+            <p>Tu navegador no puede reproducir el vídeo.
+               <a href="video/stay.mp4" download>Descárgalo aquí</a>.</p>
+          </video>
+        </div>
+
+        <div class="ced cine__ced">
+          <h2 class="ced__t">Stay</h2>
+          <p class="ced__f">Seis minutos con sus fotografías.
+             Tiene sonido: súbele al volumen.</p>
+          <p class="ced__p">Musical Archives · 6:18</p>
+          <a class="btn btn--ghost cine__spot" target="_blank" rel="noopener"
+             href="https://open.spotify.com/track/3xyti5jsVnth7AQZL2LEaI">Escuchar la canción en Spotify</a>
         </div>
       </div>
     </div>
