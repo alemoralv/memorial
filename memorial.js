@@ -276,13 +276,18 @@
   function asegurarSrc(i) {
     for (var k = i; k <= i + 3 && k < S.corrida.length; k++) {
       (function (o) {
-        if (!o || o.k !== "gift" || S.srcs[o.id]) return;
+        if (!o || o.k !== "gift") return;
         pedirSrc(o.id).then(function (src) {
           if (!src) return;
           var fig = $('.alb__slide[data-i="' + S.corrida.indexOf(o) + '"]', $("#alb-frame"));
           if (fig && !fig.firstChild) {
             var im = new Image();
-            im.src = src; im.alt = alterno(o); im.decoding = "async";
+            im.alt = alterno(o); im.decoding = "async";
+            im.onload = function () {
+              var index = S.corrida.indexOf(o);
+              if (index === albSolicitado) albMostrar(index, true);
+            };
+            im.src = src;
             fig.appendChild(im);
           }
         });
@@ -308,11 +313,25 @@
   }
 
   // ── el álbum: el scroll es el que manda ──────────────────────────────────
-  var albActual = -1;
+  var albActual = -1, albSolicitado = -1;
   function albMostrar(i, forzar) {
-    if (i === albActual && !forzar) return;
+    if (i === albSolicitado && !forzar) return;
+    albSolicitado = i;
+    var frame = $("#alb-frame");
+    var slides = $$(".alb__slide", frame);
+    asegurarSrc(i);
+    var incoming = slides[i] && slides[i].querySelector("img");
+    // A slow shared image must not erase the photograph already on the table.
+    // Keep its caption with it, and switch only when the requested print decoded.
+    if (!incoming || !incoming.complete || !incoming.naturalWidth) {
+      frame.setAttribute("aria-busy", "true");
+      if (incoming && !incoming.complete) incoming.addEventListener("load", function () {
+        if (i === albSolicitado) albMostrar(i, true);
+      }, { once: true });
+      return;
+    }
+    frame.removeAttribute("aria-busy");
     albActual = i;
-    var slides = $$(".alb__slide", $("#alb-frame"));
     slides.forEach(function (el, k) { el.classList.toggle("is-on", k === i); });
     var o = S.corrida[i];
     if (!o) return;
@@ -1325,22 +1344,7 @@
       });
     }, { root: strip, rootMargin: "300px" });
 
-    /* En el teléfono el primer acto tiene mucha menos altura de recorrido que
-       en escritorio, así que con el mismo span la foto de entrada aparece y se
-       va de un tirón. El span y la ventana del barrido se aflojan antes de
-       montar, que es cuando el motor los lee. */
-    if (window.innerWidth < 1080) {
-      var ella = document.getElementById("ella");
-      if (ella) {
-        ella.setAttribute("data-sc-span", "2.8");
-        /* La ventana va en fracción del acto, no en píxeles: con el span al
-           doble, 0.35 de recorrido es cuatro veces más scroll que antes y aun
-           así deja la foto entera durante el resto del acto, en lugar de
-           dejarla a medio revelar media pantalla. */
-        var plate = ella.querySelector("[data-sc-reveal]");
-        if (plate) plate.setAttribute("data-sc-reveal-at", "0 0.35");
-      }
-    }
+    // Page-local hero layout is chosen in premium.js before the engine mounts.
 
     crearVacia();
     pintarVida(); pintarMuro(); pintarCosas(); pintarCanciones(); contar();

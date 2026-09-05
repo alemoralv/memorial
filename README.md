@@ -183,15 +183,25 @@ la raíz del dominio sino en `/memorial/`.
   (`rreH9VdYiacR2cDMttYH`). Las reglas de Firestore permiten crear pero **no
   borrar**, así que desde el sitio no se puede quitar: hay que borrarlo en la
   consola de Firebase. Mientras tanto la página lo filtra por su id.
-- Una escena fijada es una caja de exactamente una pantalla y **recorta lo que
-  no cabe**, no lo hace scrollear. Por eso el recibidor en teléfono lleva las
-  fechas a una línea y todo apretado: hay que medirlo, no suponerlo.
-- El span de un acto es un atributo del HTML, igual para todos los tamaños. El
-  del recibidor se afloja a 2.8 en teléfono desde `memorial.js`, antes de
-  montar, que es cuando el motor lo lee. La ventana del barrido va en fracción
-  del acto, así que al alargar el span hay que **acortar** la fracción o la
-  foto se queda a medio revelar media pantalla.
+- Una escena fijada recorta lo que no cabe. El recibidor ahora usa altura natural
+  en teléfono y con movimiento reducido. El libro reserva espacio para los mandos
+  y ajusta su tamaño a la altura disponible; en ventanas muy bajas sus controles
+  siguen accesibles con desplazamiento interno.
 
 ---
 
 Hecho con cariño para Marilú. so beat it
+
+## Refinamiento visual · septiembre de 2026
+
+El recibidor muestra la fotografía desde el primer instante. El nombre de Marilú
+acompaña una impresión sobre hojas de álbum, con profundidad suave en escritorio.
+En teléfono se acomoda en una columna de altura natural. El índice está arriba,
+con un menú desplegable en teléfono; la cronología se lee en vertical, el álbum
+conserva sus dos modos, y Stay tiene su propia sala oscura.
+
+`premium.css` y `premium.js` contienen esta presentación y sus interacciones.
+El motor compartido sigue intacto. El álbum ahora coloca también las imágenes de
+la nube que ya estaban en caché y espera a que la siguiente fotografía esté lista
+antes de retirar la anterior. Las fotos, sus autores y la conexión con Firestore
+se conservan. [SCROLLCRAFT.md](SCROLLCRAFT.md) documenta la dirección y la revisión.

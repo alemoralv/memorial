@@ -667,6 +667,7 @@
     .alb__slide { transition: none; }
   }
 </style>
+<link rel="stylesheet" href="premium.css">
 </head>
 <body>
 
@@ -677,6 +678,8 @@
 <!-- ══ the index of the collection. It jumps. Counts are live and real. ══ -->
 <nav class="idx" aria-label="Índice de la colección">
   <p class="idx__mark">Marilú<span>1949 – 2026</span></p>
+  <button class="idx__toggle" type="button" aria-expanded="false" aria-controls="idx-links">Índice <span aria-hidden="true">+</span></button>
+  <div class="idx__links" id="idx-links">
   <a href="#ella"><b>Ella</b><i data-n="ella">1</i></a>
   <a href="#vida"><b>Su vida</b><i data-n="vida">–</i></a>
   <a href="#album"><b>El álbum</b><i data-n="fotos">–</i></a>
@@ -684,36 +687,41 @@
   <a href="#muro"><b>Lo que dejó</b><i data-n="recuerdos">–</i></a>
   <a href="#cocina"><b>Su cocina</b><i data-n="recetas">–</i></a>
   <a href="#cierre"><b>Sus canciones</b><i data-n="canciones">–</i></a>
+  </div>
 </nav>
 
 <main>
 
   <!-- ══ 1 · ELLA. Object one, already in view, already labelled. ══ -->
-  <section id="ella" data-sc-act="pin" data-sc-span="1.5" data-sc-drift="#D6CDB2">
+  <section id="ella" data-sc-act="pin" data-sc-span="1.65" data-sc-drift="#D6CDB2">
     <div data-sc-stage class="stage-pad">
       <div class="room ella">
-        <div class="ella__plate" data-sc-reveal="up" data-sc-reveal-at="0 0.3">
+        <div class="ella__plate">
+          <div class="ella__paper ella__paper--back" aria-hidden="true"></div>
+          <div class="ella__paper ella__paper--near" aria-hidden="true"></div>
+          <figure class="ella__print">
           <img src="fotos/v/marilu-soplando-un-diente-de-leon.webp"
                width="1400" height="933" fetchpriority="high"
                alt="María Luz sopla un diente de león, muy de cerca, en el campo.">
-          <div class="ced" style="margin-top: var(--sc-4)">
-            <p class="ced__t" style="font-size: var(--sc-t-lg)">Marilú soplando un diente de león</p>
+          <figcaption class="ced">
             <p class="ced__p">Archivo de la familia</p>
-          </div>
+            <span class="ella__print-note">Un instante, para siempre.</span>
+          </figcaption>
+          </figure>
         </div>
-        <div class="ced" data-sc-cue="0 1 0 0">
-          <h1 class="ella__name">María&nbsp;Luz<br>Galindo Rodríguez</h1>
-          <p class="ella__alias">Marilú</p>
+        <div class="ced ella__intro">
+          <p class="eyebrow">Un álbum abierto de su vida</p>
+          <h1 class="ella__name"><span class="ella__familiar">Marilú</span><span class="ella__formal">María Luz Galindo Rodríguez</span></h1>
+          <p class="ella__alias">Siempre, entre nosotros.</p>
           <dl class="ella__dl">
-            <div><dt>Nació</dt><dd>21 de enero de 1949<span>Ciudad de México</span></dd></div>
-            <div><dt>Falleció</dt><dd>1 de julio de 2026<span>Ciudad de México</span></dd></div>
-            <div><dt>Fue</dt><dd>Ciudadana del mundo</dd></div>
+            <div><dt>Su vida</dt><dd>21 enero 1949 <span aria-hidden="true">–</span> 1 julio 2026</dd></div>
+            <div><dt>Su casa</dt><dd>Ciudad de México. <br>Ciudadana del mundo.</dd></div>
           </dl>
-          <p class="ella__note">Colección de <b data-n="fotos">143</b> fotografías reunida
-             por su familia y sus amigas. Sigue abierta.</p>
+          <p class="ella__note">Sus fotografías. Nuestras historias.<br>Un lugar para volver a estar cerquita.</p>
+          <a class="ella__open" href="#album">Abrir el álbum <span data-n="fotos">–</span><span class="sr-only"> fotografías</span></a>
           <div class="velas">
             <p class="velas__n"><b data-n="velitas">–</b> velitas encendidas</p>
-            <button class="btn btn--ghost" type="button" id="velita">Encender una velita</button>
+            <button class="btn btn--ghost" type="button" id="velita"><span class="candle" aria-hidden="true"><i></i></span>Encender una velita</button>
           </div>
         </div>
       </div>
@@ -721,18 +729,18 @@
   </section>
 
   <!-- ══ 2 · SU VIDA. Lateral travel reads as chronology. ══ -->
-  <section id="vida" data-sc-act="pan" data-sc-span="2.4" data-sc-drift="#D2C8AB">
+  <section id="vida" data-sc-act="flow" data-sc-drift="#D2C8AB">
     <div data-sc-stage class="stage-pad">
-      <div class="rail" data-sc-pan="0.04" id="rail">
+      <div class="rail" id="rail">
         <div class="rail__lead">
-          <h2>Su vida</h2>
-          <p>Lo que se sabe con fecha. Cualquiera puede añadir un momento y
-             queda en su sitio, en el año que le toca.</p>
+          <h2>Una vida.<br><em>Tantos recuerdos.</em></h2>
+          <p>Hay fechas que cuentan su historia. Y momentos que sólo tú puedes contar.</p>
+          <button class="btn btn--ghost" type="button" data-go="momento">Añadir un momento</button>
         </div>
         <!-- nodes injected here -->
         <div class="rail__end" id="rail-end">
-          <p>La cronología termina aquí porque todavía nadie ha escrito el resto.
-             Si te acuerdas de un año, de un viaje, de una mudanza, ponlo.</p>
+          <p>Entre estas fechas cabe toda una vida. Si te acuerdas de un viaje,
+             de una mudanza o de un día especial, aquí tiene su lugar.</p>
         </div>
       </div>
     </div>
@@ -740,6 +748,7 @@
 
   <!-- ══ cómo se ve el álbum. Va justo encima de donde arranca. ══ -->
   <div class="room modo">
+    <div class="modo__title"><p class="eyebrow">El álbum de todos</p><h2>Volver a <em>mirarla.</em></h2></div>
     <div class="modo__in">
       <p id="modo-lbl">Cómo quieres ver el álbum</p>
       <div class="seg seg--modo" role="group" aria-labelledby="modo-lbl">
@@ -798,7 +807,7 @@
           <p class="ced__p" id="alb-p">Archivo de la familia</p>
           <p class="alb__hint">Cada fotografía que pasa se queda abajo, en la hoja
              de contactos. Pícale a cualquiera y se vuelve un pase automático de
-             las 190.</p>
+             todas las fotografías.</p>
         </div>
       </div>
     </div>
@@ -810,7 +819,7 @@
   <section id="cancion" class="cine sc-section" data-sc-act="flow">
     <div class="room stage-pad">
       <div class="cine__in" data-sc-in>
-        <p class="eyebrow">Una canción para ella</p>
+        <div class="cine__heading"><h2>Stay</h2><p>Una canción para ella.<br>Un ratito más con Marilú.</p></div>
 
         <div class="cine__marco">
           <video id="stay" class="cine__vid" controls playsinline preload="none"
@@ -823,7 +832,6 @@
         </div>
 
         <div class="ced cine__ced">
-          <h2 class="ced__t">Stay</h2>
           <p class="ced__f">Seis minutos con sus fotografías.
              Tiene sonido: súbele al volumen.</p>
           <p class="ced__p">Musical Archives · 6:18</p>
@@ -922,7 +930,7 @@
             <label class="drop">
               <b>Elige la fotografía</b>
               <span>Se suma al álbum de todos, con tu nombre en el pie.</span>
-              <input type="file" accept="image/*" id="f-file" hidden>
+              <input type="file" accept="image/*" id="f-file">
             </label>
             <div id="f-prev" hidden style="margin-bottom: var(--sc-4)"></div>
             <label class="fld"><span>Pie de foto</span>
@@ -956,7 +964,7 @@
             <label class="drop">
               <b>Sube la receta en foto</b>
               <span>La tarjeta, el cuaderno o el platillo. Opcional.</span>
-              <input type="file" accept="image/*" id="f-file2" hidden>
+              <input type="file" accept="image/*" id="f-file2">
             </label>
             <div id="f-prev2" hidden style="margin-bottom: var(--sc-4)"></div>
           </div>
@@ -984,6 +992,8 @@
           <q>so beat it</q>
           <p>Ella tiene la última palabra</p>
         </div>
+        <p class="fin__dedication">Para Marilú, con todo nuestro amor.</p>
+        <a class="fin__back" href="#ella">Volver a empezar</a>
       </div>
     </div>
   </section>
@@ -1019,6 +1029,8 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
 <script src="fotos.js"></script>
 <script src="scrollcraft.js"></script>
+<script src="premium.js"></script>
 <script src="memorial.js"></script>
+<noscript><style>.idx__toggle,.velas,.modo,#album,#cocina,#cierre,.hoja,.alb__cap,[data-go]{display:none!important}[data-sc-cue],[data-sc-in]{opacity:1!important;transform:none!important}.idx{position:static;height:auto;display:block;padding:16px 24px}.idx__links{display:flex!important;position:static!important;flex-wrap:wrap;gap:8px 16px;padding:0;box-shadow:none}#album{min-height:0}#ella [data-sc-stage]{height:auto}</style><p class="no-script">Para abrir el álbum interactivo y compartir recuerdos, activa JavaScript. Puedes ver <a href="fotos/v/marilu-soplando-un-diente-de-leon.webp">su fotografía</a> y escuchar <a href="video/stay.mp4">Stay</a>.</p></noscript>
 </body>
 </html>
