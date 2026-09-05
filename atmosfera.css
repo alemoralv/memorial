@@ -1,0 +1,40 @@
+/* Light on the paper, beneath the entire family album. */
+body { isolation:isolate; }
+main { position:relative; z-index:1; }
+.sc-grain { display:none; }
+.atmosfera { position:fixed; inset:0; z-index:0; overflow:hidden; pointer-events:none; contain:strict; background:color-mix(in srgb,var(--sc-canvas) 60%,#E3DBC5); }
+.atmosfera__papel { position:absolute; inset:-90px -40px; background:url('assets/papel-luz.webp') center / cover no-repeat; mix-blend-mode:soft-light; opacity:.75; transform:translate3d(var(--luz-x,0px),var(--papel-y,0px),0); }
+.atmosfera__sombra { position:absolute; inset:-100px -60px; background:url('assets/papel-luz.webp') center / cover no-repeat; mix-blend-mode:soft-light; opacity:.14; transform:translate3d(calc(var(--luz-x,0px) * -1),calc(var(--papel-y,0px) * -.5),0) scale(1.12) rotate(180deg); }
+.atmosfera__aire { position:absolute; inset:0; width:100%; height:100%; }
+.idx { background:rgb(214 205 178 / .97); }
+/* A whole photograph, with breathing room on every side. */
+.alb { grid-template-columns:minmax(0,1fr); gap:0; }
+.alb__frame { width:100%; height:min(74svh,760px); }
+.alb__slide { padding:16px; }
+.ella__print { padding:clamp(10px,1.2vw,18px); }
+.ella__plate img,.alb__slide img,.pag__marco img { position:relative; }
+.lb { padding:80px clamp(16px,4vw,64px) 24px; }
+.lb__mando { margin-top:0; }
+.pag__in { gap:0; padding:5.5%; }
+/* Paper edges stay behind the print; no lettering, marks or shadows on it. */
+.cara__sombra { display:none; }
+.libro__lomo { width:12px; }
+.pag__marco { max-height:100%; }
+#vida { background:rgb(227 219 197 / .22); }
+#muro { background:rgb(227 219 197 / .32); }
+#final { background:rgb(214 205 178 / .12); }
+@media(max-width:1080px) {
+  .alb { grid-template-columns:minmax(0,1fr); gap:0; }
+  .alb__frame { height:calc(100svh - var(--nav-h) - var(--hoja-h) - 100px); max-height:720px; }
+}
+@media(max-width:640px) {
+  .atmosfera__papel { opacity:.42; background-position:65% center; }
+  .atmosfera__sombra { display:none; }
+  .alb__slide { padding:8px 0; }
+  .alb__slide img { border-width:8px; }
+  .lb { padding-top:76px; padding-bottom:max(20px,env(safe-area-inset-bottom)); }
+}
+@media(prefers-reduced-motion:reduce) {
+  .atmosfera__papel,.atmosfera__sombra { transform:none; }
+  .atmosfera__aire { display:none; }
+}

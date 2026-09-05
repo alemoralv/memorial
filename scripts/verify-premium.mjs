@@ -60,7 +60,7 @@ try{
  // Preload shared photographs through the contact strip, then revisit them.
  await jump(p,'album',.98);await p.waitForTimeout(1800);await jump(p,'album',.87);await p.waitForTimeout(500);
  assert.equal(await p.locator('.alb__slide.is-on img').evaluate(i=>i.complete&&i.naturalWidth>0),true);
- assert.equal(await p.locator('#alb-p').textContent(),'Compartida por Persona de prueba');
+ assert.equal(await p.locator('#alb-p, #alb-t, .pag__ced, #lb-t, #lb-p, .ella__print figcaption').count(),0);
  results.push('Cached contributed photographs render in the main album (regression check).');
  await p.setViewportSize({width:390,height:844});await jump(p,'ella');assert.equal(await p.locator('#ella').getAttribute('data-sc-act'),'flow');
  await p.locator('.idx__toggle').click();assert.equal(await p.locator('.idx__toggle').getAttribute('aria-expanded'),'true');await p.keyboard.press('Escape');assert.equal(await p.locator('.idx__toggle').getAttribute('aria-expanded'),'false');

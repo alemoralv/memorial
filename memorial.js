@@ -299,7 +299,7 @@
     var frame = $("#alb-frame");
     frame.onclick = function () { var o = S.corrida[albActual]; if (o) abrir(o); };
     frame.style.cursor = "zoom-in";
-    frame.title = "Ver todas en pase automático";
+    frame.setAttribute("aria-label", "Ver todas en pase automático");
     frame.innerHTML = S.corrida.map(function (o, i) {
       var src = vistaSrc(o);
       return '<figure class="alb__slide" data-i="' + i + '">' +
@@ -322,7 +322,7 @@
     asegurarSrc(i);
     var incoming = slides[i] && slides[i].querySelector("img");
     // A slow shared image must not erase the photograph already on the table.
-    // Keep its caption with it, and switch only when the requested print decoded.
+    // Switch only when the requested print decoded.
     if (!incoming || !incoming.complete || !incoming.naturalWidth) {
       frame.setAttribute("aria-busy", "true");
       if (incoming && !incoming.complete) incoming.addEventListener("load", function () {
@@ -336,14 +336,6 @@
     var o = S.corrida[i];
     if (!o) return;
     asegurarSrc(i);
-    var t = $("#alb-t");
-    t.textContent = o.c;
-    t.hidden = !o.c;
-    var f = $("#alb-f");
-    if (o.f) { f.textContent = o.f; f.hidden = false; } else { f.hidden = true; }
-    var p = $("#alb-p");
-    p.textContent = procedencia(o);
-    p.classList.toggle("ced__p--gift", o.k === "gift");
     // la que sigue se precarga para que el paso no parpadee
     var sig = S.corrida[i + 1];
     if (sig && sig.k === "arch") { var im = new Image(); im.src = vistaSrc(sig); }
@@ -352,8 +344,6 @@
        igual las pasó. */
     for (var j = 0; j <= i; j++) if (S.corrida[j]) sumarAHoja(S.corrida[j], j < i - 1);
     hojaMarcar(o);
-    // dicho una vez, mientras todavía es noticia, y luego se quita de en medio
-    if (i >= 3) { var h = $(".alb__hint"); if (h) h.classList.add("is-off"); }
   }
 
   // ── la hoja de contactos ─────────────────────────────────────────────────
@@ -525,11 +515,6 @@
     caja.innerHTML =
       '<div class="pag__marco">' +
         (src ? '<img src="' + esc(src) + '" alt="' + esc(alterno(o)) + '" decoding="async">' : "") +
-      "</div>" +
-      '<div class="pag__ced">' +
-        (o.c ? '<p class="pag__t">' + esc(o.c) + "</p>" : "") +
-        '<p class="pag__p' + (o.k === "gift" ? " pag__p--gift" : "") + '">' +
-          esc(procedencia(o)) + "</p>" +
       "</div>";
     if (o.k === "gift" && !src) {
       pedirSrc(o.id).then(function (s2) {
@@ -932,11 +917,6 @@
       } else if (src) {
         lbImg.src = src; lbImg.alt = alterno(o); lbImg.hidden = false;
       }
-      var lbT = $("#lb-t");
-      lbT.textContent = o.c + (o.f ? " " + o.f : "");
-      lbT.hidden = !o.c;
-      $("#lb-p").textContent = procedencia(o);
-      $("#lb-p").classList.toggle("ced__p--gift", o.k === "gift");
       $("#lb-cuenta").textContent = (proy.i + 1) + " de " + proy.lista.length;
       $("#lb-barra").style.transform = "scaleX(" + ((proy.i + 1) / proy.lista.length) + ")";
     };

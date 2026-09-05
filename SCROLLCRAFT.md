@@ -1,5 +1,10 @@
 # Scroll-craft · Marilú
 
+Latest refinement: [Luz, papel y fotografías](ATMOSFERA.md). The new version
+removes photographic captions, adds a KIE-generated background and a subtle
+pointer response, and serves the same typography locally. The report below
+records the earlier design pass.
+
 Design refinement of the existing family memorial, using
 [nateherkai/scroll-craft](https://github.com/nateherkai/scroll-craft), retrieved
 4 September 2026. The full working brief is in the project workspace at
