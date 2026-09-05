@@ -1,0 +1,77 @@
+/* Generated scenery is a separate, decorative world behind the family archive. */
+.paisajes { position:absolute; inset:0; overflow:hidden; background:#D6CDB2; }
+.paisaje { position:absolute; inset:-4%; opacity:0; }
+.paisaje--paris { opacity:1; }
+.paisaje picture,.paisaje img,.paisaje video { position:absolute; inset:0; width:100%; height:100%; }
+.paisaje img,.paisaje video { object-fit:cover; object-position:var(--focus,50% 50%); }
+.paisaje video { opacity:0; transition:opacity 350ms ease; }
+.paisaje video.is-decoded { opacity:1; }
+.paisajes__luz { position:absolute; inset:-10%; background:radial-gradient(ellipse at 9% 12%,rgb(248 243 224 / .4),transparent 48%),linear-gradient(180deg,rgb(227 219 197 / .12),transparent 30%,transparent 78%,rgb(227 219 197 / .2)); transform:translate3d(var(--near-x,0px),var(--near-y,0px),0); }
+.atmosfera__papel { opacity:.13; }
+.atmosfera__sombra { opacity:.08; }
+.idx { background:rgb(227 219 197 / .97); }
+/* The background retains its full color outside the actual reading surfaces. */
+.ella__intro { padding:28px 32px; background:#E3DBC5; border:1px solid rgb(255 255 255 / .65); box-shadow:8px 20px 48px rgb(23 48 31 / .16); }
+.ella__familiar { font-size:clamp(94px,9.5vw,154px); }
+#vida,#muro,#final { background:none; }
+#rail { position:relative; isolation:isolate; padding-block:40px; }
+#rail::before { content:''; position:absolute; z-index:-1; inset:0 var(--sc-gutter); background:#E3DBC5; box-shadow:12px 28px 52px rgb(23 48 31 / .17); border:1px solid rgb(255 255 255 / .55); }
+#rail .rail__lead { margin-left:32px; padding-right:20px; }
+#rail .node,#rail .rail__end { margin-right:32px; }
+.modo { background:#E3DBC5; padding-top:32px; padding-bottom:32px; margin-top:32px; box-shadow:8px 18px 40px rgb(23 48 31 / .1); }
+#album .alb__slide img { box-shadow:0 1px 2px rgb(23 48 31 / .18),12px 26px 60px rgb(13 35 25 / .3); }
+#album .alb__slide { min-height:0; }
+#album .alb__slide img { max-height:calc(100svh - var(--nav-h) - var(--hoja-h) - 112px); }
+.libro__mandos { background:#E3DBC5; }
+#muro > .room { position:relative; isolation:isolate; padding-block:40px; }
+#muro > .room::before { content:''; position:absolute; z-index:-1; inset:0 var(--sc-gutter); background:#E3DBC5; border:1px solid rgb(255 255 255 / .55); box-shadow:12px 28px 52px rgb(23 48 31 / .17); }
+#muro > .room > * { margin-left:32px; margin-right:32px; }
+#cocina .rail__lead,#cocina .case,#cocina .rail__end { background:#E3DBC5; padding:32px; border:1px solid rgb(255 255 255 / .6); box-shadow:8px 20px 44px rgb(23 48 31 / .19); }
+#cocina .rail { align-items:center; }
+#cocina .case { max-height:calc(100svh - var(--nav-h) - var(--hoja-h) - 100px); overflow-y:auto; }
+#cocina .case--lug { flex-basis:clamp(280px,26vw,390px); }
+#cocina .case--lug .ced__t { font-size:clamp(32px,3vw,48px)!important; overflow-wrap:anywhere; }
+#cierre .close > div { padding:32px; background:#E3DBC5; border:1px solid rgb(255 255 255 / .55); box-shadow:12px 28px 52px rgb(23 48 31 / .17); }
+#final .fin { position:relative; isolation:isolate; }
+#final .fin::before { content:''; position:absolute; z-index:-1; inset:-32px 0; background:rgb(227 219 197 / .97); border:1px solid rgb(255 255 255 / .6); box-shadow:12px 28px 52px rgb(23 48 31 / .15); }
+@media(min-width:1081px) {
+  #ella .ella { grid-template-columns:minmax(0,.96fr) minmax(0,1.2fr); gap:clamp(36px,5vw,80px); }
+  #muro > .room { max-width:1180px; margin-left:0; }
+  #cocina .rail__lead { width:clamp(280px,28vw,440px); }
+}
+@media(max-width:1080px) {
+  .ella__intro { padding:24px; }
+  .ella__familiar { font-size:clamp(76px,10vw,120px); }
+  #rail .rail__lead { margin-left:24px; padding-right:0; }
+  #rail .node,#rail .rail__end { margin-right:24px; }
+  #muro > .room > * { margin-inline:24px; }
+}
+@media(max-width:640px) {
+  .paisaje { inset:-2%; }
+  .paisaje--paris { --focus:61% 50%; }
+  .paisaje--lago { --focus:65% 50%; }
+  .paisaje--cocina { --focus:76% 50%; }
+  #ella > [data-sc-stage] { padding-top:136px; padding-bottom:64px; }
+  .ella { position:relative; isolation:isolate; padding:24px; width:calc(100% - 40px); }
+  .ella::before { content:''; position:absolute; inset:0; background:#E3DBC5; z-index:-1; box-shadow:8px 20px 40px rgb(23 48 31 / .18); border:1px solid rgb(255 255 255 / .6); }
+  .ella__intro { padding:0; background:none; border:0; box-shadow:none; }
+  .ella__familiar { font-size:clamp(80px,23vw,138px); }
+  .ella__formal { font-size:9px; letter-spacing:.05em; }
+  .ella__alias { font-size:23px; }
+  #rail { padding:28px 44px; }
+  #rail::before { inset:0 20px; }
+  #rail .rail__lead,#rail .node,#rail .rail__end { margin-inline:0; }
+  .modo { margin-inline:20px; padding:24px; width:calc(100% - 40px); }
+  #muro > .room { padding:28px 44px; }
+  #muro > .room::before { inset:0 20px; }
+  #muro > .room > * { margin-inline:0; }
+  #cocina .rail__lead,#cocina .case,#cocina .rail__end { padding:24px; }
+  #cierre .close { gap:36px; }
+  #cierre .close > div,.plate { padding:24px; }
+  #final .fin { width:calc(100% - 40px); padding-inline:20px; }
+  #final .fin::before { inset:-24px 0; }
+}
+@media(prefers-reduced-motion:reduce) {
+  .paisaje,.paisajes__luz { transform:none!important; }
+  .paisaje video { display:none; transition:none; }
+}

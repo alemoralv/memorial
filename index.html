@@ -665,12 +665,30 @@
 </style>
 <link rel="stylesheet" href="premium.css">
 <link rel="stylesheet" href="atmosfera.css">
+<link rel="stylesheet" href="paisajes.css">
 </head>
 <body>
 
 <a class="skip" href="#album">Saltar al álbum</a>
 <span data-sc-progress></span>
 <div class="atmosfera" aria-hidden="true">
+  <div class="paisajes" data-sc-verify-state="poster">
+    <div class="paisaje paisaje--paris" data-paisaje="paris">
+      <picture><source media="(max-width:640px)" srcset="assets/paisajes/paris-m.webp"><img src="assets/paisajes/paris.webp" width="1920" height="1066" alt="" fetchpriority="high"></picture>
+      <video data-film="paris" data-src="assets/paisajes/paris.mp4" data-src-mobile="assets/paisajes/paris-m.mp4" muted playsinline preload="none" tabindex="-1" disablepictureinpicture></video>
+    </div>
+    <div class="paisaje paisaje--montana" data-paisaje="montana">
+      <picture><source media="(max-width:640px)" srcset="assets/paisajes/montana-m.webp"><img src="assets/paisajes/montana.webp" width="1920" height="1066" alt="" decoding="async"></picture>
+    </div>
+    <div class="paisaje paisaje--lago" data-paisaje="lago">
+      <picture><source media="(max-width:640px)" srcset="assets/paisajes/lago-m.webp"><img src="assets/paisajes/lago.webp" width="1920" height="1066" alt="" decoding="async"></picture>
+    </div>
+    <div class="paisaje paisaje--cocina" data-paisaje="cocina">
+      <picture><source media="(max-width:640px)" srcset="assets/paisajes/cocina-m.webp"><img src="assets/paisajes/cocina.webp" width="1920" height="1066" alt="" decoding="async"></picture>
+      <video data-film="cocina" data-src="assets/paisajes/cocina.mp4" data-src-mobile="assets/paisajes/cocina-m.mp4" muted playsinline preload="none" tabindex="-1" disablepictureinpicture></video>
+    </div>
+    <div class="paisajes__luz"></div>
+  </div>
   <div class="atmosfera__papel"></div>
   <div class="atmosfera__sombra"></div>
   <canvas class="atmosfera__aire"></canvas>
@@ -1018,6 +1036,7 @@
 <script src="scrollcraft.js"></script>
 <script src="premium.js"></script>
 <script src="atmosfera.js"></script>
+<script src="paisajes.js"></script>
 <script src="memorial.js"></script>
 <noscript><style>.idx__toggle,.velas,.modo,#album,#cocina,#cierre,.hoja,.alb__cap,[data-go]{display:none!important}[data-sc-cue],[data-sc-in]{opacity:1!important;transform:none!important}.idx{position:static;height:auto;display:block;padding:16px 24px}.idx__links{display:flex!important;position:static!important;flex-wrap:wrap;gap:8px 16px;padding:0;box-shadow:none}#album{min-height:0}#ella [data-sc-stage]{height:auto}</style><p class="no-script">Para abrir el álbum interactivo y compartir recuerdos, activa JavaScript. Puedes ver <a href="fotos/v/marilu-soplando-un-diente-de-leon.webp">su fotografía</a> y escuchar <a href="video/stay.mp4">Stay</a>.</p></noscript>
 </body>

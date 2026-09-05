@@ -13,9 +13,10 @@ try {
  for (const [width,height,reduced] of [[1440,1000,false],[768,1024,false],[390,844,false],[360,640,false],[1440,1000,true]]) {
   const name=`${width}-${height}${reduced?'-quiet':''}`;
   const context=await browser.newContext({viewport:{width,height},hasTouch:width<=640,isMobile:width<=640,reducedMotion:reduced?'reduce':'no-preference'});
+  await context.addInitScript(()=>{Element.prototype.requestPointerLock=()=>Promise.resolve();Element.prototype.setPointerCapture=()=>{};Element.prototype.releasePointerCapture=()=>{};});
   const page=await context.newPage(), errors=[];
   page.on('pageerror',e=>errors.push(e.message));
-  await page.goto('http://localhost:4517/',{waitUntil:'domcontentloaded',timeout:60000});
+  await page.goto(process.env.PAISAJES_URL||'http://localhost:4517/',{waitUntil:'domcontentloaded',timeout:60000});
   await page.waitForSelector('html.sc-ready'); await page.evaluate(()=>document.fonts.ready);
   assert.equal(await page.evaluate(async()=>{const faces=await document.fonts.load('500 24px "Bodoni Moda"');return faces.length>0&&faces.every(f=>f.status==='loaded');}),true,'Original display font loaded');
   await page.waitForFunction(()=>document.querySelector('.ella__plate img').naturalWidth>0);

@@ -24,7 +24,7 @@ async function context(options={},mock=true){
  }
  return c;
 }
-async function open(c){const p=await c.newPage();p.setDefaultTimeout(15000);p.setDefaultNavigationTimeout(45000);await p.goto('http://localhost:4517/',{waitUntil:'domcontentloaded'});await p.waitForSelector('html.sc-ready');await p.evaluate(()=>document.fonts.ready);return p;}
+async function open(c){const p=await c.newPage();p.setDefaultTimeout(15000);p.setDefaultNavigationTimeout(45000);await p.goto(process.env.PAISAJES_URL||'http://localhost:4517/',{waitUntil:'domcontentloaded'});await p.waitForSelector('html.sc-ready');await p.evaluate(()=>document.fonts.ready);return p;}
 async function jump(p,id,progress=0){await p.evaluate(({id,progress})=>{const el=document.getElementById(id);scrollTo({top:el.getBoundingClientRect().top+scrollY+Math.max(0,el.offsetHeight-innerHeight)*progress,behavior:'instant'});},{id,progress});await p.waitForTimeout(400);}
 try{
  let c=await context(),p=await open(c);const errors=[];p.on('pageerror',e=>errors.push(e.message));
@@ -74,6 +74,6 @@ try{
  results.push('Stay stays paused until requested, plays, and pauses when scrolled away.');
  assert.deepEqual(errors,[]);await c.close();
  c=await context({reducedMotion:'reduce'});p=await open(c);assert.equal(await p.locator('#ella').getAttribute('data-sc-act'),'flow');await jump(p,'album',.1);await p.locator('#alb-frame').click();assert.equal(await p.locator('#lb-pausa').getAttribute('aria-pressed'),'true');await p.keyboard.press('Escape');await c.close();results.push('Reduced motion removes hero pin and prevents automatic photo playback.');
- c=await context({javaScriptEnabled:false,viewport:{width:360,height:640}});p=await c.newPage();await p.goto('http://localhost:4517/',{waitUntil:'domcontentloaded'});await p.waitForLoadState('load');assert.equal(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);assert.equal(await p.locator('#plate').isVisible(),false);assert.equal(await p.locator('.no-script').isVisible(),true);await c.close();results.push('No-JavaScript fallback exposes photograph/film links and hides the scripted form.');
+ c=await context({javaScriptEnabled:false,viewport:{width:360,height:640}});p=await c.newPage();await p.goto(process.env.PAISAJES_URL||'http://localhost:4517/',{waitUntil:'domcontentloaded'});await p.waitForLoadState('load');assert.equal(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);assert.equal(await p.locator('#plate').isVisible(),false);assert.equal(await p.locator('.no-script').isVisible(),true);await c.close();results.push('No-JavaScript fallback exposes photograph/film links and hides the scripted form.');
  fs.writeFileSync(out+'/results.json',JSON.stringify({passed:results},null,2));console.log(results.join('\n'));
 } catch(e){fs.writeFileSync(out+'/failure.json',JSON.stringify({passed:results,error:e.stack},null,2));throw e;}finally{await browser.close();}

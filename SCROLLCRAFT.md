@@ -1,5 +1,8 @@
 # Scroll-craft · Marilú
 
+Latest: [El mundo detrás del álbum](PAISAJES.md), four KIE landscapes and two
+silent scroll-linked clips, with the existing content on a separate paper plane.
+
 Latest refinement: [Luz, papel y fotografías](ATMOSFERA.md). The new version
 removes photographic captions, adds a KIE-generated background and a subtle
 pointer response, and serves the same typography locally. The report below
